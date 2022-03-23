@@ -52,6 +52,7 @@
                           :id="`label-` + item.id"
                         >
                           {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
                           <a
                             v-if="item.link"
                             :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -60,7 +61,7 @@
                           >
                         </label>
                         <span class="text-danger">
-                          (purchased by {{ item.purchaser.name }})
+                          purchased by {{ item.purchaser.name }}
                         </span>
                       </div>
                     </div>
@@ -84,6 +85,7 @@
                           :id="`label-` + item.id"
                         >
                           {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
                           <a
                             v-if="item.link"
                             :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -91,7 +93,7 @@
                             >link</a
                           >
                         </label>
-                        <span class="text-success"> Purchased by you!</span>
+                        <span class="text-success"> purchased by you!</span>
                       </div>
                     </div>
                     <div v-else>
@@ -109,6 +111,7 @@
                           :id="`label-` + item.id"
                         >
                           {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
                           <a
                             v-if="item.link"
                             :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -124,7 +127,7 @@
             </div>
           </div>
         </div>
-        <div class="row" v-if="secretSanta">
+        <div class="row mb-5" v-if="secretSanta">
           <div class="col-12">
             <hr />
             <h3 class="mt-3 mb-4">Your secret santa</h3>
@@ -157,6 +160,7 @@
                       :id="`label-` + item.id"
                     >
                       {{ item.name }}
+                      <span v-if="item.link || item.purchaser_id"> - </span>
                       <a
                         v-if="item.link"
                         :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -165,7 +169,7 @@
                       >
                     </label>
                     <span class="text-danger">
-                      (purchased by {{ item.purchaser.name }})</span
+                      purchased by {{ item.purchaser.name }}</span
                     >
                   </div>
                 </div>
@@ -187,6 +191,7 @@
                       :id="`label-` + item.id"
                     >
                       {{ item.name }}
+                      <span v-if="item.link || item.purchaser_id"> - </span>
                       <a
                         v-if="item.link"
                         :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -194,7 +199,7 @@
                         >link</a
                       >
                     </label>
-                    <span class="text-success"> Purchased by you!</span>
+                    <span class="text-success"> purchased by you!</span>
                   </div>
                 </div>
                 <div v-else>
@@ -212,6 +217,7 @@
                       :id="`label-` + item.id"
                     >
                       {{ item.name }}
+                      <span v-if="item.link || item.purchaser_id"> - </span>
                       <a
                         v-if="item.link"
                         :href="`//` + item.link.replace(/^https?:\/\//, '')"
