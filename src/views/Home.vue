@@ -54,7 +54,7 @@
                           {{ item.name }}
                           <a
                             v-if="item.link"
-                            :href="`//` + item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
                             target="_blank"
                             >link</a
                           >
@@ -86,7 +86,7 @@
                           {{ item.name }}
                           <a
                             v-if="item.link"
-                            :href="`//` + item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
                             target="_blank"
                             >link</a
                           >
@@ -111,7 +111,7 @@
                           {{ item.name }}
                           <a
                             v-if="item.link"
-                            :href="`//` + item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
                             target="_blank"
                             >link</a
                           >
@@ -159,7 +159,7 @@
                       {{ item.name }}
                       <a
                         v-if="item.link"
-                        :href="`//` + item.link"
+                        :href="`//` + item.link.replace(/^https?:\/\//, '')"
                         target="_blank"
                         >link</a
                       >
@@ -189,7 +189,7 @@
                       {{ item.name }}
                       <a
                         v-if="item.link"
-                        :href="`//` + item.link"
+                        :href="`//` + item.link.replace(/^https?:\/\//, '')"
                         target="_blank"
                         >link</a
                       >
@@ -214,7 +214,7 @@
                       {{ item.name }}
                       <a
                         v-if="item.link"
-                        :href="`//` + item.link"
+                        :href="`//` + item.link.replace(/^https?:\/\//, '')"
                         target="_blank"
                         >link</a
                       >
