@@ -21,9 +21,7 @@
                   class="bi bi-check-lg text-success"
                   v-if="
                     user.wishedgifts &&
-                    user.wishedgifts.some(
-                      (item) => item.purchaser_id == user_id
-                    )
+                    user.wishedgifts.some((item) => item.purchaser_id == me.id)
                   "
                 ></i>
                 <div
@@ -36,7 +34,7 @@
                     them! :)</span
                   >
                   <div v-for="item in user.wishedgifts" :key="item.id">
-                    <div v-if="item.purchaser && item.purchaser_id != user_id">
+                    <div v-if="item.purchaser && item.purchaser_id != me.id">
                       <div class="form-check form-check-inline">
                         <input
                           class="form-check-input"
@@ -67,7 +65,7 @@
                     </div>
                     <div
                       v-else-if="
-                        item.purchaser_id && item.purchaser_id == user_id
+                        item.purchaser_id && item.purchaser_id == me.id
                       "
                     >
                       <div class="form-check form-check-inline">
@@ -144,7 +142,7 @@
                 :)</span
               >
               <div v-for="item in secretSanta.wishedgifts" :key="item.id">
-                <div v-if="item.purchaser && item.purchaser_id != user_id">
+                <div v-if="item.purchaser && item.purchaser_id != me.id">
                   <div class="form-check form-check-inline">
                     <input
                       class="form-check-input"
@@ -174,7 +172,7 @@
                   </div>
                 </div>
                 <div
-                  v-else-if="item.purchaser_id && item.purchaser_id == user_id"
+                  v-else-if="item.purchaser_id && item.purchaser_id == me.id"
                 >
                   <div class="form-check form-check-inline">
                     <input
@@ -231,7 +229,7 @@
             </div>
           </div>
         </div>
-        <div id="secret" v-if="user_id == `1`">
+        <div id="secret" v-if="me.id == `1`">
           <button class="btn btn-outline-danger" @click="secretSantaShuffle">
             Click to shuffle the secret santas around
           </button>
@@ -259,12 +257,14 @@ export default {
       secretSanta: null,
       christmasLists: {},
       loaded: false,
-      user_id: null,
+      me: null,
     };
   },
   created: function () {
-    this.user_id = localStorage.user_id;
-    this.getUsers();
+    axios.get("/users/me").then((response) => {
+      this.me = response.data;
+      this.getUsers();
+    });
   },
   methods: {
     toggleCheckBox: function (item) {
@@ -277,9 +277,9 @@ export default {
             console.log("errors:", error);
           });
       } else {
-        item.purchaser_id = this.user_id;
+        item.purchaser_id = this.me.id;
         axios
-          .patch(`/wishedgifts/${item.id}`, { purchaser_id: this.user_id })
+          .patch(`/wishedgifts/${item.id}`, { purchaser_id: this.me.id })
           .catch((error) => {
             console.log("errors:", error);
           });
@@ -291,7 +291,7 @@ export default {
         .then((response) => {
           this.loaded = true;
           // console.log("family ping response", response.data);
-          var my_id = localStorage.user_id;
+          var my_id = this.me.id;
           this.family = response.data.users.filter(function (user) {
             return user.id != my_id;
           });

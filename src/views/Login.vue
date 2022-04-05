@@ -86,7 +86,6 @@ export default {
               "Bearer " + response.data.jwt;
             localStorage.setItem("jwt", response.data.jwt);
             localStorage.setItem("user_name", response.data.user_name);
-            localStorage.setItem("user_id", response.data.user_id);
             localStorage.setItem("family_id", response.data.family_id);
             this.$emit("login_change", response.data.user_name);
             this.$router.push("/");

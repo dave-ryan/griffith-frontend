@@ -64,17 +64,14 @@ import axios from "axios";
 export default {
   data() {
     return {
-      user_id: null,
       user_name: null,
     };
   },
 
   created: function () {
     console.log("running script");
-    if (localStorage.jwt && localStorage.user_name && localStorage.user_id) {
+    if (localStorage.jwt && localStorage.user_name) {
       this.user_name = localStorage.user_name;
-      this.user_id = localStorage.user_id;
-      console.log("user_id is ", this.user_id);
     } else {
       this.$router.push("/login");
     }
