@@ -6,6 +6,135 @@
     <transition>
       <div v-if="loaded">
         <div class="row">
+          <div class="col-12 mb-5">
+            <button @click="getEveryone" class="btn btn-outline-primary">
+              Load everyone's lists
+            </button>
+            <div
+              class="row mt-3"
+              v-for="user in everyone"
+              :key="`everyone-` + user.id"
+            >
+              <div class="col-12-">
+                <button
+                  class="btn btn-outline-success"
+                  data-bs-toggle="collapse"
+                  :data-bs-target="`#birthday-list-${user.id}`"
+                >
+                  {{ user.name }}
+                </button>
+                <i
+                  class="bi bi-check-lg text-success"
+                  v-if="
+                    user.wishedgifts &&
+                    user.wishedgifts.some((item) => item.purchaser_id == me.id)
+                  "
+                ></i>
+                <div
+                  class="collapse"
+                  aria-expanded="false"
+                  :id="`birthday-list-${user.id}`"
+                >
+                  <span v-if="user.wishedgifts.length < 1"
+                    >this person hasn't made their christmas list yet! remind
+                    them! :)</span
+                  >
+                  <div
+                    v-for="item in user.wishedgifts"
+                    :key="`everyitem` + item.id"
+                  >
+                    <div v-if="item.purchaser && item.purchaser_id != me.id">
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          checked
+                          :id="`birthday-checkbox-` + item.id"
+                          disabled
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`birthday-checkbox-` + item.id"
+                          :id="`label-` + item.id"
+                        >
+                          {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <a
+                            v-if="item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                            target="_blank"
+                            >link</a
+                          >
+                        </label>
+                        <span class="text-danger">
+                          purchased by {{ item.purchaser.name }}
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      v-else-if="
+                        item.purchaser_id && item.purchaser_id == me.id
+                      "
+                    >
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          checked
+                          @click="toggleCheckBox(item)"
+                          :id="`birthday-checkbox-` + item.id"
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`birthday-checkbox-` + item.id"
+                          :id="`label-` + item.id"
+                        >
+                          {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <a
+                            v-if="item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                            target="_blank"
+                            >link</a
+                          >
+                        </label>
+                        <span class="text-success"> purchased by you!</span>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          @click="toggleCheckBox(item)"
+                          :id="`checkbox-` + item.id"
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`checkbox-` + item.id"
+                          :id="`label-` + item.id"
+                        >
+                          {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <a
+                            v-if="item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                            target="_blank"
+                            >link</a
+                          >
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
           <div class="col-12">
             <h3>Your family</h3>
             <div class="row mt-3" v-for="user in family" :key="user.id">
@@ -254,6 +383,7 @@ export default {
   data: function () {
     return {
       family: [],
+      everyone: [],
       secretSanta: null,
       christmasLists: {},
       loaded: false,
@@ -285,12 +415,21 @@ export default {
           });
       }
     },
+    getEveryone: function () {
+      axios.get("/users").then((response) => {
+        console.log(response.data);
+        var my_id = this.me.id;
+        this.everyone = response.data.filter(function (user) {
+          return user.id != my_id;
+        });
+      });
+    },
     getUsers: function () {
       axios
         .get(`/families/${localStorage.family_id}`)
         .then((response) => {
           this.loaded = true;
-          // console.log("family ping response", response.data);
+          console.log("family ping response", response.data);
           var my_id = this.me.id;
           this.family = response.data.users.filter(function (user) {
             return user.id != my_id;
