@@ -26,7 +26,7 @@
           <li>
             <router-link class="nav-link" to="/my-list">My List</router-link>
           </li>
-          <li v-if="(user_name = `David`)">
+          <li v-if="user_name == `David`">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <li>
@@ -85,9 +85,7 @@ export default {
     logOut: function () {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("jwt");
-      localStorage.removeItem("user_id");
       localStorage.removeItem("user_name");
-      localStorage.removeItem("family_id");
       this.user_name = null;
       this.$router.push("/login");
     },
