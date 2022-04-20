@@ -389,11 +389,6 @@
             </div>
           </div>
         </div>
-        <div id="secret" v-if="me.id == `1`">
-          <button class="btn btn-outline-danger" @click="secretSantaShuffle">
-            Click to shuffle the secret santas around
-          </button>
-        </div>
       </div>
     </transition>
   </div>
@@ -402,9 +397,6 @@
 <style scoped>
 .container {
   padding-top: 80px;
-}
-#secret {
-  padding-top: 600px;
 }
 </style>
 
@@ -460,7 +452,7 @@ export default {
     getUsers: function () {
       this.indexview = false;
       axios
-        .get(`/families/${localStorage.family_id}`)
+        .get(`/families/${this.me.family_id}`)
         .then((response) => {
           this.loaded = true;
           console.log("family ping response", response.data);
@@ -492,15 +484,6 @@ export default {
         .catch((error) => {
           console.log("errors", error.response);
         });
-    },
-    secretSantaShuffle: function () {
-      if (
-        confirm("ARE YOU SURE YOU WANT TO SHUFFLE EVERYONE'S SECRET SANTA?")
-      ) {
-        axios.post("/secret-santa-shuffle").then((response) => {
-          console.log(response.data);
-        });
-      }
     },
   },
 };
