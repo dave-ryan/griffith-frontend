@@ -261,30 +261,28 @@
                 <div class="row">
                   <div class="col-6">
                     <div class="input">
-                      <label for="floatingTextarea" class="fw-bold"
+                      <label for="floatingTextarea-Gift" class="fw-bold"
                         >Wished for:</label
                       >
                       <textarea
-                        class="form-control batch text-nowrap"
-                        placeholder="Socks
-                        Throw pillows
-                        Any Marvel movie on Bluray"
-                        id="floatingTextarea"
+                        class="form-control batch"
+                        :class="needsWordWrap(batchItems)"
+                        placeholder="Socks&#10;Throw pillows&#10;Any Marvel movie on Bluray"
+                        id="floatingTextarea-Gift"
                         v-model="batchItems"
                       ></textarea>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="input">
-                      <label for="floatingTextarea" class="fw-bold"
+                      <label for="floatingTextarea-Link" class="fw-bold"
                         >Links:</label
                       >
                       <textarea
-                        class="form-control batch text-nowrap"
-                        placeholder="amazon.com/socks
-                        
-                        www.google.com/marvel-blurays"
-                        id="floatingTextarea"
+                        class="form-control batch"
+                        :class="needsWordWrap(batchLinks)"
+                        placeholder="amazon.com/socks&#10;&#10;www.google.com/marvel-blurays"
+                        id="floatingTextarea-Link"
                         v-model="batchLinks"
                       ></textarea>
                     </div>
@@ -425,6 +423,13 @@ export default {
             document.body.scrollHeight || document.documentElement.scrollHeight
           );
         }, 400);
+      }
+    },
+    needsWordWrap: function (items) {
+      if (items === "") {
+        return "";
+      } else {
+        return "text-nowrap";
       }
     },
     batchCreate: function () {
