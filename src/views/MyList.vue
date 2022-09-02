@@ -352,7 +352,7 @@ export default {
   },
   computed: {
     isDisabled: function () {
-      if (!this.newItem.name || this.newItem.name == "") {
+      if (!this.newItem.name || this.newItem.name === "") {
         return true;
       } else {
         return false;
@@ -390,7 +390,7 @@ export default {
           .then((response) => {
             console.log(response);
             var foundItem = this.myList.find(
-              (item) => item.id == this.editingItem.id
+              (item) => item.id === this.editingItem.id
             );
 
             foundItem.name = this.editingItem.name;

@@ -45,7 +45,7 @@
                     v-if="
                       user.wishedgifts &&
                       user.wishedgifts.some(
-                        (item) => item.purchaser_id == me.id
+                        (item) => item.purchaser_id === me.id
                       )
                     "
                   ></i>
@@ -97,7 +97,7 @@
                       </div>
                       <div
                         v-else-if="
-                          item.purchaser_id && item.purchaser_id == me.id
+                          item.purchaser_id && item.purchaser_id === me.id
                         "
                       >
                         <div class="form-check form-check-inline">
@@ -181,7 +181,7 @@
                   class="bi bi-check-lg text-success"
                   v-if="
                     user.wishedgifts &&
-                    user.wishedgifts.some((item) => item.purchaser_id == me.id)
+                    user.wishedgifts.some((item) => item.purchaser_id === me.id)
                   "
                 ></i>
                 <div
@@ -225,7 +225,7 @@
                     </div>
                     <div
                       v-else-if="
-                        item.purchaser_id && item.purchaser_id == me.id
+                        item.purchaser_id && item.purchaser_id === me.id
                       "
                     >
                       <div class="form-check form-check-inline">
@@ -332,7 +332,7 @@
                   </div>
                 </div>
                 <div
-                  v-else-if="item.purchaser_id && item.purchaser_id == me.id"
+                  v-else-if="item.purchaser_id && item.purchaser_id === me.id"
                 >
                   <div class="form-check form-check-inline">
                     <input
