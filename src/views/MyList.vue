@@ -265,7 +265,7 @@
                         >Wished for:</label
                       >
                       <textarea
-                        class="form-control batch"
+                        class="form-control batch text-nowrap"
                         placeholder="Socks&#10;Throw pillows&#10;Any Marvel movie on Bluray"
                         id="floatingTextarea"
                         v-model="batchItems"
@@ -278,7 +278,7 @@
                         >Links:</label
                       >
                       <textarea
-                        class="form-control batch"
+                        class="form-control batch text-nowrap"
                         placeholder="amazon.com/socks&#10;&#10;www.google.com/marvel-blurays"
                         id="floatingTextarea"
                         v-model="batchLinks"
