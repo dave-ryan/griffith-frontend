@@ -415,10 +415,18 @@ export default {
     };
   },
   created: function () {
-    axios.get("/users/me").then((response) => {
-      this.me = response.data;
-      this.getUsers();
-    });
+    axios
+      .get("/users/me")
+      .then((response) => {
+        this.me = response.data;
+        this.getUsers();
+      })
+      .catch((error) => {
+        console.log("errors", error, error.response);
+        if (error.response.status === 401) {
+          this.$root.logOut();
+        }
+      });
   },
   methods: {
     toggleCheckBox: function (item) {
@@ -451,22 +459,14 @@ export default {
     },
     getUsers: function () {
       this.indexview = false;
-      axios
-        .get(`/families/${this.me.family_id}`)
-        .then((response) => {
-          this.loaded = true;
-          console.log("family ping response", response.data);
-          var my_id = this.me.id;
-          this.family = response.data.users.filter(function (user) {
-            return user.id != my_id;
-          });
-        })
-        .catch((error) => {
-          console.log("errors", error, error.response);
-          if (error.response.status === 401) {
-            this.$root.logOut();
-          }
+      axios.get(`/families/${this.me.family_id}`).then((response) => {
+        this.loaded = true;
+        console.log("family ping response", response.data);
+        var my_id = this.me.id;
+        this.family = response.data.users.filter(function (user) {
+          return user.id != my_id;
         });
+      });
       this.getSecretSanta();
     },
     toggleChristmasList: function (user) {
