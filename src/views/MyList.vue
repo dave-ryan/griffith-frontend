@@ -266,7 +266,9 @@
                       >
                       <textarea
                         class="form-control batch text-nowrap"
-                        placeholder="Socks&#10;Throw pillows&#10;Any Marvel movie on Bluray"
+                        placeholder="Socks
+                        Throw pillows
+                        Any Marvel movie on Bluray"
                         id="floatingTextarea"
                         v-model="batchItems"
                       ></textarea>
@@ -279,7 +281,9 @@
                       >
                       <textarea
                         class="form-control batch text-nowrap"
-                        placeholder="amazon.com/socks&#10;&#10;www.google.com/marvel-blurays"
+                        placeholder="amazon.com/socks
+                        
+                        www.google.com/marvel-blurays"
                         id="floatingTextarea"
                         v-model="batchLinks"
                       ></textarea>
