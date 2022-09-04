@@ -192,13 +192,8 @@
         <div class="modal fade" id="deleteModal" tabindex="-1">
           <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-header">
-                <i class="bi bi-exclamation-diamond danger text-danger"></i>
-                <h2 class="text-danger" id="warning">
-                  &nbsp; <u>WARNING!</u> &nbsp;
-                </h2>
-                <i class="bi bi-exclamation-diamond danger text-danger"></i>
-
+              <div class="modal-header text-center">
+                <div class="text-danger w-100 display-6">WARNING!</div>
                 <button
                   type="button"
                   class="btn-close"
@@ -321,9 +316,6 @@
 }
 i {
   font-size: 1.8em;
-}
-#warning {
-  text-shadow: 1px 1px black;
 }
 .form-control.batch {
   min-height: 50vh;
