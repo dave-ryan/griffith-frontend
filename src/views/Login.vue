@@ -48,10 +48,10 @@
             {{ errors }}
           </div>
         </fieldset>
-        <div>
-          <button class="btn btn-warning" @click="generateUsers">SeedDb</button>
-        </div>
       </form>
+      <div>
+        <button class="btn btn-warning" @click="generateUsers">SeedDb</button>
+      </div>
     </div>
   </div>
 </template>
