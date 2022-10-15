@@ -50,7 +50,8 @@
         </fieldset>
       </form>
       <div>
-        <button class="btn btn-warning" @click="seedDb">SeedDb</button>
+        <button class="btn btn-warning" @click="seedFam">Seed Fam</button>
+        <button class="btn btn-warning" @click="seedUsers">Seed Users</button>
       </div>
     </div>
   </div>
@@ -222,20 +223,19 @@ export default {
     };
   },
   methods: {
-    seedDb: function () {
-      this.family
-        .forEach((params) => {
-          axios.post("/families", params).then((response) => {
-            console.log(response);
-          });
-        })
-        .then(
-          this.users.forEach((params) => {
-            axios.post("/users", params).then((response) => {
-              console.log(response);
-            });
-          })
-        );
+    seedFam: function () {
+      this.family.forEach((params) => {
+        axios.post("/families", params).then((response) => {
+          console.log(response);
+        });
+      });
+    },
+    seedUsers: function () {
+      this.users.forEach((params) => {
+        axios.post("/users", params).then((response) => {
+          console.log(response);
+        });
+      });
     },
     logIn: function () {
       this.fieldset = document.getElementById("loginFieldset");
