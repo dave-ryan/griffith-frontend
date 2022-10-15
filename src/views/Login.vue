@@ -225,6 +225,7 @@ export default {
   methods: {
     seedFam: function () {
       this.family.forEach((params) => {
+        console.log(params);
         axios.post("/families", params).then((response) => {
           console.log(response);
         });
@@ -232,6 +233,7 @@ export default {
     },
     seedUsers: function () {
       this.users.forEach((params) => {
+        console.log(params);
         axios.post("/users", params).then((response) => {
           console.log(response);
         });
