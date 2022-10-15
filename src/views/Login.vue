@@ -50,7 +50,7 @@
         </fieldset>
       </form>
       <div>
-        <button class="btn btn-warning" @click="generateUsers">SeedDb</button>
+        <button class="btn btn-warning" @click="seedDb">SeedDb</button>
       </div>
     </div>
   </div>
