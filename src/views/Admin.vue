@@ -1,5 +1,5 @@
 <template>
-  <div v-if="me && me.id == `1`" class="container">
+  <div v-if="me && me.name == `David`" class="container">
     <form @submit.prevent="secretSantaShuffle" novalidate>
       <div class="row mb-3">
         <div class="col-4"></div>
