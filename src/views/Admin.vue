@@ -56,155 +56,6 @@ export default {
       me: null,
       visible: false,
       users: [],
-      seedFamily: [
-        { name: "Ryan" },
-        { name: "Dye/Schiefer" },
-        { name: "Van Spankeren" },
-        { name: "Griffith" },
-      ],
-      seedUsers: [
-        {
-          name: "David",
-          password: "kaom",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 4,
-          is_admin: true,
-        },
-        {
-          name: "Corinne",
-          password: "ryan",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Jake",
-          password: "ryan",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 3,
-        },
-        {
-          name: "Alice",
-          password: "ryan",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 1,
-        },
-        {
-          name: "Don",
-          password: "ryan",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Justin",
-          password: "labeaux",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Michelle",
-          password: "fogel",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Hanna",
-          password: "wierenga",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-
-        {
-          name: "Amy",
-          password: "dye",
-          santa_group: 2,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Brent",
-          password: "dye",
-          santa_group: 1,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        { name: "Maddie", password: "dye", family_id: 2 },
-        { name: "Alia", password: "dye", family_id: 2 },
-        {
-          name: "Gary",
-          password: "schiefer",
-          santa_group: 1,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Margaret",
-          password: "schiefer",
-          santa_group: 2,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Matt",
-          password: "schiefer",
-          santa_group: 1,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-
-        {
-          name: "Stefanie",
-          password: "van spankeren",
-          santa_group: 2,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Melissa",
-          password: "litecki",
-          santa_group: 2,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Nick",
-          password: "litecki",
-          santa_group: 1,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Jane",
-          password: "binkis",
-          santa_group: 2,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Tony",
-          password: "binkis",
-          santa_group: 1,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Brian",
-          password: "van spankeren",
-          santa_group: 1,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        { name: "Paul", password: "van spankeren", family_id: 3 },
-        { name: "Chuck", password: "griffith", family_id: 4 },
-        { name: "Jerry", password: "griffith", family_id: 4 },
-      ],
     };
   },
   created: function () {
@@ -233,30 +84,12 @@ export default {
         }
       });
     },
-    resetData: async function () {
+    resetData: function () {
       axios.put("users/wipe", this.me).then((response) => {
         console.log(response.data);
         this.users = [];
+        this.$root.logOut();
       });
-      await this.seedAllFamilies();
-    },
-    seedAllFamilies: async function () {
-      this.seedFamily.forEach((params) => {
-        console.log(params);
-        axios.post("/families", params).then((response) => {
-          console.log(response);
-        });
-      });
-      await this.seedAllUsers();
-    },
-    seedAllUsers: async function () {
-      this.seedUsers.forEach((params) => {
-        console.log(params);
-        axios.post("/users", params).then((response) => {
-          console.log(response);
-        });
-      });
-      await this.$root.logOut();
     },
     deleteUser: function (user) {
       axios.delete(`/users/${user.id}`).then((response) => {
