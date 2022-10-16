@@ -49,7 +49,7 @@ export default {
   created: function () {
     axios.get("/users/me").then((response) => {
       this.me = response.data;
-      if (this.me.id != 1) {
+      if (this.me.name != "David") {
         this.$router.push("/");
       }
     });
