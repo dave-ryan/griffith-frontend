@@ -49,10 +49,10 @@
           </div>
         </fieldset>
       </form>
-      <div>
+      <!-- <div>
         <button class="btn btn-warning" @click="seedFam">Seed Fam</button>
         <button class="btn btn-warning" @click="seedUsers">Seed Users</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -72,173 +72,173 @@ export default {
       errors: null,
       buttonName: "Log In",
       fieldset: null,
-      family: [
-        { name: "Ryan" },
-        { name: "Dye/Schiefer" },
-        { name: "Van Spankeren" },
-        { name: "Griffith" },
-      ],
-      users: [
-        {
-          name: "David",
-          password: "ryan",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 4,
-        },
-        {
-          name: "Corinne",
-          password: "ryan",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Jake",
-          password: "ryan",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 3,
-        },
-        {
-          name: "Alice",
-          password: "ryan",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 1,
-        },
-        {
-          name: "Don",
-          password: "ryan",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Justin",
-          password: "labeaux",
-          santa_group: 1,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Michelle",
-          password: "fogel",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Hanna",
-          password: "wierenga",
-          santa_group: 2,
-          family_id: 1,
-          mystery_santa_id: 2,
-        },
+      // family: [
+      //   { name: "Ryan" },
+      //   { name: "Dye/Schiefer" },
+      //   { name: "Van Spankeren" },
+      //   { name: "Griffith" },
+      // ],
+      // users: [
+      //   {
+      //     name: "David",
+      //     password: "ryan",
+      //     santa_group: 1,
+      //     family_id: 1,
+      //     mystery_santa_id: 4,
+      //   },
+      //   {
+      //     name: "Corinne",
+      //     password: "ryan",
+      //     santa_group: 2,
+      //     family_id: 1,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Jake",
+      //     password: "ryan",
+      //     santa_group: 1,
+      //     family_id: 1,
+      //     mystery_santa_id: 3,
+      //   },
+      //   {
+      //     name: "Alice",
+      //     password: "ryan",
+      //     santa_group: 2,
+      //     family_id: 1,
+      //     mystery_santa_id: 1,
+      //   },
+      //   {
+      //     name: "Don",
+      //     password: "ryan",
+      //     santa_group: 1,
+      //     family_id: 1,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Justin",
+      //     password: "labeaux",
+      //     santa_group: 1,
+      //     family_id: 1,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Michelle",
+      //     password: "fogel",
+      //     santa_group: 2,
+      //     family_id: 1,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Hanna",
+      //     password: "wierenga",
+      //     santa_group: 2,
+      //     family_id: 1,
+      //     mystery_santa_id: 2,
+      //   },
 
-        {
-          name: "Amy",
-          password: "dye",
-          santa_group: 2,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Brent",
-          password: "dye",
-          santa_group: 1,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        { name: "Maddie", password: "dye", family_id: 2 },
-        { name: "Alia", password: "dye", family_id: 2 },
-        {
-          name: "Gary",
-          password: "schiefer",
-          santa_group: 1,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Margaret",
-          password: "schiefer",
-          santa_group: 2,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Matt",
-          password: "schiefer",
-          santa_group: 1,
-          family_id: 2,
-          mystery_santa_id: 2,
-        },
+      //   {
+      //     name: "Amy",
+      //     password: "dye",
+      //     santa_group: 2,
+      //     family_id: 2,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Brent",
+      //     password: "dye",
+      //     santa_group: 1,
+      //     family_id: 2,
+      //     mystery_santa_id: 2,
+      //   },
+      //   { name: "Maddie", password: "dye", family_id: 2 },
+      //   { name: "Alia", password: "dye", family_id: 2 },
+      //   {
+      //     name: "Gary",
+      //     password: "schiefer",
+      //     santa_group: 1,
+      //     family_id: 2,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Margaret",
+      //     password: "schiefer",
+      //     santa_group: 2,
+      //     family_id: 2,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Matt",
+      //     password: "schiefer",
+      //     santa_group: 1,
+      //     family_id: 2,
+      //     mystery_santa_id: 2,
+      //   },
 
-        {
-          name: "Stefanie",
-          password: "van spankeren",
-          santa_group: 2,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Melissa",
-          password: "litecki",
-          santa_group: 2,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Nick",
-          password: "litecki",
-          santa_group: 1,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Jane",
-          password: "binkis",
-          santa_group: 2,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Tony",
-          password: "binkis",
-          santa_group: 1,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        {
-          name: "Brian",
-          password: "van spankeren",
-          santa_group: 1,
-          family_id: 3,
-          mystery_santa_id: 2,
-        },
-        { name: "Paul", password: "van spankeren", family_id: 3 },
-        { name: "Chuck", password: "griffith", family_id: 4 },
-        { name: "Jerry", password: "griffith", family_id: 4 },
-      ],
+      //   {
+      //     name: "Stefanie",
+      //     password: "van spankeren",
+      //     santa_group: 2,
+      //     family_id: 3,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Melissa",
+      //     password: "litecki",
+      //     santa_group: 2,
+      //     family_id: 3,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Nick",
+      //     password: "litecki",
+      //     santa_group: 1,
+      //     family_id: 3,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Jane",
+      //     password: "binkis",
+      //     santa_group: 2,
+      //     family_id: 3,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Tony",
+      //     password: "binkis",
+      //     santa_group: 1,
+      //     family_id: 3,
+      //     mystery_santa_id: 2,
+      //   },
+      //   {
+      //     name: "Brian",
+      //     password: "van spankeren",
+      //     santa_group: 1,
+      //     family_id: 3,
+      //     mystery_santa_id: 2,
+      //   },
+      //   { name: "Paul", password: "van spankeren", family_id: 3 },
+      //   { name: "Chuck", password: "griffith", family_id: 4 },
+      //   { name: "Jerry", password: "griffith", family_id: 4 },
+      // ],
     };
   },
   methods: {
-    seedFam: function () {
-      this.family.forEach((params) => {
-        console.log(params);
-        axios.post("/families", params).then((response) => {
-          console.log(response);
-        });
-      });
-    },
-    seedUsers: function () {
-      this.users.forEach((params) => {
-        console.log(params);
-        axios.post("/users", params).then((response) => {
-          console.log(response);
-        });
-      });
-    },
+    // seedFam: function () {
+    //   this.family.forEach((params) => {
+    //     console.log(params);
+    //     axios.post("/families", params).then((response) => {
+    //       console.log(response);
+    //     });
+    //   });
+    // },
+    // seedUsers: function () {
+    //   this.users.forEach((params) => {
+    //     console.log(params);
+    //     axios.post("/users", params).then((response) => {
+    //       console.log(response);
+    //     });
+    //   });
+    // },
     logIn: function () {
       this.fieldset = document.getElementById("loginFieldset");
       document.getElementById("loginForm").classList.add("was-validated");
