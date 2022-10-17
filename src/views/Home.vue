@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <div v-if="!loaded">
+    <div v-if="!loaded && wheelgif">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
-    <transition>
+    <transition mode="out-in">
       <div v-if="loaded">
         <div class="row">
           <div class="col-12 mb-5">
@@ -412,6 +412,7 @@ export default {
       loaded: false,
       indexview: false,
       me: null,
+      wheelgif: true,
     };
   },
   created: function () {
@@ -449,8 +450,9 @@ export default {
     },
     getEveryone: function () {
       this.indexview = true;
+      this.loaded = false;
       axios.get("/users").then((response) => {
-        console.log(response.data);
+        this.loaded = true;
         var my_id = this.me.id;
         this.everyone = response.data.filter(function (user) {
           return user.id != my_id;
@@ -458,9 +460,11 @@ export default {
       });
     },
     getUsers: function () {
+      this.loaded = false;
       this.indexview = false;
       axios.get(`/families/${this.me.family_id}`).then((response) => {
         this.loaded = true;
+        this.wheelgif = false;
         console.log("family ping response", response.data);
         var my_id = this.me.id;
         this.family = response.data.users.filter(function (user) {
