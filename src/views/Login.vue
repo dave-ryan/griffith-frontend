@@ -44,7 +44,7 @@
               {{ buttonName }}
             </button>
           </div>
-          <div class="errors">
+          <div class="text-danger">
             {{ errors }}
           </div>
         </fieldset>
@@ -52,12 +52,6 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-.errors {
-  color: red;
-}
-</style>
 
 <script>
 import axios from "axios";
