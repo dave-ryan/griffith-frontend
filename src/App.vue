@@ -26,7 +26,7 @@
           <li>
             <router-link class="nav-link" to="/my-list">My List</router-link>
           </li>
-          <li v-if="user_name === `David`">
+          <li v-if="is_admin">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <li>
@@ -68,12 +68,15 @@ export default {
   data() {
     return {
       user_name: null,
+      is_admin: false,
     };
   },
 
   created: function () {
     if (localStorage.jwt && localStorage.user_name) {
       this.user_name = localStorage.user_name;
+      this.is_admin = localStorage.is_admin;
+      console.log("?", localStorage.is_admin, this.is_admin);
     } else {
       this.$router.push("/login");
     }
@@ -86,6 +89,7 @@ export default {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("jwt");
       localStorage.removeItem("user_name");
+      localStorage.removeItem("is_admin");
       this.user_name = null;
       this.$router.push("/login");
     },
