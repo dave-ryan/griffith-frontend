@@ -3,6 +3,7 @@ import Home from "../views/Home.vue";
 import MyList from "../views/MyList.vue";
 import Login from "../views/Login.vue";
 import Admin from "../views/Admin.vue";
+import Fly from "../views/Fly.vue";
 
 const routes = [
   {
@@ -16,14 +17,19 @@ const routes = [
     component: MyList,
   },
   {
-    path: "/Login",
+    path: "/login",
     name: "Login",
     component: Login,
   },
   {
-    path: "/Admin",
+    path: "/admin",
     name: "Admin",
     component: Admin,
+  },
+  {
+    path: "/fly",
+    name: "Fly",
+    component: Fly,
   },
 ];
 
