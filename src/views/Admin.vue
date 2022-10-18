@@ -209,26 +209,31 @@ export default {
   },
   methods: {
     getUsers: function () {
-      axios.get("/users/me").then((response) => {
-        this.me = response.data;
-        if (response.data.is_admin === false) {
-          this.$router.push("/");
-        } else {
-          axios
-            .get("/families")
-            .then((response) => {
-              this.families = response.data;
-              this.users = response.data
-                .map((family) => family.users)
-                .flat()
-                .sort((a, b) => a.name.localeCompare(b.name));
-              this.loaded = true;
-            })
-            .catch((error) => {
-              console.log("errors:", error);
-            });
-        }
-      });
+      axios
+        .get("/users/me")
+        .then((response) => {
+          this.me = response.data;
+          if (response.data.is_admin === false) {
+            this.$router.push("/");
+          } else {
+            axios
+              .get("/families")
+              .then((response) => {
+                this.families = response.data;
+                this.users = response.data
+                  .map((family) => family.users)
+                  .flat()
+                  .sort((a, b) => a.name.localeCompare(b.name));
+                this.loaded = true;
+              })
+              .catch((error) => {
+                console.log("errors:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.log("errors:", error);
+        });
     },
     resetData: function () {
       if (confirm("ARE YOU SURE YOU WANT TO RESET EVERYTHING???")) {
@@ -236,12 +241,11 @@ export default {
 
         axios
           .put("users/wipe", this.me)
-          .then((response) => {
-            console.log(response.data);
+          .then(() => {
             this.$root.logOut();
           })
           .catch((error) => {
-            console.log("errors", error, error.response);
+            console.log("errors", error);
             this.errors = error.response;
             this.loaded = true;
           });
@@ -253,24 +257,25 @@ export default {
     updateUser: function () {
       axios
         .patch(`/users/${this.editingUser.id}`, this.editingUser)
-        .then((response) => {
-          console.log(response);
-        })
         .catch((error) => {
-          console.log("errors", error, error.response);
+          console.log("errors", error);
           this.errors = error.response;
         });
     },
     deleteUser: function (user) {
       if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS USER?")) {
-        axios.delete(`/users/${user.id}`).then((response) => {
-          console.log(response);
-          if (response.status === 200) {
-            this.users = this.users.filter((remainingUser) => {
-              return remainingUser.id != user.id;
-            });
-          }
-        });
+        axios
+          .delete(`/users/${user.id}`)
+          .then((response) => {
+            if (response.status === 200) {
+              this.users = this.users.filter((remainingUser) => {
+                return remainingUser.id != user.id;
+              });
+            }
+          })
+          .catch((error) => {
+            console.log("errors:", error);
+          });
       }
     },
     flipAdmin: function () {
@@ -282,12 +287,11 @@ export default {
       ) {
         axios
           .post("/secret-santa-shuffle", this.me)
-          .then((response) => {
-            console.log(response.data);
+          .then(() => {
             this.visible = true;
           })
           .catch((error) => {
-            console.log("errors", error, error.response);
+            console.log("errors", error);
             this.errors = error.response;
           });
       }

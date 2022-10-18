@@ -423,7 +423,7 @@ export default {
         this.getUsers();
       })
       .catch((error) => {
-        console.log("errors", error, error.response);
+        console.log("errors", error);
         if (error.response.status === 401) {
           this.$root.logOut();
         }
@@ -451,13 +451,18 @@ export default {
     getEveryone: function () {
       this.indexview = true;
       this.loaded = false;
-      axios.get("/users").then((response) => {
-        this.loaded = true;
-        var my_id = this.me.id;
-        this.everyone = response.data.filter(function (user) {
-          return user.id != my_id;
+      axios
+        .get("/users")
+        .then((response) => {
+          this.loaded = true;
+          var my_id = this.me.id;
+          this.everyone = response.data.filter(function (user) {
+            return user.id != my_id;
+          });
+        })
+        .catch((error) => {
+          console.log("errors:", error);
         });
-      });
     },
     getUsers: function () {
       this.loaded = false;
@@ -465,7 +470,6 @@ export default {
       axios.get(`/families/${this.me.family_id}`).then((response) => {
         this.loaded = true;
         this.wheelgif = false;
-        console.log("family ping response", response.data);
         var my_id = this.me.id;
         this.family = response.data.users.filter(function (user) {
           return user.id != my_id;
@@ -474,19 +478,23 @@ export default {
       this.getSecretSanta();
     },
     toggleChristmasList: function (user) {
-      axios.get(`/users/${user.id}/christmaslist`).then((response) => {
-        this.family[user.id] = response.data;
-      });
+      axios
+        .get(`/users/${user.id}/christmaslist`)
+        .then((response) => {
+          this.family[user.id] = response.data;
+        })
+        .catch((error) => {
+          console.log("errors:", error);
+        });
     },
     getSecretSanta: function () {
       axios
         .get("/users/secretsanta")
         .then((response) => {
           this.secretSanta = response.data;
-          console.log("my secret santa", this.secretSanta);
         })
         .catch((error) => {
-          console.log("errors", error.response);
+          console.log("errors", error);
         });
     },
   },

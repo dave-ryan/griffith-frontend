@@ -363,7 +363,7 @@ export default {
           this.myList = response.data;
         })
         .catch((errors) => {
-          console.log("my wished gifts", errors.response);
+          console.log("errors", errors);
           if (errors.response.status === 401) {
             this.$root.logOut();
           }
@@ -379,35 +379,44 @@ export default {
       if (this.checkForms(this.editingItem)) {
         axios
           .patch(`/wishedgifts/${this.editingItem.id}`, this.editingItem)
-          .then((response) => {
-            console.log(response);
+          .then(() => {
             var foundItem = this.myList.find(
               (item) => item.id === this.editingItem.id
             );
 
             foundItem.name = this.editingItem.name;
             foundItem.link = this.editingItem.link;
+          })
+          .catch((error) => {
+            console.log("errors", error);
           });
-      } else {
-        console.log("problem!");
       }
     },
     deleteItem: function (item) {
-      axios.delete(`/wishedgifts/${item.id}`).then((response) => {
-        console.log(response.data);
-        this.myList.splice(this.myList.indexOf(item), 1);
-      });
+      axios
+        .delete(`/wishedgifts/${item.id}`)
+        .then(() => {
+          this.myList.splice(this.myList.indexOf(item), 1);
+        })
+        .catch((error) => {
+          console.log("errors:", error);
+        });
     },
     createItem: function () {
       document.getElementById("newItemForm").classList.add("was-validated");
       if (this.checkForms(this.newItem)) {
-        axios.post("/wishedgifts", this.newItem).then((response) => {
-          this.myList.push(response.data);
-          this.newItem = {};
-          document
-            .getElementById("newItemForm")
-            .classList.remove("was-validated");
-        });
+        axios
+          .post("/wishedgifts", this.newItem)
+          .then((response) => {
+            this.myList.push(response.data);
+            this.newItem = {};
+            document
+              .getElementById("newItemForm")
+              .classList.remove("was-validated");
+          })
+          .catch((error) => {
+            console.log("errors:", error);
+          });
 
         setTimeout(() => {
           window.scrollTo(
@@ -425,8 +434,6 @@ export default {
       }
     },
     batchCreate: function () {
-      console.log("batch items", this.batchItems.split("\n"));
-      console.log("batch links", this.batchLinks.split("\n"));
       var arrayOfItems = this.batchItems.split("\n");
       var arrayOfLinks = this.batchLinks.split("\n");
       for (let i = 0; i < arrayOfItems.length; i++) {
@@ -435,11 +442,15 @@ export default {
             name: arrayOfItems[i],
             link: arrayOfLinks[i],
           };
-          axios.post("/wishedgifts", newItem).then((response) => {
-            console.log("response = ", response.data);
-            newItem.id = response.data.id;
-            this.myList.push(newItem);
-          });
+          axios
+            .post("/wishedgifts", newItem)
+            .then((response) => {
+              newItem.id = response.data.id;
+              this.myList.push(newItem);
+            })
+            .catch((error) => {
+              console.log("errors:", error);
+            });
         }
       }
       this.batchItems = "";

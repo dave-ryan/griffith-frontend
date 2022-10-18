@@ -76,7 +76,6 @@ export default {
     if (localStorage.jwt && localStorage.user_name) {
       this.user_name = localStorage.user_name;
       this.is_admin = localStorage.is_admin;
-      console.log("?", localStorage.is_admin, this.is_admin);
     } else {
       this.$router.push("/login");
     }
