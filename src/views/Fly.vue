@@ -21,9 +21,9 @@ export default {
         console.log(r);
         this.$router.push("/login");
       })
-      .catch((error) => {
-        console.log("errors", error.response.data.errors);
-        this.errors = error.response.data.errors;
+      .catch((errors) => {
+        console.log("errors", errors.response.data.errors);
+        this.errors = errors.response.data.errors;
       });
   },
 };

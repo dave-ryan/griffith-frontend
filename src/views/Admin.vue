@@ -192,6 +192,7 @@
 
 <script>
 import axios from "axios";
+import { ErrorCodes } from "vue";
 export default {
   data: function () {
     return {
@@ -226,13 +227,13 @@ export default {
                   .sort((a, b) => a.name.localeCompare(b.name));
                 this.loaded = true;
               })
-              .catch((error) => {
-                console.log("errors:", error);
+              .catch((errors) => {
+                console.log("errors: ", errors.response.data.errors);
               });
           }
         })
-        .catch((error) => {
-          console.log("errors:", error);
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
         });
     },
     resetData: function () {
@@ -244,9 +245,9 @@ export default {
           .then(() => {
             this.$root.logOut();
           })
-          .catch((error) => {
-            console.log("errors", error);
-            this.errors = error.response;
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
+            this.errors = ErrorCodes.response;
             this.loaded = true;
           });
       }
@@ -257,9 +258,9 @@ export default {
     updateUser: function () {
       axios
         .patch(`/users/${this.editingUser.id}`, this.editingUser)
-        .catch((error) => {
-          console.log("errors", error);
-          this.errors = error.response;
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
+          this.errors = ErrorCodes.response;
         });
     },
     deleteUser: function (user) {
@@ -273,8 +274,8 @@ export default {
               });
             }
           })
-          .catch((error) => {
-            console.log("errors:", error);
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
           });
       }
     },
@@ -290,9 +291,9 @@ export default {
           .then(() => {
             this.visible = true;
           })
-          .catch((error) => {
-            console.log("errors", error);
-            this.errors = error.response;
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
+            this.errors = ErrorCodes.response;
           });
       }
     },

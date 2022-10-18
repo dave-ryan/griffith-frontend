@@ -422,9 +422,9 @@ export default {
         this.me = response.data;
         this.getUsers();
       })
-      .catch((error) => {
-        console.log("errors", error);
-        if (error.response.status === 401) {
+      .catch((errors) => {
+        console.log("errors: ", errors.response.data.errors);
+        if (errors.response.status === 401) {
           this.$root.logOut();
         }
       });
@@ -436,15 +436,15 @@ export default {
         item.purchaser = null;
         axios
           .patch(`/wishedgifts/${item.id}`, { purchaser_id: null })
-          .catch((error) => {
-            console.log("errors:", error);
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
           });
       } else {
         item.purchaser_id = this.me.id;
         axios
           .patch(`/wishedgifts/${item.id}`, { purchaser_id: this.me.id })
-          .catch((error) => {
-            console.log("errors:", error);
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
           });
       }
     },
@@ -460,8 +460,8 @@ export default {
             return user.id != my_id;
           });
         })
-        .catch((error) => {
-          console.log("errors:", error);
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
         });
     },
     getUsers: function () {
@@ -483,8 +483,8 @@ export default {
         .then((response) => {
           this.family[user.id] = response.data;
         })
-        .catch((error) => {
-          console.log("errors:", error);
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
         });
     },
     getSecretSanta: function () {
@@ -493,8 +493,8 @@ export default {
         .then((response) => {
           this.secretSanta = response.data;
         })
-        .catch((error) => {
-          console.log("errors", error);
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
         });
     },
   },

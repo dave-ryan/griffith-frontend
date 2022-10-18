@@ -83,7 +83,7 @@ export default {
             this.$router.push("/");
           })
           .catch((errors) => {
-            console.log("errors", errors);
+            console.log("errors: ", errors.response.data.errors);
             document
               .getElementById("loginForm")
               .classList.remove("was-validated");

@@ -363,7 +363,7 @@ export default {
           this.myList = response.data;
         })
         .catch((errors) => {
-          console.log("errors", errors);
+          console.log("errors: ", errors.response.data.errors);
           if (errors.response.status === 401) {
             this.$root.logOut();
           }
@@ -387,8 +387,8 @@ export default {
             foundItem.name = this.editingItem.name;
             foundItem.link = this.editingItem.link;
           })
-          .catch((error) => {
-            console.log("errors", error);
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
           });
       }
     },
@@ -398,8 +398,8 @@ export default {
         .then(() => {
           this.myList.splice(this.myList.indexOf(item), 1);
         })
-        .catch((error) => {
-          console.log("errors:", error);
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
         });
     },
     createItem: function () {
@@ -414,8 +414,8 @@ export default {
               .getElementById("newItemForm")
               .classList.remove("was-validated");
           })
-          .catch((error) => {
-            console.log("errors:", error);
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
           });
 
         setTimeout(() => {
@@ -448,8 +448,8 @@ export default {
               newItem.id = response.data.id;
               this.myList.push(newItem);
             })
-            .catch((error) => {
-              console.log("errors:", error);
+            .catch((errors) => {
+              console.log("errors: ", errors.response.data.errors);
             });
         }
       }
