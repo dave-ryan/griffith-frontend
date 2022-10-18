@@ -76,7 +76,7 @@ export default {
     if (localStorage.jwt && localStorage.user_name) {
       this.user_name = localStorage.user_name;
       this.is_admin = localStorage.is_admin;
-    } else {
+    } else if (window.location.pathname !== "/fly") {
       this.$router.push("/login");
     }
   },

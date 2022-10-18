@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <img src="../assets/images/loading.gif" alt="" />
+    <img v-if="!errors" src="../assets/images/loading.gif" alt="" />
+    <div>{{ errors }}</div>
   </div>
 </template>
 
@@ -8,21 +9,21 @@
 import axios from "axios";
 
 export default {
+  data() {
+    return {
+      errors: null,
+    };
+  },
   created: function () {
     axios
-      .get("/users")
-      .then((response) => {
-        if (response.status === 200 && response.data.length === 0) {
-          axios.put("/users/wipe").then((r) => {
-            console.log(r);
-            this.$router.push("/login");
-          });
-        } else {
-          this.$router.push("/login");
-        }
+      .put("/users/wipe")
+      .then((r) => {
+        console.log(r);
+        this.$router.push("/login");
       })
       .catch((error) => {
-        console.log("errors", error);
+        console.log("errors", error.response.data.errors);
+        this.errors = error.response.data.errors;
       });
   },
 };
