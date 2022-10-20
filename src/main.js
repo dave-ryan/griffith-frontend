@@ -9,7 +9,7 @@ import "bootstrap";
 axios.defaults.baseURL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : "https://griffith.fly.dev/";
+    : "https://griffith3.fly.dev/";
 
 createApp(App).use(router).mount("#app");
 
