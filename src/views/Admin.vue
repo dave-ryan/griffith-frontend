@@ -192,7 +192,6 @@
 
 <script>
 import axios from "axios";
-import { ErrorCodes } from "vue";
 export default {
   data: function () {
     return {
@@ -247,7 +246,7 @@ export default {
           })
           .catch((errors) => {
             console.log("errors: ", errors.response.data.errors);
-            this.errors = ErrorCodes.response;
+            this.errors = errors.response;
             this.loaded = true;
           });
       }
@@ -260,7 +259,7 @@ export default {
         .patch(`/users/${this.editingUser.id}`, this.editingUser)
         .catch((errors) => {
           console.log("errors: ", errors.response.data.errors);
-          this.errors = ErrorCodes.response;
+          this.errors = errors.response;
         });
     },
     deleteUser: function (user) {
@@ -293,7 +292,7 @@ export default {
           })
           .catch((errors) => {
             console.log("errors: ", errors.response.data.errors);
-            this.errors = ErrorCodes.response;
+            this.errors = errors.response;
           });
       }
     },
