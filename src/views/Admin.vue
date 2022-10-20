@@ -213,8 +213,8 @@ export default {
         .get("/users/me")
         .then((response) => {
           this.me = response.data;
-          if (response.data.is_admin === false) {
-            this.$router.push("/");
+          if (!response.data.is_admin) {
+            this.$root.logOut();
           } else {
             axios
               .get("/families")

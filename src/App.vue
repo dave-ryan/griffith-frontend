@@ -1,7 +1,7 @@
 <template>
   <nav
     class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark"
-    v-if="user_name"
+    v-if="userName"
     id="navbar"
   >
     <div class="container-fluid">
@@ -26,11 +26,11 @@
           <li>
             <router-link class="nav-link" to="/my-list">My List</router-link>
           </li>
-          <li v-if="isAdmin">
+          <li v-if="isAdmin === `true`">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <li>
-            <span class="nav-link disabled"> Logged in as {{ userName }} </span>
+            <span class="nav-link disabled"> Logged in as {{ userName }}</span>
           </li>
         </ul>
       </div>
@@ -80,17 +80,15 @@ export default {
   },
   methods: {
     loginUpdate: function (userName) {
-      this.user_name = userName;
-      if (localStorage.is_admin) {
-        this.isAdmin = localStorage.is_admin;
-      }
+      this.userName = userName;
+      this.isAdmin = localStorage.is_admin;
     },
     logOut: function () {
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("jwt");
       localStorage.removeItem("user_name");
       localStorage.removeItem("is_admin");
-      this.user_name = null;
+      this.userName = null;
       this.$router.push("/login");
     },
   },
