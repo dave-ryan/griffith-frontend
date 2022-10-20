@@ -79,6 +79,7 @@ export default {
             localStorage.setItem("jwt", response.data.jwt);
             localStorage.setItem("is_admin", response.data.is_admin);
             localStorage.setItem("user_name", response.data.user_name);
+            console.log(response.data);
             this.$emit("login_change", response.data.user_name);
             this.$router.push("/");
           })
@@ -87,6 +88,9 @@ export default {
             document
               .getElementById("loginForm")
               .classList.remove("was-validated");
+            console.log(errors.response);
+            console.log(errors.response.data);
+            console.log(errors.response.data.error);
             this.errors = errors.response.data.error;
             this.fieldset.removeAttribute("disabled");
             this.buttonName = "Log In";
