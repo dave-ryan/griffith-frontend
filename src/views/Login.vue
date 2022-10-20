@@ -88,10 +88,7 @@ export default {
             document
               .getElementById("loginForm")
               .classList.remove("was-validated");
-            console.log(errors.response);
-            console.log(errors.response.data);
-            console.log(errors.response.data.error);
-            this.errors = errors.response.data.error;
+            this.errors = errors.response.data;
             this.fieldset.removeAttribute("disabled");
             this.buttonName = "Log In";
           });
