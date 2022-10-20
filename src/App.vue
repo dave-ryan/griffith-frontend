@@ -26,13 +26,11 @@
           <li>
             <router-link class="nav-link" to="/my-list">My List</router-link>
           </li>
-          <li v-if="is_admin">
+          <li v-if="isAdmin">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <li>
-            <span class="nav-link disabled">
-              Logged in as {{ user_name }}
-            </span>
+            <span class="nav-link disabled"> Logged in as {{ userName }} </span>
           </li>
         </ul>
       </div>
@@ -67,15 +65,15 @@ import axios from "axios";
 export default {
   data() {
     return {
-      user_name: null,
-      is_admin: false,
+      userName: null,
+      isAdmin: false,
     };
   },
 
   created: function () {
     if (localStorage.jwt && localStorage.user_name) {
-      this.user_name = localStorage.user_name;
-      this.is_admin = localStorage.is_admin;
+      this.userName = localStorage.user_name;
+      this.isAdmin = localStorage.is_admin;
     } else if (window.location.pathname !== "/fly") {
       this.$router.push("/login");
     }
@@ -83,6 +81,9 @@ export default {
   methods: {
     loginUpdate: function (userName) {
       this.user_name = userName;
+      if (localStorage.is_admin) {
+        this.isAdmin = localStorage.is_admin;
+      }
     },
     logOut: function () {
       delete axios.defaults.headers.common["Authorization"];
