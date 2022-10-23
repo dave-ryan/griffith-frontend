@@ -16,6 +16,7 @@
                 id="name-input"
                 v-model="inputParams.name"
                 required
+                autocomplete="username"
               />
               <div class="invalid-feedback">Please enter your first name</div>
             </div>
@@ -27,11 +28,12 @@
             </div>
             <div class="col-auto">
               <input
-                type="text"
+                type="password"
                 class="form-control form-control-sm"
                 id="password-input"
                 v-model="inputParams.password"
                 required
+                autocomplete="current-password"
               />
               <div class="invalid-feedback">
                 Please enter your password (last name)
@@ -79,7 +81,6 @@ export default {
             localStorage.setItem("jwt", response.data.jwt);
             localStorage.setItem("is_admin", response.data.is_admin);
             localStorage.setItem("user_name", response.data.user_name);
-            console.log(response.data);
             this.$emit("login_change", response.data.user_name);
             this.$router.push("/");
           })
