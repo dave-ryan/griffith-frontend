@@ -234,7 +234,6 @@ export default {
             axios
               .get("/families")
               .then((response) => {
-                console.log(response.data);
                 this.families = response.data;
                 this.users = response.data
                   .map((family) => family.users)
@@ -269,17 +268,12 @@ export default {
     },
     openEditModal: function (user) {
       this.editingUser = user;
-      console.log(">>>", user);
       this.editingUser.familyName = user.family.name;
       this.editingUser.secretSantaName = user.mystery_santa
         ? user.mystery_santa.name
         : null;
-      console.log(this.editingUser);
     },
     updateUser: function (user) {
-      // console.log("families", this.families);
-      // console.log("user", user);
-
       var userParams = {
         id: user.id,
         name: user.name,
@@ -299,7 +293,7 @@ export default {
           userParams.family_id = family.id;
         }
       });
-      console.log("parm", userParams);
+
       axios.patch(`/users/${userParams.id}`, userParams).catch((errors) => {
         console.log("errors: ", errors);
         this.errors = errors.response;
