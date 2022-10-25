@@ -103,13 +103,20 @@
                   </div>
                 </div>
                 <div class="input-group mb-3" v-if="editingUser.mystery_santa">
-                  <span class="input-group-text">Secret Santa</span>
-                  <input
-                    type="text"
-                    v-model="editingUser.mystery_santa.id"
-                    class="form-control"
-                    required
-                  />
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" for="secretSantaSelector"
+                      >Secret Santa</label
+                    >
+                  </div>
+                  <select
+                    id="secretSantaSelector"
+                    class="custom-select"
+                    v-model="editingUser.secretSantaName"
+                  >
+                    <option v-for="user in users" :key="user.id">
+                      {{ user.name }}
+                    </option>
+                  </select>
                 </div>
 
                 <div class="input-group mb-3">
@@ -203,6 +210,7 @@ export default {
         name: "",
         familyid: 1,
         familyName: "",
+        secretSantaName: "",
         is_admin: false,
         secretSanta: null,
       },
@@ -226,6 +234,7 @@ export default {
             axios
               .get("/families")
               .then((response) => {
+                console.log(response.data);
                 this.families = response.data;
                 this.users = response.data
                   .map((family) => family.users)
@@ -260,23 +269,30 @@ export default {
     },
     openEditModal: function (user) {
       this.editingUser = user;
-      this.families.forEach((family) => {
-        if (user.family_id === family.id) {
-          this.editingUser.familyName = family.name;
-        }
-      });
+      console.log(">>>", user);
+      this.editingUser.familyName = user.family.name;
+      this.editingUser.secretSantaName = user.mystery_santa
+        ? user.mystery_santa.name
+        : null;
       console.log(this.editingUser);
     },
     updateUser: function (user) {
-      console.log("families", this.families);
-      console.log("user", user);
+      // console.log("families", this.families);
+      // console.log("user", user);
 
       var userParams = {
         id: user.id,
         name: user.name,
-        is_admin: user.is_admin,
-        mystery_santa_id: user.mystery_santa ? user.mystery_santa.id : null,
+        is_admin: user.is_admin ? true : false,
       };
+
+      this.users.forEach((loopUser) => {
+        if (user.secretSantaName === loopUser.name) {
+          console.log(user.secretSantaName);
+          console.log(loopUser);
+          userParams.mystery_santa_id = loopUser.id;
+        }
+      });
 
       this.families.forEach((family) => {
         if (family.name === user.familyName) {
