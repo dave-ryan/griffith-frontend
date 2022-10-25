@@ -16,7 +16,6 @@
                 id="name-input"
                 v-model="inputParams.name"
                 required
-                autocomplete="username"
               />
               <div class="invalid-feedback">Please enter your first name</div>
             </div>
@@ -33,7 +32,6 @@
                 id="password-input"
                 v-model="inputParams.password"
                 required
-                autocomplete="current-password"
               />
               <div class="invalid-feedback">
                 Please enter your password (last name)
