@@ -326,6 +326,7 @@ export default {
           .post("/secret-santa-shuffle", this.me)
           .then(() => {
             this.visible = true;
+            this.getUsers();
           })
           .catch((errors) => {
             console.log("errors: ", errors.response.data.errors);
