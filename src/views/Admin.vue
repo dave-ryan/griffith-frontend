@@ -39,7 +39,7 @@
                 class="btn btn-outline-success me-2"
                 data-bs-toggle="modal"
                 data-bs-target="#editModal"
-                @click="openEditUser(user)"
+                @click="openEditModal(user)"
               >
                 Edit
               </button>
@@ -73,7 +73,7 @@
         <div class="modal-dialog" id="editingModal">
           <div class="modal-content">
             <form
-              @submit.prevent="updateUser"
+              @submit.prevent="updateUser(editingUser)"
               id="editingUserForm"
               class="mt-5 mb-4"
               novalidate
@@ -102,51 +102,52 @@
                     Can't have a user without a name
                   </div>
                 </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text">Family ID</span>
+                <div class="input-group mb-3" v-if="editingUser.mystery_santa">
+                  <span class="input-group-text">Secret Santa</span>
                   <input
                     type="text"
-                    v-model="editingUser.family_id"
+                    v-model="editingUser.mystery_santa.id"
                     class="form-control"
                     required
                   />
-                  <div class="invalid-feedback">Family ID requires</div>
                 </div>
-                <div v-for="family in families" :key="family.id">
-                  {{ family.name }} / {{ family.id }}
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" for="familySelector"
+                      >Family</label
+                    >
+                  </div>
+                  <select
+                    id="familySelector"
+                    class="custom-select"
+                    v-model="editingUser.familyName"
+                  >
+                    <option v-for="family in families" :key="family.id">
+                      {{ family.name }}
+                    </option>
+                  </select>
                 </div>
-                <div
-                  class="input-group mb-3"
-                  v-if="editingUser.is_admin"
-                  @click="flipAdmin"
-                >
+
+                <div class="input-group mb-3" @click="flipAdmin">
                   <div class="form-check form-check-inline">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      value=""
-                      checked
-                    />
-                    <label class="form-check-label" for="flexCheckDefault">
+                    <label class="form-check-label" for="">
                       Admin Status
                     </label>
-                  </div>
-                </div>
-                <div
-                  class="input-group mb-3"
-                  v-if="!editingUser.is_admin"
-                  @click="flipAdmin"
-                >
-                  <div class="form-check form-check-inline">
                     <input
                       type="checkbox"
                       class="form-check-input"
                       value=""
                       @click="flipAdmin"
+                      v-if="!editingUser.is_admin"
                     />
-                    <label class="form-check-label" for="flexCheckDefault">
-                      Admin Status
-                    </label>
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      checked
+                      @click="flipAdmin"
+                      v-if="editingUser.is_admin"
+                    />
                   </div>
                 </div>
               </div>
@@ -198,7 +199,13 @@ export default {
       me: null,
       visible: false,
       users: [],
-      editingUser: { name: "", familyid: 1, is_admin: false },
+      editingUser: {
+        name: "",
+        familyid: 1,
+        familyName: "",
+        is_admin: false,
+        secretSanta: null,
+      },
       errors: null,
       families: [],
       loaded: false,
@@ -251,16 +258,36 @@ export default {
           });
       }
     },
-    openEditUser: function (user) {
+    openEditModal: function (user) {
       this.editingUser = user;
+      this.families.forEach((family) => {
+        if (user.family_id === family.id) {
+          this.editingUser.familyName = family.name;
+        }
+      });
+      console.log(this.editingUser);
     },
-    updateUser: function () {
-      axios
-        .patch(`/users/${this.editingUser.id}`, this.editingUser)
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
-          this.errors = errors.response;
-        });
+    updateUser: function (user) {
+      console.log("families", this.families);
+      console.log("user", user);
+
+      var userParams = {
+        id: user.id,
+        name: user.name,
+        is_admin: user.is_admin,
+        mystery_santa_id: user.mystery_santa ? user.mystery_santa.id : null,
+      };
+
+      this.families.forEach((family) => {
+        if (family.name === user.familyName) {
+          userParams.family_id = family.id;
+        }
+      });
+      console.log("parm", userParams);
+      axios.patch(`/users/${userParams.id}`, userParams).catch((errors) => {
+        console.log("errors: ", errors);
+        this.errors = errors.response;
+      });
     },
     deleteUser: function (user) {
       if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS USER?")) {
@@ -274,7 +301,7 @@ export default {
             }
           })
           .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
+            console.log("errors: ", errors.response);
           });
       }
     },
