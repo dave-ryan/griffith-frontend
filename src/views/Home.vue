@@ -467,7 +467,7 @@ export default {
     getUsers: function () {
       this.loaded = false;
       this.indexview = false;
-      axios.get(`/families/${this.me.family_id}`).then((response) => {
+      axios.get(`/families/${this.me.family.id}`).then((response) => {
         this.loaded = true;
         this.wheelgif = false;
         var my_id = this.me.id;
@@ -489,7 +489,7 @@ export default {
     },
     getSecretSanta: function () {
       axios
-        .get("/users/secretsanta")
+        .get(`/users/${this.me.mystery_santa.id}`)
         .then((response) => {
           this.secretSanta = response.data;
         })
