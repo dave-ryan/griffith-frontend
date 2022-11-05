@@ -69,8 +69,9 @@
         tabindex="-1"
         aria-labelledby="editModalLabel"
         aria-hidden="true"
+        data-bs-backdrop="static"
       >
-        <div class="modal-dialog" id="editingModal">
+        <div class="modal-dialog modal-dialog-centered" id="editingModal">
           <div class="modal-content">
             <form
               @submit.prevent="updateUser(editingUser)"

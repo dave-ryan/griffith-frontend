@@ -110,8 +110,9 @@
           tabindex="-1"
           aria-labelledby="editModalLabel"
           aria-hidden="true"
+          data-bs-backdrop="static"
         >
-          <div class="modal-dialog" id="editingModal">
+          <div class="modal-dialog modal-dialog-centered" id="editingModal">
             <div class="modal-content">
               <form
                 @submit.prevent="updateItem"
@@ -189,8 +190,13 @@
 
         <!-- Delete Modal -->
 
-        <div class="modal fade" id="deleteModal" tabindex="-1">
-          <div class="modal-dialog">
+        <div
+          class="modal fade"
+          id="deleteModal"
+          tabindex="-1"
+          data-bs-backdrop="static"
+        >
+          <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header text-center">
                 <div class="text-danger w-100 display-6">WARNING!</div>
@@ -230,8 +236,13 @@
 
         <!-- Batch add Modal -->
 
-        <div class="modal fade" id="batchModal" tabindex="-1">
-          <div class="modal-dialog modal-xl">
+        <div
+          class="modal fade"
+          id="batchModal"
+          tabindex="-1"
+          data-bs-backdrop="static"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
               <div class="modal-header">
                 <button
