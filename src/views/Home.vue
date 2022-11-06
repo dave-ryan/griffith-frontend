@@ -12,14 +12,14 @@
               class="btn btn-outline-primary"
               v-if="!indexview"
             >
-              Load everyone's lists
+              Load Everyone's Lists
             </button>
             <button
               @click="getUsers"
               class="btn btn-outline-primary"
               v-if="indexview"
             >
-              Load your family's list
+              Load Your Family's List
             </button>
           </div>
 
@@ -167,7 +167,7 @@
           </div>
 
           <div class="col-12" v-if="!indexview">
-            <h3>Your family</h3>
+            <h3>Your Family</h3>
             <div class="row mt-3" v-for="user in family" :key="user.id">
               <div class="col-12-">
                 <button
@@ -288,7 +288,7 @@
         <div class="row mb-5" v-if="secretSanta && !indexview">
           <div class="col-12">
             <hr />
-            <h3 class="mt-3 mb-4">Your secret santa</h3>
+            <h3 class="mt-3 mb-4">Your Secret Santa</h3>
             <button
               class="btn btn-outline-success"
               data-bs-toggle="collapse"

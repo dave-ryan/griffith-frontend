@@ -12,7 +12,7 @@
             <thead class="table-dark">
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Wished gift</th>
+                <th scope="col">Wished Gift</th>
                 <th scope="col">Link</th>
                 <th scope="col"></th>
               </tr>
@@ -66,7 +66,7 @@
           data-bs-toggle="modal"
           data-bs-target="#batchModal"
         >
-          Add multiple items to your list at once
+          Add Multiple Items To Your List At Once
         </button>
         <hr />
         <div class="row">
@@ -78,9 +78,9 @@
               class="mt-5 mb-4"
               novalidate
             >
-              <h5 class="mb-3">New item for your Christmas List:</h5>
+              <h5 class="mb-3">New Item For Your Christmas List:</h5>
               <div class="input-group mb-3">
-                <span class="input-group-text">Name/description of item</span>
+                <span class="input-group-text">Name/Description of Item</span>
                 <input
                   type="text"
                   v-model="newItem.name"
@@ -93,7 +93,8 @@
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text">
-                  Online shopping link (optional)
+                  Online Shopping Link&nbsp;
+                  <span class="fw-light"> (optional) </span>
                 </span>
                 <input
                   type="text"
@@ -102,7 +103,7 @@
                 />
               </div>
               <button class="btn btn-success" type="submit">
-                Add this to your list
+                Add This To Your List
               </button>
             </form>
           </div>
