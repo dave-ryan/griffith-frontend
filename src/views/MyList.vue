@@ -59,46 +59,39 @@
           </table>
         </div>
         <hr />
-        <button
-          type="button"
-          class="btn btn-outline-success p-4"
-          data-bs-toggle="modal"
-          data-bs-target="#batchModal"
-        >
-          Add Multiple Items To Your List At Once
-        </button>
-        <hr />
         <div class="row">
           <div class="col"></div>
           <div class="col-md-8 col-12">
             <form
               @submit.prevent="createItem"
               id="newItemForm"
-              class="mt-5 mb-4"
+              class="mt-4 mb-4"
               novalidate
             >
               <h5 class="mb-3">New Item For Your Christmas List:</h5>
+              <label class="input-group-text">Name/Description</label>
               <div class="input-group mb-3">
-                <span class="input-group-text">Name/Description of Item</span>
                 <input
                   type="text"
                   v-model="newItem.name"
                   class="form-control"
                   required
+                  id="newItemName"
                 />
                 <div class="invalid-feedback">
-                  What do you want for Christmas?
+                  What Do You Want For Christmas?
                 </div>
               </div>
+              <label class="input-group-text">
+                Online Shopping Link&nbsp;
+                <span class="fw-light"> (optional) </span>
+              </label>
               <div class="input-group mb-3">
-                <span class="input-group-text">
-                  Online Shopping Link&nbsp;
-                  <span class="fw-light"> (optional) </span>
-                </span>
                 <input
                   type="text"
                   v-model="newItem.link"
                   class="form-control"
+                  id="newItemLink"
                 />
               </div>
               <button class="btn btn-success" type="submit">
@@ -108,6 +101,16 @@
           </div>
           <div class="col"></div>
         </div>
+        <hr />
+        <button
+          type="button"
+          class="btn btn-outline-success p-4 mb-5 mt-5"
+          data-bs-toggle="modal"
+          data-bs-target="#batchModal"
+        >
+          Add Multiple Items To Your List At Once
+        </button>
+
         <!-- Edit Modal -->
         <div
           class="modal fade"
@@ -142,7 +145,7 @@
 
                 <div class="modal-body">
                   <label class="input-group-text" for="editName"
-                    >Name/Description Of Item</label
+                    >Name/Description</label
                   >
                   <div class="input-group mb-3">
                     <input
@@ -153,7 +156,7 @@
                       id="editName"
                     />
                     <div class="invalid-feedback">
-                      What do you want for Christmas?
+                      What Do You Want For Christmas?
                     </div>
                   </div>
                   <label class="input-group-text" for="editLink">
