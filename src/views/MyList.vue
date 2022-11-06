@@ -5,10 +5,9 @@
     </div>
     <transition>
       <div v-if="loaded">
-        <div class="mb-5">
+        <div class="mb-5 table-responsive">
           <h2 class="mt-2 mb-5">Your Christmas List</h2>
-
-          <table class="table table-striped table-responsive">
+          <table class="table table-striped">
             <thead class="table-dark">
               <tr>
                 <th scope="col">#</th>
