@@ -117,7 +117,6 @@
               <form
                 @submit.prevent="updateItem"
                 id="editingItemForm"
-                class="mt-5 mb-4"
                 novalidate
               >
                 <div class="modal-header">
@@ -131,6 +130,7 @@
                     aria-label="Close"
                   ></button>
                 </div>
+
                 <div class="modal-body">
                   <div class="input-group mb-3">
                     <span class="input-group-text"
@@ -245,6 +245,9 @@
           <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
               <div class="modal-header">
+                <h4 class="col fw-bold text-center mt-2">
+                  Add Items One Line At A Time
+                </h4>
                 <button
                   type="button"
                   class="btn-close"
@@ -255,21 +258,19 @@
 
               <div class="modal-body">
                 <div class="row">
-                  <div class="col mb-3">
-                    <h5>Add things one line at a time.</h5>
-
-                    <p>
-                      (If you have links, make sure they line up. See the
-                      example below..)
-                    </p>
+                  <div class="col mb-3 fw-light">
+                    If you have links, make sure they line up. See the example
+                    below..
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-6">
                     <div class="input">
-                      <label for="floatingTextarea-Gift" class="fw-bold"
-                        >Wished for:</label
-                      >
+                      <h4>
+                        <label for="floatingTextarea-Gift" class="fw-bold"
+                          >Wished For</label
+                        >
+                      </h4>
                       <textarea
                         class="form-control batch"
                         :class="needsWordWrap(batchItems)"
@@ -281,9 +282,11 @@
                   </div>
                   <div class="col-6">
                     <div class="input">
-                      <label for="floatingTextarea-Link" class="fw-bold"
-                        >Links:</label
-                      >
+                      <h4>
+                        <label for="floatingTextarea-Link" class="fw-bold"
+                          >Links</label
+                        >
+                      </h4>
                       <textarea
                         class="form-control batch"
                         :class="needsWordWrap(batchLinks)"
