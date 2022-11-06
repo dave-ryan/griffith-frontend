@@ -130,7 +130,7 @@
                     id="editModalLabel"
                     style="max-width: 400px"
                   >
-                    Editing: {{ editingItem.name }}
+                    {{ editingItem.name }}
                   </h3>
                   <button
                     type="button"
@@ -141,28 +141,31 @@
                 </div>
 
                 <div class="modal-body">
+                  <label class="input-group-text" for="editName"
+                    >Name/Description Of Item</label
+                  >
                   <div class="input-group mb-3">
-                    <span class="input-group-text"
-                      >Name/description of item</span
-                    >
                     <input
                       type="text"
                       v-model="editingItem.name"
                       class="form-control"
                       required
+                      id="editName"
                     />
                     <div class="invalid-feedback">
                       What do you want for Christmas?
                     </div>
                   </div>
+                  <label class="input-group-text" for="editLink">
+                    Online Shopping Link&nbsp;
+                    <span class="fw-light"> (optional) </span>
+                  </label>
                   <div class="input-group mb-3">
-                    <span class="input-group-text">
-                      Online shopping link (optional)
-                    </span>
                     <input
                       type="text"
                       v-model="editingItem.link"
                       class="form-control"
+                      id="editLink"
                     />
                   </div>
                 </div>
@@ -181,7 +184,7 @@
                     data-bs-dismiss="modal"
                     v-if="!editingItem.name"
                   >
-                    Save changes
+                    Save Changes
                   </button>
                   <button
                     type="submit"
@@ -236,7 +239,7 @@
                   data-bs-dismiss="modal"
                   @click="deleteItem(deletingItem)"
                 >
-                  Delete the item
+                  Delete The Item
                 </button>
               </div>
             </div>
@@ -322,7 +325,7 @@
                   data-bs-dismiss="modal"
                   @click="batchCreate"
                 >
-                  Add all items!
+                  Add All Items!
                 </button>
               </div>
             </div>
