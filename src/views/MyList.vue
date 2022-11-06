@@ -24,10 +24,10 @@
                 class="align-middle"
               >
                 <th scope="row">{{ index + 1 }}</th>
-                <td class="text-truncate">
+                <td class="text-truncate" style="max-width: 150px">
                   {{ item.name }}
                 </td>
-                <td class="text-truncate">
+                <td class="text-truncate" style="max-width: 150px">
                   <a
                     v-if="item.link"
                     :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -125,7 +125,11 @@
                 novalidate
               >
                 <div class="modal-header">
-                  <h3 class="modal-title" id="editModalLabel">
+                  <h3
+                    class="modal-title text-truncate"
+                    id="editModalLabel"
+                    style="max-width: 400px"
+                  >
                     Editing: {{ editingItem.name }}
                   </h3>
                   <button
@@ -333,17 +337,8 @@
 .container {
   padding-top: 80px;
 }
-i {
-  font-size: 1.8em;
-}
 .form-control.batch {
   min-height: 50vh;
-}
-#newItem {
-  max-width: 750px;
-}
-.text-truncate {
-  max-width: 150px;
 }
 </style>
 
