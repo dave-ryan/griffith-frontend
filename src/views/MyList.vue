@@ -224,8 +224,11 @@
               </div>
 
               <div class="modal-body">
-                Are you sure you want to delete "{{ deletingItem.name }}" from
-                your wishlist?
+                <div class="fw-bold">Are you sure you want to delete</div>
+                <div class="text-truncate" style="max-width: 450px">
+                  {{ deletingItem.name }}
+                </div>
+                <div class="fw-bold">from your wishlist?</div>
               </div>
               <div class="modal-footer">
                 <button
