@@ -85,8 +85,8 @@ button:active,
   animation-duration: 0.1s;
   -webkit-animation-timing-function: linear;
   animation-timing-function: linear;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: 2;
+  animation-iteration-count: 2;
   -webkit-animation-direction: alternate;
   animation-direction: alternate;
 }
