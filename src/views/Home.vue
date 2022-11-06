@@ -24,7 +24,7 @@
           </div>
 
           <div class="col-12">
-            <div v-if="indexview" class="m">
+            <div v-if="indexview" class="mb-5">
               <h3>Everyone</h3>
 
               <div
