@@ -35,9 +35,7 @@
         </ul>
       </div>
       <span class="nav-item">
-        <router-link class="nav-link" to="" @click="logOut()"
-          >Log Out</router-link
-        >
+        <button class="btn btn-danger" @click="logOut()">Log Out</button>
       </span>
     </div>
   </nav>
