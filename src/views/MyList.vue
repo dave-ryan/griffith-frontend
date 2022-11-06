@@ -9,15 +9,20 @@
           <h2 class="mt-2 mb-5">Your Christmas List</h2>
 
           <table class="table table-striped table-responsive">
-            <thead>
+            <thead class="table-dark">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Wished gift</th>
                 <th scope="col">Link</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in myList" :key="item.id">
+              <tr
+                v-for="(item, index) in myList"
+                :key="item.id"
+                class="align-middle"
+              >
                 <th scope="row">{{ index + 1 }}</th>
                 <td class="text-truncate">
                   {{ item.name }}
@@ -34,7 +39,7 @@
                 <td>
                   <button
                     type="button"
-                    class="btn btn-outline-success p-1 m-1"
+                    class="btn btn-outline-success"
                     data-bs-toggle="modal"
                     data-bs-target="#editModal"
                     @click="editItem(item)"
@@ -42,7 +47,7 @@
                     Edit
                   </button>
                   <button
-                    class="btn btn-outline-danger p-1 m-1"
+                    class="btn btn-outline-danger ms-2"
                     data-bs-toggle="modal"
                     data-bs-target="#deleteModal"
                     @click="deletingItem = item"
