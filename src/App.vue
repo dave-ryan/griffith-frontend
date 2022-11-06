@@ -19,7 +19,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav me-auto text-center" @click="collapseBurger">
           <li>
             <router-link class="nav-link" to="/">Home</router-link>
           </li>
@@ -33,10 +33,10 @@
             <span class="nav-link disabled"> Logged in as {{ userName }}</span>
           </li>
         </ul>
+        <div class="text-center">
+          <button class="btn btn-danger" @click="logOut()">Log Out</button>
+        </div>
       </div>
-      <span class="nav-item">
-        <button class="btn btn-danger" @click="logOut()">Log Out</button>
-      </span>
     </div>
   </nav>
   <router-view @login_change="loginUpdate"></router-view>
@@ -114,6 +114,11 @@ export default {
     loginUpdate: function (userName) {
       this.userName = userName;
       this.isAdmin = localStorage.is_admin;
+    },
+    collapseBurger: function () {
+      document
+        .getElementById("navbarSupportedContent")
+        .classList.remove("show");
     },
     logOut: function () {
       delete axios.defaults.headers.common["Authorization"];
