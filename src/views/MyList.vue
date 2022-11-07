@@ -291,11 +291,11 @@
                       </h4>
                       <textarea
                         class="form-control batch"
-                        :class="needsWordWrap(batchItems)"
-                        placeholder="Socks&#10;Throw pillows&#10;Any Marvel movie on Bluray"
+                        placeholder="&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;"
                         id="floatingTextarea-Gift"
                         v-model="batchItems"
-                      ></textarea>
+                      >
+                      </textarea>
                     </div>
                   </div>
                   <div class="col-6">
@@ -306,9 +306,8 @@
                         >
                       </h4>
                       <textarea
-                        class="form-control batch"
-                        :class="needsWordWrap(batchLinks)"
-                        placeholder="amazon.com/socks&#10;&#10;www.google.com/marvel-blurays"
+                        class="form-control batch word-wrap"
+                        placeholder="&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;"
                         id="floatingTextarea-Link"
                         v-model="batchLinks"
                       ></textarea>
@@ -348,6 +347,14 @@
 }
 .form-control.batch {
   min-height: 50vh;
+}
+#floatingTextarea-Link::placeholder {
+  background-image: url(../assets/images/links.png);
+  background-repeat: no-repeat;
+}
+#floatingTextarea-Gift::placeholder {
+  background-image: url(../assets/images/items.png);
+  background-repeat: no-repeat;
 }
 </style>
 
@@ -447,13 +454,6 @@ export default {
             document.body.scrollHeight || document.documentElement.scrollHeight
           );
         }, 400);
-      }
-    },
-    needsWordWrap: function (items) {
-      if (items === "") {
-        return "";
-      } else {
-        return "text-nowrap";
       }
     },
     batchCreate: function () {
