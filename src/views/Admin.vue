@@ -3,17 +3,61 @@
     <div v-if="!loaded">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
-    <div v-if="loaded">
-      <form @submit.prevent="secretSantaShuffle" novalidate>
+    <transition>
+      <div v-if="loaded">
+        <div class="row mt-3">
+          <div class="col-3"></div>
+          <div class="col-6">
+            <div v-for="user in users" :key="user.id" class="row mb-3">
+              <div class="col-6">
+                {{ user.name }} - id:<strong>{{ user.id }}</strong>
+                <i class="font-monospace">{{
+                  user.is_admin ? " Admin" : ""
+                }}</i>
+              </div>
+
+              <div class="col-6">
+                <button
+                  type="button"
+                  class="btn btn-outline-success me-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editModal"
+                  @click="openEditModal(user)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-outline-danger"
+                  @click="deleteUser(user)"
+                >
+                  Delete user
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-3"></div>
+        </div>
+
+        <div class="row mt-3 mb-3">
+          <div class="col-4"></div>
+          <div class="col-4">
+            <button class="btn btn-danger" @click="resetData">
+              Wipe data and reseed
+            </button>
+          </div>
+          <div class="col-4"></div>
+        </div>
         <div class="row mb-3">
           <div class="col-4"></div>
           <div class="col-4 text-danger">{{ errors }}</div>
           <div class="col-4"></div>
         </div>
-        <div class="row">
+        <div class="row mb-5">
           <div class="col-4"></div>
           <div class="col-4">
-            <button class="btn btn-outline-danger">Secret Santa Shuffle</button>
+            <button class="btn btn-outline-danger" @click="secretSantaShuffle">
+              Secret Santa Shuffle
+            </button>
           </div>
           <div class="col-4"></div>
         </div>
@@ -22,174 +66,139 @@
             Secret Santas have been shuffled!
           </div>
         </div>
-      </form>
 
-      <div class="row mt-3">
-        <div class="col-3"></div>
-        <div class="col-6">
-          <div v-for="user in users" :key="user.id" class="row mb-3">
-            <div class="col-6">
-              {{ user.name }} - id:<strong>{{ user.id }}</strong>
-              <i class="font-monospace">{{ user.is_admin ? " Admin" : "" }}</i>
-            </div>
-
-            <div class="col-6">
-              <button
-                type="button"
-                class="btn btn-outline-success me-2"
-                data-bs-toggle="modal"
-                data-bs-target="#editModal"
-                @click="openEditModal(user)"
+        <!-- Edit Modal -->
+        <div
+          class="modal fade"
+          id="editModal"
+          tabindex="-1"
+          aria-labelledby="editModalLabel"
+          aria-hidden="true"
+          data-bs-backdrop="static"
+        >
+          <div class="modal-dialog modal-dialog-centered" id="editingModal">
+            <div class="modal-content">
+              <form
+                @submit.prevent="updateUser(editingUser)"
+                id="editingUserForm"
+                class="mt-5 mb-4"
+                novalidate
               >
-                Edit
-              </button>
-              <button class="btn btn-outline-danger" @click="deleteUser(user)">
-                Delete user
-              </button>
+                <div class="modal-header">
+                  <h3 class="modal-title" id="editModalLabel">
+                    Editing: {{ editingUser.name }}
+                  </h3>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Username</span>
+                    <input
+                      type="text"
+                      v-model="editingUser.name"
+                      class="form-control"
+                      required
+                    />
+                    <div class="invalid-feedback">
+                      Can't have a user without a name
+                    </div>
+                  </div>
+                  <div
+                    class="input-group mb-3"
+                    v-if="editingUser.mystery_santa"
+                  >
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="secretSantaSelector"
+                        >Secret Santa</label
+                      >
+                    </div>
+                    <select
+                      id="secretSantaSelector"
+                      class="custom-select"
+                      v-model="editingUser.secretSantaName"
+                    >
+                      <option v-for="user in users" :key="user.id">
+                        {{ user.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="familySelector"
+                        >Family</label
+                      >
+                    </div>
+                    <select
+                      id="familySelector"
+                      class="custom-select"
+                      v-model="editingUser.familyName"
+                    >
+                      <option v-for="family in families" :key="family.id">
+                        {{ family.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="input-group mb-3" @click="flipAdmin">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label" for="">
+                        Admin Status
+                      </label>
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        value=""
+                        @click="flipAdmin"
+                        v-if="!editingUser.is_admin"
+                      />
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        checked
+                        @click="flipAdmin"
+                        v-if="editingUser.is_admin"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    class="btn btn-success disabled"
+                    data-bs-dismiss="modal"
+                    v-if="!editingUser.name"
+                  >
+                    Save changes
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-success"
+                    data-bs-dismiss="modal"
+                    v-if="editingUser.name"
+                  >
+                    Save changes
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-        <div class="col-3"></div>
       </div>
-
-      <div class="row mt-3 mb-3">
-        <div class="col-4"></div>
-        <div class="col-4">
-          <button class="btn btn-danger" @click="resetData">
-            Wipe data and reseed
-          </button>
-        </div>
-        <div class="col-4"></div>
-      </div>
-
-      <!-- Edit Modal -->
-      <div
-        class="modal fade"
-        id="editModal"
-        tabindex="-1"
-        aria-labelledby="editModalLabel"
-        aria-hidden="true"
-        data-bs-backdrop="static"
-      >
-        <div class="modal-dialog modal-dialog-centered" id="editingModal">
-          <div class="modal-content">
-            <form
-              @submit.prevent="updateUser(editingUser)"
-              id="editingUserForm"
-              class="mt-5 mb-4"
-              novalidate
-            >
-              <div class="modal-header">
-                <h3 class="modal-title" id="editModalLabel">
-                  Editing: {{ editingUser.name }}
-                </h3>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <div class="input-group mb-3">
-                  <span class="input-group-text">Username</span>
-                  <input
-                    type="text"
-                    v-model="editingUser.name"
-                    class="form-control"
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    Can't have a user without a name
-                  </div>
-                </div>
-                <div class="input-group mb-3" v-if="editingUser.mystery_santa">
-                  <div class="input-group-prepend">
-                    <label class="input-group-text" for="secretSantaSelector"
-                      >Secret Santa</label
-                    >
-                  </div>
-                  <select
-                    id="secretSantaSelector"
-                    class="custom-select"
-                    v-model="editingUser.secretSantaName"
-                  >
-                    <option v-for="user in users" :key="user.id">
-                      {{ user.name }}
-                    </option>
-                  </select>
-                </div>
-
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <label class="input-group-text" for="familySelector"
-                      >Family</label
-                    >
-                  </div>
-                  <select
-                    id="familySelector"
-                    class="custom-select"
-                    v-model="editingUser.familyName"
-                  >
-                    <option v-for="family in families" :key="family.id">
-                      {{ family.name }}
-                    </option>
-                  </select>
-                </div>
-
-                <div class="input-group mb-3" @click="flipAdmin">
-                  <div class="form-check form-check-inline">
-                    <label class="form-check-label" for="">
-                      Admin Status
-                    </label>
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      value=""
-                      @click="flipAdmin"
-                      v-if="!editingUser.is_admin"
-                    />
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      checked
-                      @click="flipAdmin"
-                      v-if="editingUser.is_admin"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  class="btn btn-success disabled"
-                  data-bs-dismiss="modal"
-                  v-if="!editingUser.name"
-                >
-                  Save changes
-                </button>
-                <button
-                  type="submit"
-                  class="btn btn-success"
-                  data-bs-dismiss="modal"
-                  v-if="editingUser.name"
-                >
-                  Save changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
