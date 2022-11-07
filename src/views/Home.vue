@@ -471,11 +471,13 @@ export default {
         this.loaded = true;
         this.wheelgif = false;
         var my_id = this.me.id;
-        this.family = response.data.users.filter(function (user) {
-          return user.id != my_id;
-        });
+        this.family = response.data.users
+          .filter(function (user) {
+            return user.id != my_id;
+          })
+          .sort((a, b) => a.name.localeCompare(b.name));
       });
-      this.getSecretSanta();
+      this.me.mystery_santa ? this.getSecretSanta() : "";
     },
     toggleChristmasList: function (user) {
       axios
