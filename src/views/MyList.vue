@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
+  <div class="container pb-5 pt-5">
     <div v-if="!loaded">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
     <transition>
-      <div v-if="loaded">
+      <div v-if="loaded" class="pt-5 pb-5">
         <div class="mb-5 table-responsive">
           <h2 class="mt-2 mb-5">Your Christmas List</h2>
           <table class="table table-striped">
@@ -104,7 +104,7 @@
         <hr />
         <button
           type="button"
-          class="btn btn-outline-success p-4 mb-5 mt-5"
+          class="btn btn-outline-success p-4 mt-5"
           data-bs-toggle="modal"
           data-bs-target="#batchModal"
         >
@@ -342,9 +342,6 @@
 </template>
 
 <style scoped>
-.container {
-  padding-top: 80px;
-}
 .form-control.batch {
   min-height: 50vh;
 }

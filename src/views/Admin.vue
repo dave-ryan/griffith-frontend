@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="container pt-5 pb-5">
     <div v-if="!loaded">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
     <transition>
-      <div v-if="loaded">
-        <div class="row mt-3">
+      <div v-if="loaded" class="pt-5">
+        <div class="row">
           <div class="col-3"></div>
           <div class="col-6">
             <div v-for="user in users" :key="user.id" class="row mb-3">
@@ -38,7 +38,7 @@
           <div class="col-3"></div>
         </div>
 
-        <div class="row mt-3 mb-3">
+        <div class="row mt-5 mb-3">
           <div class="col-4"></div>
           <div class="col-4">
             <button class="btn btn-danger" @click="resetData">
@@ -52,7 +52,7 @@
           <div class="col-4 text-danger">{{ errors }}</div>
           <div class="col-4"></div>
         </div>
-        <div class="row mb-5">
+        <div class="row">
           <div class="col-4"></div>
           <div class="col-4">
             <button class="btn btn-outline-danger" @click="secretSantaShuffle">
@@ -203,9 +203,6 @@
 </template>
 
 <style scoped>
-.container {
-  padding-top: 80px;
-}
 </style>
 
 <script>

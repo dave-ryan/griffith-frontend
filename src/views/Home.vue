@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
+  <div class="container pt-5 pb-5">
     <div v-if="!loaded && wheelgif">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
     <transition mode="out-in">
-      <div v-if="loaded">
+      <div v-if="loaded" class="pt-5">
         <div class="row">
           <div class="col-12 mb-5">
             <button
@@ -32,7 +32,7 @@
                 v-for="user in everyone"
                 :key="`everyone-` + user.id"
               >
-                <div class="col-12-">
+                <div class="col-12">
                   <button
                     class="btn btn-outline-success"
                     data-bs-toggle="collapse"
@@ -285,10 +285,10 @@
             </div>
           </div>
         </div>
-        <div class="row mb-5" v-if="secretSanta && !indexview">
+        <div class="row" v-if="secretSanta && !indexview">
           <div class="col-12">
             <hr />
-            <h3 class="mt-3 mb-4">Your Secret Santa</h3>
+            <h3 class="mt-3 mb-3">Your Secret Santa</h3>
             <button
               class="btn btn-outline-success"
               data-bs-toggle="collapse"
@@ -395,9 +395,6 @@
 </template>
 
 <style scoped>
-.container {
-  padding-top: 80px;
-}
 </style>
 
 <script>
