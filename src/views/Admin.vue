@@ -21,8 +21,8 @@
                   type="button"
                   class="btn btn-outline-success me-2"
                   data-bs-toggle="modal"
-                  data-bs-target="#editModal"
-                  @click="openEditModal(user)"
+                  data-bs-target="#editUserModal"
+                  @click="openEditUser(user)"
                 >
                   Edit
                 </button>
@@ -36,6 +36,31 @@
             </div>
           </div>
           <div class="col-3"></div>
+        </div>
+
+        <div class="row mt-3">
+          <div v-for="family in families" :key="family.id" class="col">
+            {{ family.name }} - id:<strong>{{ family.id }}</strong>
+            <div class="row">
+              <div class="col">
+                <button
+                  type="button"
+                  class="btn btn-outline-success m-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editFamily"
+                  @click="openEditFamily(family)"
+                >
+                  Edit Family
+                </button>
+                <button
+                  class="btn btn-outline-danger"
+                  @click="deleteFamily(family)"
+                >
+                  Delete Family
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="row mt-5 mb-3">
@@ -166,6 +191,76 @@
                     v-if="newFamilyParams.name"
                   >
                     Create Family
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Family Modal -->
+        <div
+          class="modal fade"
+          id="editFamily"
+          tabindex="-1"
+          aria-labelledby="newFamilyModalLabel"
+          aria-hidden="true"
+          data-bs-backdrop="static"
+        >
+          <div class="modal-dialog modal-dialog-centered" id="editFamilyModal">
+            <div class="modal-content">
+              <form
+                @submit.prevent="editFamily(editFamilyParams)"
+                id="editFamilyParamsForm"
+                novalidate
+              >
+                <div class="modal-header">
+                  <h3 class="modal-title" id="editFamilyLabel">
+                    Editing: {{ editFamilyParams.name }}
+                  </h3>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">Family Name</span>
+                    <input
+                      type="text"
+                      v-model="editFamilyParams.name"
+                      class="form-control"
+                      required
+                    />
+                    <div class="invalid-feedback">Must have a family name</div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    class="btn btn-success disabled"
+                    data-bs-dismiss="modal"
+                    v-if="!editFamilyParams.name"
+                  >
+                    Save Changes
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-success"
+                    data-bs-dismiss="modal"
+                    v-if="editFamilyParams.name"
+                  >
+                    Save Changes
                   </button>
                 </div>
               </form>
@@ -339,7 +434,7 @@
                     class="btn btn-success"
                     data-bs-dismiss="modal"
                     v-if="
-                    newUserParams.name &&
+                      newUserParams.name &&
                       newUserParams.santa_group &&
                       newUserParams.password &&
                       newUserParams.familyName
@@ -356,9 +451,9 @@
         <!-- Edit User Modal -->
         <div
           class="modal fade"
-          id="editModal"
+          id="editUserModal"
           tabindex="-1"
-          aria-labelledby="editModalLabel"
+          aria-labelledby="editUserModalLabel"
           aria-hidden="true"
           data-bs-backdrop="static"
         >
@@ -367,11 +462,10 @@
               <form
                 @submit.prevent="updateUser(editingUser)"
                 id="editingUserForm"
-                class="mt-5 mb-4"
                 novalidate
               >
                 <div class="modal-header">
-                  <h3 class="modal-title" id="editModalLabel">
+                  <h3 class="modal-title" id="editUserModalLabel">
                     Editing: {{ editingUser.name }}
                   </h3>
                   <button
@@ -499,14 +593,8 @@ export default {
       me: null,
       visible: false,
       users: [],
-      editingUser: {
-        name: "",
-        familyid: 1,
-        familyName: "",
-        secretSantaName: "",
-        is_admin: false,
-        secretSanta: null,
-      },
+      editingUser: {},
+      editFamilyParams: {},
       newUserParams: {},
       newFamilyParams: {},
       errors: null,
@@ -576,12 +664,15 @@ export default {
           });
       }
     },
-    openEditModal: function (user) {
+    openEditUser: function (user) {
       this.editingUser = user;
       this.editingUser.familyName = user.family.name;
       this.editingUser.secretSantaName = user.mystery_santa
         ? user.mystery_santa.name
         : null;
+    },
+    openEditFamily: function (family) {
+      this.editFamilyParams = family;
     },
     createUser: function (userParams) {
       userParams.santa_group = parseInt(userParams.santa_group.charAt());
@@ -607,6 +698,7 @@ export default {
     createFamily: function (familyParams) {
       axios.post("/families", familyParams).then((response) => {
         console.log(response.data);
+        this.families.push(familyParams);
       });
     },
     updateUser: function (user) {
@@ -648,6 +740,34 @@ export default {
           })
           .catch((errors) => {
             console.log("errors: ", errors.response);
+          });
+      }
+    },
+    editFamily: function (family) {
+      axios
+        .patch(`/families/${family.id}`, family)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((errors) => {
+          console.log("errors: ", errors);
+          this.errors = errors.response;
+        });
+    },
+    deleteFamily: function (family) {
+      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FAMILY?")) {
+        axios
+          .delete(`/families/${family.id}`)
+          .then((response) => {
+            console.log(response.data);
+            if (response.status === 200) {
+              this.families = this.families.filter((remainingfamily) => {
+                return remainingfamily.id != family.id;
+              });
+            }
+          })
+          .catch((errors) => {
+            console.log("errors: ", errors);
           });
       }
     },
