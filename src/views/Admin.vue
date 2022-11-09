@@ -625,6 +625,7 @@ export default {
       axios
         .get("/users/me")
         .then((response) => {
+          console.log(response.data);
           this.me = response.data;
           if (!response.data.is_admin) {
             this.$root.logOut();
@@ -632,6 +633,8 @@ export default {
             axios
               .get("/families")
               .then((response) => {
+                console.log(response.data);
+
                 this.families = response.data;
                 this.users = response.data
                   .map((family) => family.users)
@@ -732,6 +735,8 @@ export default {
         axios
           .delete(`/users/${user.id}`)
           .then((response) => {
+            console.log(response.data);
+
             if (response.status === 200) {
               this.users = this.users.filter((remainingUser) => {
                 return remainingUser.id != user.id;
@@ -780,7 +785,8 @@ export default {
       ) {
         axios
           .post("/secret-santa-shuffle", this.me)
-          .then(() => {
+          .then((response) => {
+            console.log(response.data);
             this.visible = true;
             this.getUsers();
           })
