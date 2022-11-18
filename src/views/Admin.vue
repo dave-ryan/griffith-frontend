@@ -1,5 +1,5 @@
 <template>
-  <div class="container pt-5 pb-5">
+  <div class="container-fluid me-0 pt-5 pb-5 text-center">
     <div v-if="!loaded">
       <img src="../assets/images/loading.gif" alt="" />
     </div>

@@ -39,24 +39,19 @@
       </div>
     </div>
   </nav>
-  <router-view @login_change="loginUpdate"></router-view>
+  <router-view @login_change="loginUpdate"> </router-view>
 </template>
 
 <style>
-.container {
-  text-align: center;
-}
 .v-enter-active,
 .v-leave-active {
   transition: all 0.5s ease;
 }
-
 .v-enter-from,
 .v-leave-to {
   transform: translateY(15px);
   opacity: 0;
 }
-
 @-webkit-keyframes pulse {
   to {
     -webkit-transform: scale(1.1);

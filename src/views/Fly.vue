@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid me-0 text-center">
     <img v-if="!errors" src="../assets/images/loading.gif" alt="" />
     <div>{{ errors }}</div>
   </div>
