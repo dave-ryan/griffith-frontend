@@ -8,7 +8,7 @@
         <div class="mb-5 table-responsive">
           <h2 class="mt-2 mb-5">Your Christmas List</h2>
           <table class="table table-striped">
-            <thead class="table-dark">
+            <thead class="table-light">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Wished Gift</th>
