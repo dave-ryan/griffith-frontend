@@ -71,23 +71,16 @@
 }
 button,
 .nav-link {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
   transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
 }
 button:active,
-.nav-link:active {
-  -webkit-animation-name: pulse;
+button:focus,
+.nav-link:active,
+.nav-link:focus {
   animation-name: pulse;
-  -webkit-animation-duration: 0.1s;
   animation-duration: 0.1s;
-  -webkit-animation-timing-function: linear;
   animation-timing-function: linear;
-  -webkit-animation-iteration-count: 2;
   animation-iteration-count: 2;
-  -webkit-animation-direction: alternate;
   animation-direction: alternate;
 }
 </style>
