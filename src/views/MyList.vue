@@ -291,7 +291,8 @@
                       </h4>
                       <textarea
                         class="form-control batch"
-                        placeholder="&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;"
+                        :class="needsWordWrap(batchItems)"
+                        placeholder="Socks&#10;Throw pillows&#10;Marvel Blurays"
                         id="floatingTextarea-Gift"
                         v-model="batchItems"
                       >
@@ -307,7 +308,8 @@
                       </h4>
                       <textarea
                         class="form-control batch word-wrap"
-                        placeholder="&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;&#10;&nbsp;"
+                        :class="needsWordWrap(batchLinks)"
+                        placeholder="socks.com&#10;&#10;g.com/blurays"
                         id="floatingTextarea-Link"
                         v-model="batchLinks"
                       ></textarea>
@@ -344,14 +346,6 @@
 <style scoped>
 .form-control.batch {
   min-height: 50vh;
-}
-#floatingTextarea-Link::placeholder {
-  background-image: url(../assets/images/links.png);
-  background-repeat: no-repeat;
-}
-#floatingTextarea-Gift::placeholder {
-  background-image: url(../assets/images/items.png);
-  background-repeat: no-repeat;
 }
 </style>
 
@@ -481,6 +475,13 @@ export default {
         return true;
       } else {
         return false;
+      }
+    },
+    needsWordWrap: function (items) {
+      if (items === "") {
+        return "";
+      } else {
+        return "text-nowrap";
       }
     },
   },
