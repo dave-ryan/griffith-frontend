@@ -43,13 +43,29 @@
 </template>
 
 <style>
-.v-enter-active,
-.v-leave-active {
+.content-enter-active,
+.content-leave-active {
   transition: all 0.7s ease;
 }
-.v-enter-from,
-.v-leave-to {
+.content-enter-from,
+.content-leave-to {
   transform: translateY(15px);
+  opacity: 0;
+}
+.splash {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  max-height: 17em;
+  min-height: 10em;
+}
+.splash-enter-active,
+.splash-leave-active {
+  transition: all 0.7s ease;
+}
+.splash-enter-from,
+.splash-leave-to {
+  transform: none;
   opacity: 0;
 }
 @-webkit-keyframes pulse {
