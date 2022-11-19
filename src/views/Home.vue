@@ -1,9 +1,19 @@
 <template>
-  <div class="container-fluid m-0 pe-0 ps-0 pb-5 text-center">
-    <div v-if="!contentloaded && wheelgif" class="pt-5">
+  <div class="container-fluid pe-0 ps-0 pb-5 text-center">
+    <div v-if="!contentaded && wheelgif" class="pt-5">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
-    <transition name="splashTransition" mode="out-in">
+    <div class="row" v-show="!splashLoaded && pageLoaded">
+      <div class="col">
+        <img
+          src="../assets/images/tree-cropped-blurred.jpg"
+          class="img splash shadow"
+          alt=""
+          v-on:load="this.splashLoaded = true"
+        />
+      </div>
+    </div>
+    <transition name="splash" mode="out-in">
       <div class="row" v-show="splashLoaded && pageLoaded">
         <div class="col">
           <img
@@ -15,20 +25,7 @@
         </div>
       </div>
     </transition>
-    <transition name="splashTransition" mode="out-in">
-      <div class="row" v-show="!splashLoaded && pageLoaded">
-        <div class="col">
-          <img
-            src="../assets/images/tree-cropped-blurred.jpg"
-            class="img splash shadow"
-            alt=""
-            v-on:load="this.splashLoaded = true"
-          />
-        </div>
-      </div>
-    </transition>
-
-    <transition mode="out-in">
+    <transition name="content" mode="out-in">
       <div v-if="contentLoaded" class="row pt-5">
         <div class="col">
           <div class="row mb-5">
@@ -461,18 +458,6 @@
   width: 100%;
   max-height: 17em;
   min-height: 10em;
-}
-.splashTransition-enter-active,
-.splashTransition-leave-active {
-  transition: all 0.7s ease;
-}
-.splashTransition-enter-from,
-.splashTransition-leave-to {
-  transform: none;
-  opacity: 0;
-}
-.row {
-  --bs-gutter-x: 0;
 }
 </style>
 
