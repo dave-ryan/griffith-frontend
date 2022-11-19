@@ -80,9 +80,9 @@
               class="mt-4 mb-4"
               novalidate
             >
-              <h5 class="mb-3">New Item For Your Christmas List:</h5>
+              <h5 class="mb-2">New Item For Your Christmas List</h5>
               <label class="input-group-text">Name/Description</label>
-              <div class="input-group mb-3">
+              <div class="input-group mb-2">
                 <input
                   type="text"
                   v-model="newItem.name"
@@ -98,7 +98,7 @@
                 Online Shopping Link&nbsp;
                 <span class="fw-light"> (optional) </span>
               </label>
-              <div class="input-group mb-3">
+              <div class="input-group mb-2">
                 <input
                   type="text"
                   v-model="newItem.link"
@@ -220,7 +220,6 @@
         </div>
 
         <!-- Delete Modal -->
-
         <div
           class="modal fade"
           id="deleteModal"
@@ -269,7 +268,6 @@
         </div>
 
         <!-- Batch add Modal -->
-
         <div
           class="modal fade"
           id="batchModal"

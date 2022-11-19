@@ -20,8 +20,8 @@
         <div class="col">
           <div class="row mb-5">
             <div class="col">
-              <h3 v-if="indexview">Everyone</h3>
-              <h3 v-if="!indexview">Your Family</h3>
+              <h2 v-if="indexview">Everyone</h2>
+              <h2 v-if="!indexview">Your Family</h2>
               <div v-if="indexview" class="row">
                 <div class="col">
                   <div
@@ -332,7 +332,7 @@
             </div>
             <div class="row mt-2">
               <div class="col">
-                <h3 class="mb-3">Your Secret Santa</h3>
+                <h2 class="mb-3">Your Secret Santa</h2>
                 <button
                   class="btn btn-outline-success"
                   data-bs-toggle="collapse"

@@ -8,6 +8,7 @@
         <div class="row">
           <div class="col-3"></div>
           <div class="col-6">
+            <h2>Admin</h2>
             <div v-for="user in users" :key="user.id" class="row mb-3">
               <div class="col-6">
                 {{ user.name }} - id:<strong>{{ user.id }}</strong>
@@ -582,8 +583,7 @@
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
 
 <script>
 import axios from "axios";
