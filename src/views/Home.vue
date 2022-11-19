@@ -1,10 +1,35 @@
 <template>
-  <div class="container-fluid me-0 pt-5 pb-5 text-center">
-    <div v-if="!loaded && wheelgif">
+  <div class="container-fluid m-0 pe-0 ps-0 pb-5 text-center">
+    <div v-if="!contentloaded && wheelgif" class="pt-5">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
+    <transition name="splashTransition" mode="out-in">
+      <div class="row" v-show="splashLoaded && pageLoaded">
+        <div class="col">
+          <img
+            src="../assets/images/tree-cropped-compressed.jpg"
+            class="img splash shadow"
+            alt=""
+            v-on:load="this.splashLoaded = true"
+          />
+        </div>
+      </div>
+    </transition>
+    <transition name="splashTransition" mode="out-in">
+      <div class="row" v-show="!splashLoaded && pageLoaded">
+        <div class="col">
+          <img
+            src="../assets/images/tree-cropped-blurred.jpg"
+            class="img splash shadow"
+            alt=""
+            v-on:load="this.splashLoaded = true"
+          />
+        </div>
+      </div>
+    </transition>
+
     <transition mode="out-in">
-      <div v-if="loaded" class="row pt-5">
+      <div v-if="contentLoaded" class="row pt-5">
         <div class="col">
           <div class="row mb-5">
             <div class="col">
@@ -313,8 +338,8 @@
             </div>
           </div>
           <div class="row" v-if="secretSanta && !indexview">
-            <div class="me-auto">
-              <hr />
+            <div class="ps-5 pe-5">
+              <hr class="ps-5 pe-5" />
             </div>
             <div class="col mt-2">
               <h3 class="mb-3">Your Secret Santa</h3>
@@ -429,6 +454,25 @@
 </template>
 
 <style scoped>
+.splash {
+  object-fit: cover;
+  object-position: center;
+  object-position: 100% 0;
+  width: 100%;
+  max-height: 18em;
+}
+.splashTransition-enter-active,
+.splashTransition-leave-active {
+  transition: all 0.7s ease;
+}
+.splashTransition-enter-from,
+.splashTransition-leave-to {
+  transform: none;
+  opacity: 0;
+}
+.row {
+  --bs-gutter-x: 0;
+}
 </style>
 
 <script>
@@ -440,10 +484,12 @@ export default {
       everyone: [],
       secretSanta: null,
       christmasLists: {},
-      loaded: false,
+      contentLoaded: false,
       indexview: false,
       me: null,
       wheelgif: true,
+      splashLoaded: false,
+      pageLoaded: false,
     };
   },
   created: function () {
@@ -482,11 +528,11 @@ export default {
     getEveryone: function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
       this.indexview = true;
-      this.loaded = false;
+      this.contentLoaded = false;
       axios
         .get("/users")
         .then((response) => {
-          this.loaded = true;
+          this.contentLoaded = true;
           var my_id = this.me.id;
           this.everyone = response.data.filter(function (user) {
             return user.id != my_id;
@@ -498,10 +544,11 @@ export default {
     },
     getFamily: function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      this.loaded = false;
+      this.contentLoaded = false;
       this.indexview = false;
       axios.get(`/families/${this.me.family.id}`).then((response) => {
-        this.loaded = true;
+        this.pageLoaded = true;
+        this.contentLoaded = true;
         this.wheelgif = false;
         var my_id = this.me.id;
         this.family = response.data.users
