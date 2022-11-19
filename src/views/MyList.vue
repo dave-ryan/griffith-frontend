@@ -1,10 +1,32 @@
 <template>
-  <div class="container-fluid me-0 pt-5 pb-5 text-center">
-    <div v-if="!loaded">
+  <div class="container-fluid ps-0 pe-0 pt-5 pb-5 text-center">
+    <div v-if="!contentLoaded">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
-    <transition>
-      <div v-if="loaded" class="pt-5 pb-5">
+    <div class="row" v-show="!splashLoaded && pageLoaded">
+      <div class="col">
+        <img
+          src="../assets/images/presents-cropped-blurred.jpg"
+          class="img splash shadow"
+          alt=""
+          v-on:load="this.splashLoaded = true"
+        />
+      </div>
+    </div>
+    <transition name="splashTransition" mode="out-in">
+      <div class="row" v-show="splashLoaded && pageLoaded">
+        <div class="col">
+          <img
+            src="../assets/images/presents-cropped-compressed.jpg"
+            class="img splash shadow"
+            alt=""
+            v-on:load="this.splashLoaded = true"
+          />
+        </div>
+      </div>
+    </transition>
+    <transition name="content">
+      <div v-if="contentLoaded" class="ps-3 pe-3 pt-5 pb-5">
         <div class="mb-5 table-responsive">
           <h2 class="mt-2 mb-5">Your Christmas List</h2>
           <table class="table table-striped">
@@ -358,9 +380,11 @@ export default {
       newItem: {},
       editingItem: {},
       deletingItem: {},
-      loaded: false,
+      contentLoaded: false,
       batchItems: "",
       batchLinks: "",
+      splashLoaded: false,
+      pageLoaded: false,
     };
   },
   computed: {
@@ -380,7 +404,8 @@ export default {
       axios
         .get("/wishedgifts")
         .then((response) => {
-          this.loaded = true;
+          this.contentLoaded = true;
+          this.pageLoaded = true;
           this.myList = response.data;
         })
         .catch((errors) => {
