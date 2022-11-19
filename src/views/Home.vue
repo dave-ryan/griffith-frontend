@@ -459,7 +459,7 @@
   object-position: center;
   object-position: 100% 0;
   width: 100%;
-  max-height: 18em;
+  max-height: 17em;
   min-height: 10em;
 }
 .splashTransition-enter-active,
