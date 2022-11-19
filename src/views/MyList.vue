@@ -3,16 +3,6 @@
     <div v-if="!contentLoaded">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
-    <div class="row" v-show="!splashLoaded && pageLoaded">
-      <div class="col">
-        <img
-          src="../assets/images/presents-cropped-blurred.jpg"
-          class="img splash shadow"
-          alt=""
-          v-on:load="this.splashLoaded = true"
-        />
-      </div>
-    </div>
     <transition name="splashTransition" mode="out-in">
       <div class="row" v-show="splashLoaded && pageLoaded">
         <div class="col">
@@ -368,6 +358,9 @@
 <style scoped>
 .form-control.batch {
   min-height: 50vh;
+}
+.row {
+  --bs-gutter-x: 0;
 }
 </style>
 

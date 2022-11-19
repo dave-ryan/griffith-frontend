@@ -43,9 +43,6 @@
 </template>
 
 <style>
-.row {
-  --bs-gutter-x: 0;
-}
 .content-enter-active,
 .content-leave-active {
   transition: all 0.7s ease;

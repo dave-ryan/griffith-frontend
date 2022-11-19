@@ -1,17 +1,7 @@
 <template>
   <div class="container-fluid pe-0 ps-0 pb-5 text-center">
-    <div v-if="!contentaded && wheelgif" class="pt-5">
+    <div v-if="!contentloaded && !pageLoaded" class="pt-5">
       <img src="../assets/images/loading.gif" alt="" />
-    </div>
-    <div class="row" v-show="!splashLoaded && pageLoaded">
-      <div class="col">
-        <img
-          src="../assets/images/tree-cropped-blurred.jpg"
-          class="img splash shadow"
-          alt=""
-          v-on:load="this.splashLoaded = true"
-        />
-      </div>
     </div>
     <transition name="splash" mode="out-in">
       <div class="row" v-show="splashLoaded && pageLoaded">
@@ -459,6 +449,9 @@
   max-height: 17em;
   min-height: 10em;
 }
+.row {
+  --bs-gutter-x: 0;
+}
 </style>
 
 <script>
@@ -473,7 +466,6 @@ export default {
       contentLoaded: false,
       indexview: false,
       me: null,
-      wheelgif: true,
       splashLoaded: false,
       pageLoaded: false,
     };
@@ -535,7 +527,6 @@ export default {
       axios.get(`/families/${this.me.family.id}`).then((response) => {
         this.pageLoaded = true;
         this.contentLoaded = true;
-        this.wheelgif = false;
         var my_id = this.me.id;
         this.family = response.data.users
           .filter(function (user) {
