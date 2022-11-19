@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid pe-0 ps-0 pb-5 text-center">
+  <div class="container-fluid pe-0 ps-0 mt-5 mb-5 text-center">
     <div v-if="!contentloaded && !pageLoaded" class="pt-5">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
@@ -306,7 +306,7 @@
             </div>
           </div>
 
-          <div class="row mb-5">
+          <div class="row mb-3">
             <div class="col">
               <button
                 @click="getEveryone"
@@ -325,109 +325,115 @@
             </div>
           </div>
           <div class="row" v-if="secretSanta && !indexview">
-            <div class="ps-5 pe-5">
-              <hr class="ps-5 pe-5" />
+            <div class="row">
+              <div class="col-2 col-sm-3 col-md-4"></div>
+              <div class="col-8 col-sm-6 col-md-4"><hr /></div>
+              <div class="col-2 col-sm-3 col-md-4"></div>
             </div>
-            <div class="col mt-2">
-              <h3 class="mb-3">Your Secret Santa</h3>
-              <button
-                class="btn btn-outline-success"
-                data-bs-toggle="collapse"
-                data-bs-target="#christmas-list-ss"
-              >
-                {{ secretSanta.name }}
-              </button>
-              <div
-                class="collapse"
-                aria-expanded="false"
-                id="christmas-list-ss"
-              >
-                <span v-if="secretSanta.wishedgifts.length === 0"
-                  >this person hasn't made their christmas list yet! remind
-                  them! :)</span
+            <div class="row mt-2">
+              <div class="col">
+                <h3 class="mb-3">Your Secret Santa</h3>
+                <button
+                  class="btn btn-outline-success"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#christmas-list-ss"
                 >
-                <div v-for="item in secretSanta.wishedgifts" :key="item.id">
-                  <div v-if="item.purchaser && item.purchaser_id != me.id">
-                    <div class="form-check form-check-inline">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        value=""
-                        checked
-                        :id="`checkbox-` + item.id"
-                        disabled
-                      />
-                      <label
-                        class="form-check-label"
-                        :for="`checkbox-` + item.id"
-                        :id="`label-` + item.id"
-                      >
-                        {{ item.name }}
-                        <span v-if="item.link || item.purchaser_id"> - </span>
-                        <a
-                          v-if="item.link"
-                          :href="`//` + item.link.replace(/^https?:\/\//, '')"
-                          target="_blank"
-                          >link</a
-                        >
-                      </label>
-                      <span class="text-danger">
-                        purchased by {{ item.purchaser.name }}</span
-                      >
-                    </div>
-                  </div>
-                  <div
-                    v-else-if="item.purchaser_id && item.purchaser_id === me.id"
+                  {{ secretSanta.name }}
+                </button>
+                <div
+                  class="collapse"
+                  aria-expanded="false"
+                  id="christmas-list-ss"
+                >
+                  <span v-if="secretSanta.wishedgifts.length === 0"
+                    >this person hasn't made their christmas list yet! remind
+                    them! :)</span
                   >
-                    <div class="form-check form-check-inline">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        value=""
-                        checked
-                        @click="toggleCheckBox(item)"
-                        :id="`checkbox-` + item.id"
-                      />
-                      <label
-                        class="form-check-label"
-                        :for="`checkbox-` + item.id"
-                        :id="`label-` + item.id"
-                      >
-                        {{ item.name }}
-                        <span v-if="item.link || item.purchaser_id"> - </span>
-                        <a
-                          v-if="item.link"
-                          :href="`//` + item.link.replace(/^https?:\/\//, '')"
-                          target="_blank"
-                          >link</a
+                  <div v-for="item in secretSanta.wishedgifts" :key="item.id">
+                    <div v-if="item.purchaser && item.purchaser_id != me.id">
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          checked
+                          :id="`checkbox-` + item.id"
+                          disabled
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`checkbox-` + item.id"
+                          :id="`label-` + item.id"
                         >
-                      </label>
-                      <span class="text-success"> purchased by you!</span>
+                          {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <a
+                            v-if="item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                            target="_blank"
+                            >link</a
+                          >
+                        </label>
+                        <span class="text-danger">
+                          purchased by {{ item.purchaser.name }}</span
+                        >
+                      </div>
                     </div>
-                  </div>
-                  <div v-else>
-                    <div class="form-check form-check-inline">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        value=""
-                        @click="toggleCheckBox(item)"
-                        :id="`checkbox-` + item.id"
-                      />
-                      <label
-                        class="form-check-label"
-                        :for="`checkbox-` + item.id"
-                        :id="`label-` + item.id"
-                      >
-                        {{ item.name }}
-                        <span v-if="item.link || item.purchaser_id"> - </span>
-                        <a
-                          v-if="item.link"
-                          :href="`//` + item.link.replace(/^https?:\/\//, '')"
-                          target="_blank"
-                          >link</a
+                    <div
+                      v-else-if="
+                        item.purchaser_id && item.purchaser_id === me.id
+                      "
+                    >
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          checked
+                          @click="toggleCheckBox(item)"
+                          :id="`checkbox-` + item.id"
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`checkbox-` + item.id"
+                          :id="`label-` + item.id"
                         >
-                      </label>
+                          {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <a
+                            v-if="item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                            target="_blank"
+                            >link</a
+                          >
+                        </label>
+                        <span class="text-success"> purchased by you!</span>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          @click="toggleCheckBox(item)"
+                          :id="`checkbox-` + item.id"
+                        />
+                        <label
+                          class="form-check-label"
+                          :for="`checkbox-` + item.id"
+                          :id="`label-` + item.id"
+                        >
+                          {{ item.name }}
+                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <a
+                            v-if="item.link"
+                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                            target="_blank"
+                            >link</a
+                          >
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -1,10 +1,10 @@
 <template>
-  <div class="container-fluid ps-0 pe-0 pt-5 pb-5 text-center">
+  <div class="container-fluid ps-0 pe-0 mt-5 mb-5 text-center">
     <div v-if="!contentLoaded">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
-    <transition name="splashTransition" mode="out-in">
-      <div class="row" v-show="splashLoaded && pageLoaded">
+    <transition name="splash" mode="out-in">
+      <div class="row mt-5" v-show="splashLoaded && pageLoaded">
         <div class="col">
           <img
             src="../assets/images/presents-cropped-compressed.jpg"
@@ -73,7 +73,7 @@
         <hr />
         <div class="row">
           <div class="col"></div>
-          <div class="col-md-8 col-12">
+          <div class="col-12 col-sm-10 col-md-8">
             <form
               @submit.prevent="createItem"
               id="newItemForm"
@@ -113,7 +113,11 @@
           </div>
           <div class="col"></div>
         </div>
-        <hr />
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-10 col-sm-8 col-md-6"><hr /></div>
+          <div class="col"></div>
+        </div>
         <button
           type="button"
           class="btn btn-outline-success p-4 mt-5"
@@ -275,9 +279,11 @@
           <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="col fw-bold text-center mt-2">
-                  Add Items One Line At A Time
-                </h4>
+                <div class="container-fluid">
+                  <h4 class="fw-bold text-center mt-2">
+                    Add Items One Line At A Time
+                  </h4>
+                </div>
                 <button
                   type="button"
                   class="btn-close"
@@ -294,7 +300,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-6 pe-1">
                     <div class="input">
                       <h4>
                         <label for="floatingTextarea-Gift" class="fw-bold"
