@@ -4,7 +4,6 @@
       <form @submit.prevent="logIn" id="loginForm" novalidate>
         <fieldset id="loginFieldset">
           <h2>Griffith</h2>
-
           <div class="row g-3 align-items-center mb-2 mt-2">
             <div class="col-auto">
               <label class="form-label" for="name-input">First Name</label>
@@ -52,6 +51,15 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.container-fluid {
+  background-image: url("../assets/images/xmas2.jpg");
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+}
+</style>
 
 <script>
 import axios from "axios";
