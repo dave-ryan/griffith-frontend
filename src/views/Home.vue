@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid pe-0 ps-0 mt-5 mb-5 text-center">
-    <div v-if="!contentloaded && !pageLoaded" class="pt-5">
+    <div v-if="!contentLoaded && !pageLoaded" class="pt-5">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
     <transition name="splash" mode="out-in">
