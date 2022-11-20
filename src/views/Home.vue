@@ -22,6 +22,12 @@
             <div class="col">
               <h2 v-if="indexview">Everyone</h2>
               <h2 v-if="!indexview">Your Family</h2>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                @click="expandLists"
+              >
+                Expand all lists
+              </button>
               <div v-if="indexview" class="row">
                 <div class="col">
                   <div
@@ -542,6 +548,7 @@ export default {
       });
       this.me.mystery_santa ? this.getSecretSanta() : "";
     },
+    expandLists: function () {},
     toggleChristmasList: function (user) {
       axios
         .get(`/users/${user.id}/christmaslist`)
