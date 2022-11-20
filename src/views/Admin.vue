@@ -310,7 +310,7 @@
                     </div>
                   </div>
                   <div class="input-group mb-3">
-                    <span class="input-group-text">Password</span>
+                    <span class="input-group-text">New Password</span>
                     <input
                       type="text"
                       v-model="newUserParams.password"
@@ -488,6 +488,14 @@
                     <div class="invalid-feedback">
                       Can't have a user without a name
                     </div>
+                  </div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">New Password</span>
+                    <input
+                      type="text"
+                      v-model="editingUser.password"
+                      class="form-control"
+                    />
                   </div>
                   <div
                     class="input-group mb-3"
@@ -710,6 +718,12 @@ export default {
         name: user.name,
         is_admin: user.is_admin ? true : false,
       };
+      console.log("password", user.password);
+
+      if (user.password !== "" && user.password) {
+        console.log("password changed");
+        userParams.password = user.password;
+      }
 
       this.users.forEach((loopUser) => {
         if (user.secretSantaName === loopUser.name) {
