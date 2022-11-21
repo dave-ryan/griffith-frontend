@@ -39,7 +39,7 @@
                       <button
                         class="btn btn-outline-success"
                         data-bs-toggle="collapse"
-                        :data-bs-target="`#birthday-list-${user.id}`"
+                        :data-bs-target="`#christmas-list-${user.id}`"
                       >
                         {{ user.name }}
                       </button>
@@ -53,9 +53,9 @@
                         "
                       ></i>
                       <div
-                        class="collapse"
+                        class="collapse list-collapse"
                         aria-expanded="false"
-                        :id="`birthday-list-${user.id}`"
+                        :id="`christmas-list-${user.id}`"
                       >
                         <span v-if="user.wishedgifts.length < 1"
                           >this person hasn't made their christmas list yet!
@@ -74,12 +74,12 @@
                                 type="checkbox"
                                 value=""
                                 checked
-                                :id="`birthday-checkbox-` + item.id"
+                                :id="`christmas-checkbox-` + item.id"
                                 disabled
                               />
                               <label
                                 class="form-check-label"
-                                :for="`birthday-checkbox-` + item.id"
+                                :for="`christmas-checkbox-` + item.id"
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
@@ -112,11 +112,11 @@
                                 value=""
                                 checked
                                 @click="toggleCheckBox(item)"
-                                :id="`birthday-checkbox-` + item.id"
+                                :id="`christmas-checkbox-` + item.id"
                               />
                               <label
                                 class="form-check-label"
-                                :for="`birthday-checkbox-` + item.id"
+                                :for="`christmas-checkbox-` + item.id"
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
@@ -193,7 +193,7 @@
                         "
                       ></i>
                       <div
-                        class="collapse"
+                        class="collapse list-collapse"
                         aria-expanded="false"
                         :id="`christmas-list-${user.id}`"
                       >
@@ -347,7 +347,7 @@
                   {{ secretSanta.name }}
                 </button>
                 <div
-                  class="collapse"
+                  class="collapse list-collapse"
                   aria-expanded="false"
                   id="christmas-list-ss"
                 >
@@ -548,7 +548,14 @@ export default {
       });
       this.me.mystery_santa ? this.getSecretSanta() : "";
     },
-    expandLists: function () {},
+    expandLists: function () {
+      var lists = document.getElementsByClassName("list-collapse");
+      for (let i = 0; i < lists.length; i++) {
+        lists[i].classList.remove("collapsed");
+        lists[i].classList.remove("show");
+        lists[i].classList.add("show");
+      }
+    },
     toggleChristmasList: function (user) {
       axios
         .get(`/users/${user.id}/christmaslist`)
