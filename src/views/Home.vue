@@ -22,12 +22,6 @@
             <div class="col">
               <h2 v-if="indexview">Everyone</h2>
               <h2 v-if="!indexview">Your Family</h2>
-              <button
-                class="btn btn-sm btn-outline-danger"
-                @click="expandLists"
-              >
-                Expand all lists
-              </button>
               <div v-if="indexview" class="row">
                 <div class="col">
                   <div
@@ -547,14 +541,6 @@ export default {
           .sort((a, b) => a.name.localeCompare(b.name));
       });
       this.me.mystery_santa ? this.getSecretSanta() : "";
-    },
-    expandLists: function () {
-      var lists = document.getElementsByClassName("list-collapse");
-      for (let i = 0; i < lists.length; i++) {
-        lists[i].classList.remove("collapsed");
-        lists[i].classList.remove("show");
-        lists[i].classList.add("show");
-      }
     },
     toggleChristmasList: function (user) {
       axios

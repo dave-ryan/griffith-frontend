@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark"
+    class="navbar fixed-top navbar-expand-md navbar-dark bg-dark"
     v-if="userName"
     id="navbar"
   >
@@ -28,6 +28,14 @@
           </li>
           <li v-if="isAdmin === `true`">
             <router-link class="nav-link" to="/admin">Admin</router-link>
+          </li>
+          <li>
+            <button
+              class="btn btn-sm btn-outline-success align-middle mt-1"
+              @click="expandLists"
+            >
+              Expand all lists
+            </button>
           </li>
           <li>
             <span class="nav-link disabled"> Logged in as {{ userName }}</span>
@@ -123,6 +131,14 @@ export default {
       document
         .getElementById("navbarSupportedContent")
         .classList.remove("show");
+    },
+    expandLists: function () {
+      var lists = document.getElementsByClassName("list-collapse");
+      for (let i = 0; i < lists.length; i++) {
+        lists[i].classList.remove("collapsed");
+        lists[i].classList.remove("show");
+        lists[i].classList.add("show");
+      }
     },
     logOut: function () {
       delete axios.defaults.headers.common["Authorization"];
