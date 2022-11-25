@@ -31,10 +31,11 @@
           </li>
           <li>
             <button
+              v-if="this.$router.currentRoute.value.path === '/'"
               class="btn btn-outline-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
               @click="expandLists"
             >
-              Expand all lists
+              Expand All Lists
             </button>
           </li>
           <li>
@@ -113,7 +114,6 @@ export default {
       isAdmin: false,
     };
   },
-
   created: function () {
     if (localStorage.jwt && localStorage.user_name) {
       this.userName = localStorage.user_name;
