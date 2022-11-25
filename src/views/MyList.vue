@@ -17,58 +17,75 @@
     </transition>
     <transition name="content">
       <div v-if="contentLoaded" class="ps-3 pe-3 mt-5">
-        <div class="table-responsive">
-          <h2 class="mt-2 mb-5">Your Christmas List</h2>
-          <table class="table table-striped">
-            <thead class="table-light">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Wished Gift</th>
-                <th scope="col">Link</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(item, index) in myList"
-                :key="item.id"
-                class="align-middle"
-              >
-                <th scope="row">{{ index + 1 }}</th>
-                <td class="text-truncate" style="max-width: 150px">
-                  {{ item.name }}
-                </td>
-                <td class="text-truncate" style="max-width: 150px">
-                  <a
-                    v-if="item.link"
-                    :href="`//` + item.link.replace(/^https?:\/\//, '')"
-                    alt=""
-                    target="_blank"
-                    >{{ item.link }}</a
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-lg-10">
+            <div class="table-responsive">
+              <h2 class="mt-2 mb-5">Your Christmas List</h2>
+              <table class="table table-striped">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Wished Gift</th>
+                    <th scope="col">Link</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(item, index) in myList"
+                    :key="item.id"
+                    class="align-middle"
                   >
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    class="btn btn-outline-success"
-                    data-bs-toggle="modal"
-                    data-bs-target="#editModal"
-                    @click="editItem(item)"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    class="btn btn-outline-danger ms-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#deleteModal"
-                    @click="deletingItem = item"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                    <td scope="row" style="width: 1%">
+                      {{ index + 1 }}
+                    </td>
+                    <td
+                      class="text-truncate"
+                      style="max-width: 150px; min-width: 200px"
+                    >
+                      {{ item.name }}
+                    </td>
+                    <td
+                      class="text-truncate"
+                      style="max-width: 150px; min-width: 200px"
+                    >
+                      <a
+                        v-if="item.link"
+                        :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                        alt=""
+                        target="_blank"
+                        >{{ item.link }}</a
+                      >
+                    </td>
+                    <td style="width: 1%" class="pe-0">
+                      <button
+                        type="button"
+                        class="btn btn-outline-success"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editModal"
+                        @click="editItem(item)"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                    <td style="width: 1%" class="ps-0">
+                      <button
+                        class="btn btn-outline-danger ms-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal"
+                        @click="deletingItem = item"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col"></div>
         </div>
         <div class="row">
           <div class="col"></div>
