@@ -31,21 +31,21 @@
                   >
                     <div class="col">
                       <button
-                        class="btn btn-outline-success"
+                        class="btn btn-outline-success mb-1"
                         data-bs-toggle="collapse"
                         :data-bs-target="`#christmas-list-${user.id}`"
                       >
                         {{ user.name }}
+                        <i
+                          class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
+                          v-if="
+                            user.wishedgifts &&
+                            user.wishedgifts.some(
+                              (item) => item.purchaser_id === me.id
+                            )
+                          "
+                        ></i>
                       </button>
-                      <i
-                        class="bi bi-check-lg text-success"
-                        v-if="
-                          user.wishedgifts &&
-                          user.wishedgifts.some(
-                            (item) => item.purchaser_id === me.id
-                          )
-                        "
-                      ></i>
                       <div
                         class="collapse list-collapse"
                         aria-expanded="false"
@@ -171,21 +171,21 @@
                   <div class="row mt-3" v-for="user in family" :key="user.id">
                     <div class="col">
                       <button
-                        class="btn btn-outline-success"
+                        class="btn btn-outline-success mb-1"
                         data-bs-toggle="collapse"
                         :data-bs-target="`#christmas-list-${user.id}`"
                       >
                         {{ user.name }}
+                        <i
+                          class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
+                          v-if="
+                            user.wishedgifts &&
+                            user.wishedgifts.some(
+                              (item) => item.purchaser_id === me.id
+                            )
+                          "
+                        ></i>
                       </button>
-                      <i
-                        class="bi bi-check-lg text-success"
-                        v-if="
-                          user.wishedgifts &&
-                          user.wishedgifts.some(
-                            (item) => item.purchaser_id === me.id
-                          )
-                        "
-                      ></i>
                       <div
                         class="collapse list-collapse"
                         aria-expanded="false"
