@@ -37,6 +37,13 @@
             >
               Expand All Lists
             </button>
+            <button
+              v-if="this.$router.currentRoute.value.path !== '/'"
+              class="btn btn-outline-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
+              disabled
+            >
+              Expand All Lists
+            </button>
           </li>
           <li>
             <span class="nav-link disabled"> Logged in as {{ userName }}</span>
