@@ -16,8 +16,8 @@
       </div>
     </transition>
     <transition name="content">
-      <div v-if="contentLoaded" class="ps-3 pe-3 pt-5 pb-5">
-        <div class="mb-5 table-responsive">
+      <div v-if="contentLoaded" class="ps-3 pe-3 mt-5">
+        <div class="table-responsive">
           <h2 class="mt-2 mb-5">Your Christmas List</h2>
           <table class="table table-striped">
             <thead class="table-light">
@@ -70,7 +70,6 @@
             </tbody>
           </table>
         </div>
-        <hr />
         <div class="row">
           <div class="col"></div>
           <div class="col-12 col-sm-10 col-md-8">
@@ -120,7 +119,7 @@
         </div>
         <button
           type="button"
-          class="btn btn-outline-success p-4 mt-5"
+          class="btn btn-outline-success p-4 mt-4"
           data-bs-toggle="modal"
           data-bs-target="#batchModal"
         >
