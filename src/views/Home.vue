@@ -52,8 +52,8 @@
                         :id="`christmas-list-${user.id}`"
                       >
                         <span v-if="user.wishedgifts.length < 1"
-                          >this person hasn't made their christmas list yet!
-                          remind them! :)</span
+                          >{{ user.name }} hasn't made a christmas list yet!
+                          Remind them! &#128578;</span
                         >
                         <div
                           v-for="item in user.wishedgifts"
@@ -192,8 +192,8 @@
                         :id="`christmas-list-${user.id}`"
                       >
                         <span v-if="user.wishedgifts.length < 1"
-                          >this person hasn't made their christmas list yet!
-                          remind them! :)</span
+                          >{{ user.name }} hasn't made a christmas list yet!
+                          Remind them! &#128578;</span
                         >
                         <div v-for="item in user.wishedgifts" :key="item.id">
                           <div
@@ -346,8 +346,8 @@
                   id="christmas-list-ss"
                 >
                   <span v-if="secretSanta.wishedgifts.length === 0"
-                    >this person hasn't made their christmas list yet! remind
-                    them! :)</span
+                    >{{ secretSanta.name }} hasn't made their christmas list
+                    yet! Remind them! &#128578;</span
                   >
                   <div v-for="item in secretSanta.wishedgifts" :key="item.id">
                     <div v-if="item.purchaser && item.purchaser_id != me.id">
