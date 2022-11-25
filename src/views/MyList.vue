@@ -72,7 +72,7 @@
         </div>
         <div class="row">
           <div class="col"></div>
-          <div class="col-12 col-sm-10 col-md-8">
+          <div class="col-12 col-sm-8 col-md-6 col-lg-4">
             <form
               @submit.prevent="createItem"
               id="newItemForm"
