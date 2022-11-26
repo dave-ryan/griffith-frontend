@@ -19,7 +19,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto">
+        <ul class="navbar-nav me-auto text-center">
           <li>
             <router-link class="nav-link" to="/">Home</router-link>
           </li>
@@ -46,10 +46,10 @@
             </button>
           </li>
         </ul>
-        <div class="d-flex">
-          <span class="nav-link disabled">Logged in as {{ userName }}</span>
-          <button class="btn btn-danger" @click="logOut()">Log Out</button>
+        <div class="nav-link disabled align-middle">
+          Logged in as {{ userName }}
         </div>
+        <button class="btn btn-danger" @click="logOut()">Log Out</button>
       </div>
     </div>
   </nav>
