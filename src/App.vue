@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar fixed-top navbar-expand-md navbar-dark bg-dark"
+    class="navbar fixed-top navbar-expand-md navbar-dark bg-dark text-center"
     v-if="userName"
     id="navbar"
   >
@@ -19,7 +19,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto text-center" @click="collapseBurger">
+        <ul class="navbar-nav me-auto">
           <li>
             <router-link class="nav-link" to="/">Home</router-link>
           </li>
@@ -45,11 +45,9 @@
               Expand All Lists
             </button>
           </li>
-          <li>
-            <span class="nav-link disabled"> Logged in as {{ userName }}</span>
-          </li>
         </ul>
-        <div class="text-center">
+        <div class="d-flex">
+          <span class="nav-link disabled">Logged in as {{ userName }}</span>
           <button class="btn btn-danger" @click="logOut()">Log Out</button>
         </div>
       </div>
@@ -133,11 +131,6 @@ export default {
     loginUpdate: function (userName) {
       this.userName = userName;
       this.isAdmin = localStorage.is_admin;
-    },
-    collapseBurger: function () {
-      document
-        .getElementById("navbarSupportedContent")
-        .classList.remove("show");
     },
     expandLists: function () {
       var lists = document.getElementsByClassName("list-collapse");
