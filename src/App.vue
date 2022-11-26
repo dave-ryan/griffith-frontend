@@ -32,14 +32,14 @@
           <li>
             <button
               v-if="this.$router.currentRoute.value.path === '/'"
-              class="btn btn-outline-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
+              class="btn btn-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
               @click="expandLists"
             >
               Expand All Lists
             </button>
             <button
               v-if="this.$router.currentRoute.value.path !== '/'"
-              class="btn btn-outline-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
+              class="btn btn-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
               disabled
             >
               Expand All Lists
