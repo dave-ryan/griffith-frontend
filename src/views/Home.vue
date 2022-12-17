@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid pe-0 ps-0 mt-5 mb-5 text-center">
-    <div v-if="!contentLoaded && !pageLoaded" class="pt-5">
+    <div v-if="!contentLoaded && !pageLoaded" class="mt-5">
       <img src="../assets/images/loading.gif" alt="" />
     </div>
     <transition name="splash" mode="out-in">
@@ -16,10 +16,22 @@
       </div>
     </transition>
     <transition name="content" mode="out-in">
-      <div v-if="contentLoaded" class="row pt-5">
+      <div v-if="contentLoaded" class="row">
         <div class="col">
           <div class="row mb-5">
             <div class="col">
+              <div
+                class="alert alert-warning"
+                role="alert"
+                v-if="lowPresentCount"
+              >
+                You Need To Add More Things To
+                <router-link to="/my-list" class="alert-link"
+                  >Your List!</router-link
+                >
+                <i class="bi bi-gift ms-2"></i>
+              </div>
+              <div class="mt-5 empty-space"></div>
               <h2 v-if="indexview">Everyone</h2>
               <h2 v-if="!indexview">Your Family</h2>
 
@@ -490,6 +502,7 @@ export default {
       me: null,
       splashLoaded: false,
       pageLoaded: false,
+      lowPresentCount: false,
     };
   },
   created: function () {
@@ -497,6 +510,14 @@ export default {
       .get("/users/me")
       .then((response) => {
         this.me = response.data;
+        if (
+          this.me.wishedgifts.reduce((total, currentgift) => {
+            return currentgift.purchaser ? total : (total += 1);
+          }, 0) < 4
+        ) {
+          this.lowPresentCount = true;
+        }
+
         this.getFamily();
       })
       .catch((errors) => {
