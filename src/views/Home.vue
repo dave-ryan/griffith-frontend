@@ -91,8 +91,10 @@
                               </label>
                               <span class="text-danger">
                                 - Purchased By
-                                <span v-if="me.id !== 1">Someone Else</span>
-                                <span v-if="me.id === 1">
+                                <span v-if="me.is_admin !== true"
+                                  >Someone Else</span
+                                >
+                                <span v-if="me.is_admin === true">
                                   {{ item.purchaser.name }}</span
                                 >
                               </span>
@@ -235,9 +237,11 @@
                               </label>
                               <span class="text-danger">
                                 - Purchased By
-                                <span v-if="me.id != 1">Someone Else</span>
-                                <span v-if="me.id === 1">
-                                  {{ tem.purchaser.name }}
+                                <span v-if="me.is_admin !== true"
+                                  >Someone Else</span
+                                >
+                                <span v-if="me.is_admin === true">
+                                  {{ item.purchaser.name }}
                                 </span>
                               </span>
                             </div>
@@ -395,8 +399,8 @@
                         </label>
                         <span class="text-danger">
                           - Purchased By
-                          <span v-if="me.id != 1">Someone Else</span>
-                          <span v-if="me.id === 1">
+                          <span v-if="me.is_admin !== true">Someone Else</span>
+                          <span v-if="me.is_admin === true">
                             {{ item.purchaser.name }}</span
                           >
                         </span>
