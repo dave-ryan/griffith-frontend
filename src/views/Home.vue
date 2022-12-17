@@ -16,22 +16,17 @@
       </div>
     </transition>
     <transition name="content" mode="out-in">
+      <div class="alert alert-warning" role="alert" v-if="lowPresentCount">
+        You Need To Add More Things To
+        <router-link to="/my-list" class="alert-link">Your List!</router-link>
+        <i class="bi bi-gift ms-2"></i>
+      </div>
+    </transition>
+    <transition name="content" mode="out-in">
       <div v-if="contentLoaded" class="row">
         <div class="col">
-          <div class="row mb-5">
+          <div class="row mb-5 mt-5">
             <div class="col">
-              <div
-                class="alert alert-warning"
-                role="alert"
-                v-if="lowPresentCount"
-              >
-                You Need To Add More Things To
-                <router-link to="/my-list" class="alert-link"
-                  >Your List!</router-link
-                >
-                <i class="bi bi-gift ms-2"></i>
-              </div>
-              <div class="mt-5 empty-space"></div>
               <h2 v-if="indexview">Everyone</h2>
               <h2 v-if="!indexview">Your Family</h2>
 
