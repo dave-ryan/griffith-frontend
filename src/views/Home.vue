@@ -341,11 +341,20 @@
               <div class="col">
                 <h2 class="mb-3">Your Secret Santa</h2>
                 <button
-                  class="btn btn-outline-success"
+                  class="btn btn-outline-success mb-1"
                   data-bs-toggle="collapse"
                   data-bs-target="#christmas-list-ss"
                 >
                   {{ secretSanta.name }}
+                  <i
+                    class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
+                    v-if="
+                      secretSanta.wishedgifts &&
+                      secretSanta.wishedgifts.some(
+                        (item) => item.purchaser_id === me.id
+                      )
+                    "
+                  ></i>
                 </button>
                 <div
                   class="collapse list-collapse"
