@@ -29,22 +29,16 @@
           <li v-if="isAdmin === `true`">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
-          <li>
-            <button
-              v-if="this.$router.currentRoute.value.path === '/'"
-              class="btn btn-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
-              @click="expandLists"
-            >
-              Expand All Lists
-            </button>
-            <button
-              v-if="this.$router.currentRoute.value.path !== '/'"
-              class="btn btn-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
-              disabled
-            >
-              Expand All Lists
-            </button>
-          </li>
+          <transition name="splash" mode="out-in">
+            <li v-if="this.$router.currentRoute.value.path === '/'">
+              <button
+                class="btn btn-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
+                @click="expandLists"
+              >
+                Expand All Lists
+              </button>
+            </li>
+          </transition>
         </ul>
         <div class="nav-link disabled align-middle">
           Logged in as {{ userName }}
