@@ -79,9 +79,7 @@
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
-                                <span v-if="item.link || item.purchaser_id">
-                                  -
-                                </span>
+                                <span v-if="item.link"> - </span>
                                 <a
                                   v-if="item.link"
                                   :href="
@@ -120,9 +118,7 @@
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
-                                <span v-if="item.link || item.purchaser_id">
-                                  -
-                                </span>
+                                <span v-if="item.link"> - </span>
                                 <a
                                   v-if="item.link"
                                   :href="
@@ -152,9 +148,7 @@
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
-                                <span v-if="item.link || item.purchaser_id">
-                                  -
-                                </span>
+                                <span v-if="item.link"> - </span>
                                 <a
                                   v-if="item.link"
                                   :href="
@@ -229,9 +223,7 @@
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
-                                <span v-if="item.link || item.purchaser_id">
-                                  -
-                                </span>
+                                <span v-if="item.link"> - </span>
                                 <a
                                   v-if="item.link"
                                   :href="
@@ -270,9 +262,7 @@
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
-                                <span v-if="item.link || item.purchaser_id">
-                                  -
-                                </span>
+                                <span v-if="item.link"> - </span>
                                 <a
                                   v-if="item.link"
                                   :href="
@@ -302,9 +292,7 @@
                                 :id="`label-` + item.id"
                               >
                                 {{ item.name }}
-                                <span v-if="item.link || item.purchaser_id">
-                                  -
-                                </span>
+                                <span v-if="item.link"> - </span>
                                 <a
                                   v-if="item.link"
                                   :href="
@@ -397,7 +385,7 @@
                           :id="`label-` + item.id"
                         >
                           {{ item.name }}
-                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <span v-if="item.link"> - </span>
                           <a
                             v-if="item.link"
                             :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -434,7 +422,7 @@
                           :id="`label-` + item.id"
                         >
                           {{ item.name }}
-                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <span v-if="item.link"> - </span>
                           <a
                             v-if="item.link"
                             :href="`//` + item.link.replace(/^https?:\/\//, '')"
@@ -460,7 +448,7 @@
                           :id="`label-` + item.id"
                         >
                           {{ item.name }}
-                          <span v-if="item.link || item.purchaser_id"> - </span>
+                          <span v-if="item.link"> - </span>
                           <a
                             v-if="item.link"
                             :href="`//` + item.link.replace(/^https?:\/\//, '')"
