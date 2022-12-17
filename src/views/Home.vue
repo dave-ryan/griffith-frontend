@@ -92,7 +92,11 @@
                                 >
                               </label>
                               <span class="text-danger">
-                                purchased by {{ item.purchaser.name }}
+                                - Purchased By
+                                <span v-if="me.id !== 1">Someone Else</span>
+                                <span v-if="me.id === 1">
+                                  {{ item.purchaser.name }}</span
+                                >
                               </span>
                             </div>
                           </div>
@@ -129,7 +133,7 @@
                                 >
                               </label>
                               <span class="text-success">
-                                purchased by you!</span
+                                - Purchased By You!</span
                               >
                             </div>
                           </div>
@@ -238,7 +242,11 @@
                                 >
                               </label>
                               <span class="text-danger">
-                                purchased by {{ item.purchaser.name }}
+                                - Purchased By
+                                <span v-if="me.id != 1">Someone Else</span>
+                                <span v-if="me.id === 1">
+                                  {{ tem.purchaser.name }}
+                                </span>
                               </span>
                             </div>
                           </div>
@@ -275,7 +283,7 @@
                                 >
                               </label>
                               <span class="text-success">
-                                purchased by you!</span
+                                - Purchased By You!</span
                               >
                             </div>
                           </div>
@@ -398,8 +406,12 @@
                           >
                         </label>
                         <span class="text-danger">
-                          purchased by {{ item.purchaser.name }}</span
-                        >
+                          - Purchased By
+                          <span v-if="me.id != 1">Someone Else</span>
+                          <span v-if="me.id === 1">
+                            {{ tem.purchaser.name }}</span
+                          >
+                        </span>
                       </div>
                     </div>
                     <div
@@ -430,7 +442,7 @@
                             >link</a
                           >
                         </label>
-                        <span class="text-success"> purchased by you!</span>
+                        <span class="text-success">- Purchased By You!</span>
                       </div>
                     </div>
                     <div v-else>
