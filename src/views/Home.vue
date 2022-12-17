@@ -409,7 +409,7 @@
                           - Purchased By
                           <span v-if="me.id != 1">Someone Else</span>
                           <span v-if="me.id === 1">
-                            {{ tem.purchaser.name }}</span
+                            {{ item.purchaser.name }}</span
                           >
                         </span>
                       </div>
