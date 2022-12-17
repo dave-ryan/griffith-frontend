@@ -382,6 +382,9 @@
 .row {
   --bs-gutter-x: 0;
 }
+textarea {
+  white-space: pre-wrap;
+}
 </style>
 
 <script>
