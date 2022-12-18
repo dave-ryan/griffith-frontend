@@ -23,7 +23,7 @@
       </div>
     </transition>
     <transition name="content" mode="out-in">
-      <div v-if="contentLoaded" class="row">
+      <div v-if="contentLoaded" class="row ps-2 pe-2">
         <div class="col">
           <div class="row mb-5 mt-5">
             <div class="col">
@@ -73,11 +73,7 @@
                                 :id="`checkbox-` + item.id"
                                 disabled
                               />
-                              <label
-                                class="form-check-label"
-                                :for="`checkbox-` + item.id"
-                                :id="`label-` + item.id"
-                              >
+                              <span class="fw-light">
                                 {{ item.name }}
                                 <span v-if="item.link"> - </span>
                                 <a
@@ -88,7 +84,7 @@
                                   target="_blank"
                                   >link</a
                                 >
-                              </label>
+                              </span>
                               <span class="text-danger">
                                 - Purchased By
                                 <span v-if="me.is_admin !== true"
@@ -114,22 +110,16 @@
                                 @click="toggleCheckBox(item)"
                                 :id="`checkbox-` + item.id"
                               />
-                              <label
-                                class="form-check-label"
-                                :for="`checkbox-` + item.id"
-                                :id="`label-` + item.id"
+                              {{ item.name }}
+                              <span v-if="item.link"> - </span>
+                              <a
+                                v-if="item.link"
+                                :href="
+                                  `//` + item.link.replace(/^https?:\/\//, '')
+                                "
+                                target="_blank"
+                                >link</a
                               >
-                                {{ item.name }}
-                                <span v-if="item.link"> - </span>
-                                <a
-                                  v-if="item.link"
-                                  :href="
-                                    `//` + item.link.replace(/^https?:\/\//, '')
-                                  "
-                                  target="_blank"
-                                  >link</a
-                                >
-                              </label>
                               <span class="text-success">
                                 - Purchased By You!</span
                               >
@@ -144,22 +134,16 @@
                                 @click="toggleCheckBox(item)"
                                 :id="`checkbox-` + item.id"
                               />
-                              <label
-                                class="form-check-label"
-                                :for="`checkbox-` + item.id"
-                                :id="`label-` + item.id"
+                              {{ item.name }}
+                              <span v-if="item.link"> - </span>
+                              <a
+                                v-if="item.link"
+                                :href="
+                                  `//` + item.link.replace(/^https?:\/\//, '')
+                                "
+                                target="_blank"
+                                >link</a
                               >
-                                {{ item.name }}
-                                <span v-if="item.link"> - </span>
-                                <a
-                                  v-if="item.link"
-                                  :href="
-                                    `//` + item.link.replace(/^https?:\/\//, '')
-                                  "
-                                  target="_blank"
-                                  >link</a
-                                >
-                              </label>
                             </div>
                           </div>
                         </div>
@@ -219,11 +203,7 @@
                                 :id="`christmas-checkbox-` + item.id"
                                 disabled
                               />
-                              <label
-                                class="form-check-label"
-                                :for="`christmas-checkbox-` + item.id"
-                                :id="`label-` + item.id"
-                              >
+                              <span class="fw-light">
                                 {{ item.name }}
                                 <span v-if="item.link"> - </span>
                                 <a
@@ -234,7 +214,7 @@
                                   target="_blank"
                                   >link</a
                                 >
-                              </label>
+                              </span>
                               <span class="text-danger">
                                 - Purchased By
                                 <span v-if="me.is_admin !== true"
@@ -260,22 +240,16 @@
                                 @click="toggleCheckBox(item)"
                                 :id="`christmas-checkbox-` + item.id"
                               />
-                              <label
-                                class="form-check-label"
-                                :for="`christmas-checkbox-` + item.id"
-                                :id="`label-` + item.id"
+                              {{ item.name }}
+                              <span v-if="item.link"> - </span>
+                              <a
+                                v-if="item.link"
+                                :href="
+                                  `//` + item.link.replace(/^https?:\/\//, '')
+                                "
+                                target="_blank"
+                                >link</a
                               >
-                                {{ item.name }}
-                                <span v-if="item.link"> - </span>
-                                <a
-                                  v-if="item.link"
-                                  :href="
-                                    `//` + item.link.replace(/^https?:\/\//, '')
-                                  "
-                                  target="_blank"
-                                  >link</a
-                                >
-                              </label>
                               <span class="text-success">
                                 - Purchased By You!</span
                               >
@@ -290,22 +264,16 @@
                                 @click="toggleCheckBox(item)"
                                 :id="`checkbox-` + item.id"
                               />
-                              <label
-                                class="form-check-label"
-                                :for="`checkbox-` + item.id"
-                                :id="`label-` + item.id"
+                              {{ item.name }}
+                              <span v-if="item.link"> - </span>
+                              <a
+                                v-if="item.link"
+                                :href="
+                                  `//` + item.link.replace(/^https?:\/\//, '')
+                                "
+                                target="_blank"
+                                >link</a
                               >
-                                {{ item.name }}
-                                <span v-if="item.link"> - </span>
-                                <a
-                                  v-if="item.link"
-                                  :href="
-                                    `//` + item.link.replace(/^https?:\/\//, '')
-                                  "
-                                  target="_blank"
-                                  >link</a
-                                >
-                              </label>
                             </div>
                           </div>
                         </div>
@@ -383,11 +351,7 @@
                           :id="`checkbox-` + item.id"
                           disabled
                         />
-                        <label
-                          class="form-check-label"
-                          :for="`checkbox-` + item.id"
-                          :id="`label-` + item.id"
-                        >
+                        <span class="fw-light">
                           {{ item.name }}
                           <span v-if="item.link"> - </span>
                           <a
@@ -396,7 +360,7 @@
                             target="_blank"
                             >link</a
                           >
-                        </label>
+                        </span>
                         <span class="text-danger">
                           - Purchased By
                           <span v-if="me.is_admin !== true">Someone Else</span>
@@ -420,11 +384,7 @@
                           @click="toggleCheckBox(item)"
                           :id="`checkbox-` + item.id"
                         />
-                        <label
-                          class="form-check-label"
-                          :for="`checkbox-` + item.id"
-                          :id="`label-` + item.id"
-                        >
+                        <span class="fw-light">
                           {{ item.name }}
                           <span v-if="item.link"> - </span>
                           <a
@@ -433,7 +393,7 @@
                             target="_blank"
                             >link</a
                           >
-                        </label>
+                        </span>
                         <span class="text-success">- Purchased By You!</span>
                       </div>
                     </div>
@@ -446,20 +406,14 @@
                           @click="toggleCheckBox(item)"
                           :id="`checkbox-` + item.id"
                         />
-                        <label
-                          class="form-check-label"
-                          :for="`checkbox-` + item.id"
-                          :id="`label-` + item.id"
+                        {{ item.name }}
+                        <span v-if="item.link"> - </span>
+                        <a
+                          v-if="item.link"
+                          :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                          target="_blank"
+                          >link</a
                         >
-                          {{ item.name }}
-                          <span v-if="item.link"> - </span>
-                          <a
-                            v-if="item.link"
-                            :href="`//` + item.link.replace(/^https?:\/\//, '')"
-                            target="_blank"
-                            >link</a
-                          >
-                        </label>
                       </div>
                     </div>
                   </div>
