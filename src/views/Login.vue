@@ -73,6 +73,18 @@ export default {
     };
   },
   methods: {
+    checkForms: function () {
+      if (
+        this.inputParams["name"] &&
+        this.inputParams["name"].length > 0 &&
+        this.inputParams["password"] &&
+        this.inputParams["password"].length > 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     logIn: function () {
       this.fieldset = document.getElementById("loginFieldset");
       document.getElementById("loginForm").classList.add("was-validated");
@@ -105,18 +117,6 @@ export default {
       this.errors = null;
       this.fieldset.setAttribute("disabled", "");
       this.buttonName = "Loading...";
-    },
-    checkForms: function () {
-      if (
-        this.inputParams["name"] &&
-        this.inputParams["name"].length > 0 &&
-        this.inputParams["password"] &&
-        this.inputParams["password"].length > 0
-      ) {
-        return true;
-      } else {
-        return false;
-      }
     },
   },
 };

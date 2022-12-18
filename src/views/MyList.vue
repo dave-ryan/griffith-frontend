@@ -416,78 +416,6 @@ export default {
     this.getMyList();
   },
   methods: {
-    getMyList: function () {
-      axios
-        .get("/wishedgifts")
-        .then((response) => {
-          this.contentLoaded = true;
-          this.pageLoaded = true;
-          this.myList = response.data;
-        })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
-          if (errors.response.status === 401) {
-            this.$root.logOut();
-          }
-        });
-    },
-    editItem: function (item) {
-      this.editingItem.name = item.name;
-      this.editingItem.link = item.link;
-      this.editingItem.id = item.id;
-    },
-    updateItem: function () {
-      document.getElementById("editingItemForm").classList.add("was-validated");
-      if (this.checkForms(this.editingItem)) {
-        axios
-          .patch(`/wishedgifts/${this.editingItem.id}`, this.editingItem)
-          .then(() => {
-            var foundItem = this.myList.find(
-              (item) => item.id === this.editingItem.id
-            );
-
-            foundItem.name = this.editingItem.name;
-            foundItem.link = this.editingItem.link;
-          })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-          });
-      }
-    },
-    deleteItem: function (item) {
-      axios
-        .delete(`/wishedgifts/${item.id}`)
-        .then(() => {
-          this.myList.splice(this.myList.indexOf(item), 1);
-        })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
-        });
-    },
-    createItem: function () {
-      document.getElementById("newItemForm").classList.add("was-validated");
-      if (this.checkForms(this.newItem)) {
-        axios
-          .post("/wishedgifts", this.newItem)
-          .then((response) => {
-            this.myList.push(response.data);
-            this.newItem = {};
-            document
-              .getElementById("newItemForm")
-              .classList.remove("was-validated");
-          })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-          });
-
-        setTimeout(() => {
-          window.scrollTo(
-            0,
-            document.body.scrollHeight || document.documentElement.scrollHeight
-          );
-        }, 400);
-      }
-    },
     batchCreate: function () {
       var arrayOfItems = this.batchItems.split("\n");
       var arrayOfLinks = this.batchLinks.split("\n");
@@ -518,11 +446,83 @@ export default {
         return false;
       }
     },
+    createItem: function () {
+      document.getElementById("newItemForm").classList.add("was-validated");
+      if (this.checkForms(this.newItem)) {
+        axios
+          .post("/wishedgifts", this.newItem)
+          .then((response) => {
+            this.myList.push(response.data);
+            this.newItem = {};
+            document
+              .getElementById("newItemForm")
+              .classList.remove("was-validated");
+          })
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
+          });
+
+        setTimeout(() => {
+          window.scrollTo(
+            0,
+            document.body.scrollHeight || document.documentElement.scrollHeight
+          );
+        }, 400);
+      }
+    },
+    deleteItem: function (item) {
+      axios
+        .delete(`/wishedgifts/${item.id}`)
+        .then(() => {
+          this.myList.splice(this.myList.indexOf(item), 1);
+        })
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
+        });
+    },
+    editItem: function (item) {
+      this.editingItem.name = item.name;
+      this.editingItem.link = item.link;
+      this.editingItem.id = item.id;
+    },
+    getMyList: function () {
+      axios
+        .get("/wishedgifts")
+        .then((response) => {
+          this.contentLoaded = true;
+          this.pageLoaded = true;
+          this.myList = response.data;
+        })
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
+          if (errors.response.status === 401) {
+            this.$root.logOut();
+          }
+        });
+    },
     needsWordWrap: function (items) {
       if (items === "") {
         return "";
       } else {
         return "text-nowrap";
+      }
+    },
+    updateItem: function () {
+      document.getElementById("editingItemForm").classList.add("was-validated");
+      if (this.checkForms(this.editingItem)) {
+        axios
+          .patch(`/wishedgifts/${this.editingItem.id}`, this.editingItem)
+          .then(() => {
+            var foundItem = this.myList.find(
+              (item) => item.id === this.editingItem.id
+            );
+
+            foundItem.name = this.editingItem.name;
+            foundItem.link = this.editingItem.link;
+          })
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
+          });
       }
     },
   },

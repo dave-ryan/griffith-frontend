@@ -481,24 +481,6 @@ export default {
       });
   },
   methods: {
-    toggleCheckBox: function (item) {
-      if (item.purchaser_id) {
-        item.purchaser_id = null;
-        item.purchaser = null;
-        axios
-          .patch(`/wishedgifts/${item.id}`, { purchaser_id: null })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-          });
-      } else {
-        item.purchaser_id = this.me.id;
-        axios
-          .patch(`/wishedgifts/${item.id}`, { purchaser_id: this.me.id })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-          });
-      }
-    },
     getEveryone: function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
       this.indexview = true;
@@ -532,21 +514,39 @@ export default {
       });
       this.me.mystery_santa ? this.getSecretSanta() : "";
     },
-    toggleChristmasList: function (user) {
-      axios
-        .get(`/users/${user.id}/christmaslist`)
-        .then((response) => {
-          this.family[user.id] = response.data;
-        })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
-        });
-    },
     getSecretSanta: function () {
       axios
         .get(`/users/${this.me.mystery_santa.id}`)
         .then((response) => {
           this.secretSanta = response.data;
+        })
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
+        });
+    },
+    toggleCheckBox: function (item) {
+      if (item.purchaser_id) {
+        item.purchaser_id = null;
+        item.purchaser = null;
+        axios
+          .patch(`/wishedgifts/${item.id}`, { purchaser_id: null })
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
+          });
+      } else {
+        item.purchaser_id = this.me.id;
+        axios
+          .patch(`/wishedgifts/${item.id}`, { purchaser_id: this.me.id })
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
+          });
+      }
+    },
+    toggleChristmasList: function (user) {
+      axios
+        .get(`/users/${user.id}/christmaslist`)
+        .then((response) => {
+          this.family[user.id] = response.data;
         })
         .catch((errors) => {
           console.log("errors: ", errors.response.data.errors);

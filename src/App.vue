@@ -122,10 +122,6 @@ export default {
     }
   },
   methods: {
-    loginUpdate: function (userName) {
-      this.userName = userName;
-      this.isAdmin = localStorage.is_admin;
-    },
     expandLists: function () {
       var lists = document.getElementsByClassName("list-collapse");
       for (let i = 0; i < lists.length; i++) {
@@ -133,6 +129,10 @@ export default {
         lists[i].classList.remove("show");
         lists[i].classList.add("show");
       }
+    },
+    loginUpdate: function (userName) {
+      this.userName = userName;
+      this.isAdmin = localStorage.is_admin;
     },
     logOut: function () {
       delete axios.defaults.headers.common["Authorization"];

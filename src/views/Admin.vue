@@ -23,7 +23,7 @@
                   class="btn btn-outline-success me-2"
                   data-bs-toggle="modal"
                   data-bs-target="#editUserModal"
-                  @click="openEditUser(user)"
+                  @click="editUser(user)"
                 >
                   Edit
                 </button>
@@ -49,7 +49,7 @@
                   class="btn btn-outline-success m-2"
                   data-bs-toggle="modal"
                   data-bs-target="#editFamily"
-                  @click="openEditFamily(family)"
+                  @click="editFamily(family)"
                 >
                   Edit Family
                 </button>
@@ -211,7 +211,7 @@
           <div class="modal-dialog modal-dialog-centered" id="editFamilyModal">
             <div class="modal-content">
               <form
-                @submit.prevent="editFamily(editFamilyParams)"
+                @submit.prevent="updateFamily(editFamilyParams)"
                 id="editFamilyParamsForm"
                 novalidate
               >
@@ -614,20 +614,80 @@ export default {
     this.getUsers();
   },
   methods: {
-    testGetUsers: function () {
-      axios.get("/users").then((response) => {
+    createFamily: function (familyParams) {
+      axios.post("/families", familyParams).then((response) => {
         console.log(response.data);
+        this.families.push(familyParams);
       });
     },
-    testGetMe: function () {
-      axios.get("/users/me").then((response) => {
+    createUser: function (userParams) {
+      userParams.santa_group = parseInt(userParams.santa_group.charAt());
+      this.families.forEach((family) => {
+        if (family.name === userParams.familyName) {
+          userParams.family_id = family.id;
+        }
+      });
+      if (userParams.is_admin === "true") {
+        userParams.is_admin = true;
+      }
+      this.users.forEach((user) => {
+        if (user.name === userParams.secretSantaName) {
+          userParams.mystery_santa_id = user.id;
+        }
+      });
+      console.log(userParams);
+      axios.post("/users", userParams).then((response) => {
         console.log(response.data);
+        this.users.push(userParams);
       });
     },
-    testGetFamilies: function () {
-      axios.get("/families").then((response) => {
-        console.log(response.data);
-      });
+    deleteFamily: function (family) {
+      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FAMILY?")) {
+        axios
+          .delete(`/families/${family.id}`)
+          .then((response) => {
+            console.log(response.data);
+            if (response.status === 200) {
+              this.families = this.families.filter((remainingfamily) => {
+                return remainingfamily.id != family.id;
+              });
+            }
+          })
+          .catch((errors) => {
+            console.log("errors: ", errors);
+          });
+      }
+    },
+    deleteUser: function (user) {
+      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS USER?")) {
+        axios
+          .delete(`/users/${user.id}`)
+          .then((response) => {
+            console.log(response.data);
+
+            if (response.status === 200) {
+              this.users = this.users.filter((remainingUser) => {
+                return remainingUser.id != user.id;
+              });
+            }
+          })
+          .catch((errors) => {
+            console.log("errors: ", errors.response);
+          });
+      }
+    },
+    editFamily: function (family) {
+      this.editFamilyParams = family;
+    },
+    editUser: function (user) {
+      this.editingUser = user;
+      this.editingUser.familyName = user.family.name;
+      this.editingUser.secretSantaName = user.mystery_santa
+        ? user.mystery_santa.name
+        : null;
+    },
+    flipAdmin: function (user) {
+      user.is_admin = !user.is_admin;
     },
     getUsers: function () {
       axios
@@ -675,42 +735,48 @@ export default {
           });
       }
     },
-    openEditUser: function (user) {
-      this.editingUser = user;
-      this.editingUser.familyName = user.family.name;
-      this.editingUser.secretSantaName = user.mystery_santa
-        ? user.mystery_santa.name
-        : null;
-    },
-    openEditFamily: function (family) {
-      this.editFamilyParams = family;
-    },
-    createUser: function (userParams) {
-      userParams.santa_group = parseInt(userParams.santa_group.charAt());
-      this.families.forEach((family) => {
-        if (family.name === userParams.familyName) {
-          userParams.family_id = family.id;
-        }
-      });
-      if (userParams.is_admin === "true") {
-        userParams.is_admin = true;
+    secretSantaShuffle: function () {
+      if (
+        confirm("ARE YOU SURE YOU WANT TO SHUFFLE EVERYONE'S SECRET SANTA?")
+      ) {
+        axios
+          .post("/secret-santa-shuffle", this.me)
+          .then((response) => {
+            console.log(response.data);
+            this.visible = true;
+            this.getUsers();
+          })
+          .catch((errors) => {
+            console.log("errors: ", errors.response.data.errors);
+            this.errors = errors.response;
+          });
       }
-      this.users.forEach((user) => {
-        if (user.name === userParams.secretSantaName) {
-          userParams.mystery_santa_id = user.id;
-        }
-      });
-      console.log(userParams);
-      axios.post("/users", userParams).then((response) => {
+    },
+    testGetUsers: function () {
+      axios.get("/users").then((response) => {
         console.log(response.data);
-        this.users.push(userParams);
       });
     },
-    createFamily: function (familyParams) {
-      axios.post("/families", familyParams).then((response) => {
+    testGetMe: function () {
+      axios.get("/users/me").then((response) => {
         console.log(response.data);
-        this.families.push(familyParams);
       });
+    },
+    testGetFamilies: function () {
+      axios.get("/families").then((response) => {
+        console.log(response.data);
+      });
+    },
+    updateFamily: function (family) {
+      axios
+        .patch(`/families/${family.id}`, family)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((errors) => {
+          console.log("errors: ", errors);
+          this.errors = errors.response;
+        });
     },
     updateUser: function (user) {
       var userParams = {
@@ -743,72 +809,6 @@ export default {
         console.log("errors: ", errors);
         this.errors = errors.response;
       });
-    },
-    deleteUser: function (user) {
-      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS USER?")) {
-        axios
-          .delete(`/users/${user.id}`)
-          .then((response) => {
-            console.log(response.data);
-
-            if (response.status === 200) {
-              this.users = this.users.filter((remainingUser) => {
-                return remainingUser.id != user.id;
-              });
-            }
-          })
-          .catch((errors) => {
-            console.log("errors: ", errors.response);
-          });
-      }
-    },
-    editFamily: function (family) {
-      axios
-        .patch(`/families/${family.id}`, family)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((errors) => {
-          console.log("errors: ", errors);
-          this.errors = errors.response;
-        });
-    },
-    deleteFamily: function (family) {
-      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FAMILY?")) {
-        axios
-          .delete(`/families/${family.id}`)
-          .then((response) => {
-            console.log(response.data);
-            if (response.status === 200) {
-              this.families = this.families.filter((remainingfamily) => {
-                return remainingfamily.id != family.id;
-              });
-            }
-          })
-          .catch((errors) => {
-            console.log("errors: ", errors);
-          });
-      }
-    },
-    flipAdmin: function (user) {
-      user.is_admin = !user.is_admin;
-    },
-    secretSantaShuffle: function () {
-      if (
-        confirm("ARE YOU SURE YOU WANT TO SHUFFLE EVERYONE'S SECRET SANTA?")
-      ) {
-        axios
-          .post("/secret-santa-shuffle", this.me)
-          .then((response) => {
-            console.log(response.data);
-            this.visible = true;
-            this.getUsers();
-          })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-            this.errors = errors.response;
-          });
-      }
     },
   },
 };
