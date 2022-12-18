@@ -19,7 +19,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto text-center">
+        <ul class="navbar-nav me-auto text-center" @click="collapseBurger">
           <li>
             <router-link class="nav-link" to="/">Home</router-link>
           </li>
@@ -122,11 +122,13 @@ export default {
     }
   },
   methods: {
+    collapseBurger: function () {
+      var burger = document.getElementsByClassName("navbar-collapse");
+      burger[0].classList.remove("show");
+    },
     expandLists: function () {
       var lists = document.getElementsByClassName("list-collapse");
       for (let i = 0; i < lists.length; i++) {
-        lists[i].classList.remove("collapsed");
-        lists[i].classList.remove("show");
         lists[i].classList.add("show");
       }
     },
