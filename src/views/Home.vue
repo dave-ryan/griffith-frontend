@@ -63,57 +63,14 @@
                           >{{ user.name }} hasn't made a christmas list yet!
                           Remind them! &#128578;</span
                         >
-                        <div v-for="item in user.wishedgifts" :key="item.id">
-                          <div class="form-check form-check-inline">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              @change="toggleCheckBox(item)"
-                              :value="item.id"
-                              :id="`checkbox-` + item.id"
-                              :checked="item.purchaser_id"
-                              :disabled="
-                                item.purchaser_id && item.purchaser_id !== me.id
-                              "
-                            />
-                            <span
-                              :class="
-                                item.purchaser_id && item.purchaser_id !== me.id
-                                  ? 'fw-light'
-                                  : ''
-                              "
-                            >
-                              {{ item.name }}
-                              <span v-if="item.link"> - </span>
-                              <a
-                                v-if="item.link"
-                                :href="
-                                  `//` + item.link.replace(/^https?:\/\//, '')
-                                "
-                                target="_blank"
-                                >link</a
-                              >
-                            </span>
-                            <span
-                              v-if="item.purchaser && item.purchaser_id"
-                              :class="
-                                item.purchaser_id === me.id
-                                  ? 'text-success'
-                                  : 'text-danger'
-                              "
-                            >
-                              - Purchased By
-                              {{
-                                item.purchaser_id === me.id
-                                  ? "You!"
-                                  : "Someone Else"
-                              }}
-                              {{
-                                me.is_admin ? " - " + item.purchaser.name : ""
-                              }}
-                            </span>
-                          </div>
-                        </div>
+
+                        <WishList
+                          v-for="item in user.wishedgifts"
+                          :key="item.id"
+                          :item="item"
+                          :me="me"
+                          @toggleCheckBox="toggleCheckBox(item)"
+                        />
                       </div>
                     </div>
                   </div>
@@ -143,6 +100,7 @@
           </div>
 
           <!-- Secret Santa Section -->
+
           <div class="row" v-if="secretSanta && !indexview">
             <div class="row">
               <div class="col-2 col-sm-3 col-md-4"></div>
@@ -177,51 +135,13 @@
                     >{{ secretSanta.name }} hasn't made their christmas list
                     yet! Remind them! &#128578;</span
                   >
-                  <div v-for="item in secretSanta.wishedgifts" :key="item.id">
-                    <div class="form-check form-check-inline">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        @change="toggleCheckBox(item)"
-                        :value="item.id"
-                        :id="`checkbox-` + item.id"
-                        :checked="item.purchaser_id"
-                        :disabled="
-                          item.purchaser_id && item.purchaser_id !== me.id
-                        "
-                      />
-                      <span
-                        :class="
-                          item.purchaser_id && item.purchaser_id !== me.id
-                            ? 'fw-light'
-                            : ''
-                        "
-                      >
-                        {{ item.name }}
-                        <span v-if="item.link"> - </span>
-                        <a
-                          v-if="item.link"
-                          :href="`//` + item.link.replace(/^https?:\/\//, '')"
-                          target="_blank"
-                          >link</a
-                        >
-                      </span>
-                      <span
-                        v-if="item.purchaser && item.purchaser_id"
-                        :class="
-                          item.purchaser_id === me.id
-                            ? 'text-success'
-                            : 'text-danger'
-                        "
-                      >
-                        - Purchased By
-                        {{
-                          item.purchaser_id === me.id ? "You!" : "Someone Else"
-                        }}
-                        {{ me.is_admin ? " - " + item.purchaser.name : "" }}
-                      </span>
-                    </div>
-                  </div>
+                  <WishList
+                    v-for="item in secretSanta.wishedgifts"
+                    :key="item.id"
+                    :item="item"
+                    :me="me"
+                    @toggleCheckBox="toggleCheckBox(item)"
+                  />
                 </div>
               </div>
             </div>
@@ -275,8 +195,10 @@
 <script>
 import axios from "axios";
 import { Toast } from "bootstrap";
+import WishList from "../components/WishList.vue";
 
 export default {
+  components: { WishList },
   data: function () {
     return {
       family: [],
