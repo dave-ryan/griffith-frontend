@@ -96,43 +96,16 @@
                               </span>
                             </div>
                           </div>
-                          <div
-                            v-else-if="
-                              item.purchaser_id && item.purchaser_id === me.id
-                            "
-                          >
-                            <div class="form-check form-check-inline">
-                              <input
-                                class="form-check-input"
-                                type="checkbox"
-                                value=""
-                                checked
-                                @click="toggleCheckBox(item)"
-                                :id="`checkbox-` + item.id"
-                              />
-                              {{ item.name }}
-                              <span v-if="item.link"> - </span>
-                              <a
-                                v-if="item.link"
-                                :href="
-                                  `//` + item.link.replace(/^https?:\/\//, '')
-                                "
-                                target="_blank"
-                                >link</a
-                              >
-                              <span class="text-success">
-                                - Purchased By You!</span
-                              >
-                            </div>
-                          </div>
+
                           <div v-else>
                             <div class="form-check form-check-inline">
                               <input
                                 class="form-check-input"
                                 type="checkbox"
-                                value=""
-                                @click="toggleCheckBox(item)"
+                                @change="toggleCheckBox(item)"
+                                :value="item.id"
                                 :id="`checkbox-` + item.id"
+                                :checked="item.purchaser_id"
                               />
                               {{ item.name }}
                               <span v-if="item.link"> - </span>
@@ -144,6 +117,15 @@
                                 target="_blank"
                                 >link</a
                               >
+                              <span
+                                v-if="
+                                  item.purchaser_id &&
+                                  item.purchaser_id === me.id
+                                "
+                                class="text-success"
+                              >
+                                - Purchased By You!
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -424,6 +406,32 @@
         </div>
       </div>
     </transition>
+
+    <div
+      class="position-fixed top-0 start-50 translate-middle-x p-3"
+      style="z-index: 1100"
+    >
+      <div
+        id="toast"
+        class="toast fade align-items-center text-white bg-danger border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-bs-delay="3500"
+      >
+        <div class="d-flex">
+          <div class="toast-body">
+            {{ errorMessage }}
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -443,6 +451,8 @@
 
 <script>
 import axios from "axios";
+import { Toast } from "bootstrap";
+
 export default {
   data: function () {
     return {
@@ -456,6 +466,9 @@ export default {
       splashLoaded: false,
       pageLoaded: false,
       lowPresentCount: false,
+      errorMessage: "",
+      defaultErrorMessage:
+        "Oops! Something went wrong. Try refreshing the page",
     };
   },
   created: function () {
@@ -524,23 +537,34 @@ export default {
           console.log("errors: ", errors.response.data.errors);
         });
     },
+    //todo: add loading wheel while we wait for patching to complete
     toggleCheckBox: function (item) {
-      if (item.purchaser_id) {
-        item.purchaser_id = null;
-        item.purchaser = null;
-        axios
-          .patch(`/wishedgifts/${item.id}`, { purchaser_id: null })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-          });
-      } else {
-        item.purchaser_id = this.me.id;
-        axios
-          .patch(`/wishedgifts/${item.id}`, { purchaser_id: this.me.id })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-          });
-      }
+      let purchasing = !item.purchaser_id ? true : false;
+      item.purchaser_id = purchasing ? this.me.id : null;
+      item.purchaser = purchasing ? this.me : null;
+      axios
+        .patch(`/wishedgifts/${item.id}`, {
+          purchaser_id: this.me.id,
+          purchasing: purchasing,
+        })
+        .then((response) => {
+          item.purchaser_id = response.data.purchaser_id;
+          item.purchaser = response.data.purchaser;
+        })
+        .catch((errors) => {
+          let error = errors.response.data;
+          console.log(error);
+          if (error) {
+            this.errorMessage = error.errors;
+            item.purchaser = error.purchaser;
+            item.purchaser_id = error.purchaser_id;
+          } else {
+            this.errorMessage = this.defaultErrorMessage;
+          }
+          let docEl = document.getElementById("toast");
+          var toast = new Toast(docEl);
+          toast.show();
+        });
     },
     toggleChristmasList: function (user) {
       axios
