@@ -301,16 +301,17 @@ export default {
         .catch((errors) => {
           item.loading = false;
           let error = errors.response.data;
-          console.log(error);
-          if (error) {
+          if (error && error.purchaser) {
             this.errorMessage = error.errors;
             item.purchaser = error.purchaser;
             item.purchaser_id = error.purchaser_id;
           } else {
-            this.errorMessage = this.defaultErrorMessage;
+            this.getEveryone();
+            this.errorMessage = error.errors
+              ? error.errors
+              : this.defaultErrorMessage;
           }
-          let docEl = document.getElementById("toast");
-          var toast = new Toast(docEl);
+          var toast = new Toast(document.getElementById("toast"));
           toast.show();
         });
     },
