@@ -1,5 +1,13 @@
 <template>
   <div>
+    <transition>
+      <span class="spinner-container" v-if="item.loading">
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+        ></span>
+      </span>
+    </transition>
     <div class="form-check form-check-inline">
       <input
         class="form-check-input"
@@ -37,6 +45,26 @@
   </div>
 </template>
 
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.spinner-container {
+  position: absolute;
+  transform: translate(-100%);
+}
+</style>
+
 <script>
-export default { props: ["item", "me"], emits: ["toggleCheckBox"] };
+export default {
+  props: ["item", "me"],
+  emits: ["toggleCheckBox"],
+};
 </script>

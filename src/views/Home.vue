@@ -284,6 +284,7 @@ export default {
     },
     //todo: add loading wheel while we wait for patching to complete
     toggleCheckBox: function (item) {
+      item.loading = true;
       let purchasing = !item.purchaser_id ? true : false;
       item.purchaser_id = purchasing ? this.me.id : null;
       item.purchaser = purchasing ? this.me : null;
@@ -295,8 +296,10 @@ export default {
         .then((response) => {
           item.purchaser_id = response.data.purchaser_id;
           item.purchaser = response.data.purchaser;
+          item.loading = false;
         })
         .catch((errors) => {
+          item.loading = false;
           let error = errors.response.data;
           console.log(error);
           if (error) {
