@@ -441,9 +441,15 @@ export default {
         });
       } else {
         let gift = this.findCustomGift(user);
-        axios.delete(`/customgifts/${gift.id}`).then((response) => {
-          gift.customgift_purchaser_id = null;
-        });
+        axios
+          .delete(`/customgifts/${gift.id}`)
+          .then(() => {
+            gift.customgift_purchaser_id = null;
+          })
+          .catch((errors) => {
+            console.log("errors: ", errors);
+            console.log("errors: ", errors.response?.data?.errors);
+          });
       }
     },
     toggleCheckBox: function (item) {
