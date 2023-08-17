@@ -47,10 +47,9 @@
                         <i
                           class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
                           v-if="
-                            user.wishedgifts &&
-                            user.wishedgifts.some(
+                            user.wishedgifts?.some(
                               (item) => item.purchaser_id === me.id
-                            )
+                            ) || findCustomGift(user)
                           "
                         ></i>
                       </button>
@@ -59,37 +58,6 @@
                         aria-expanded="false"
                         :id="`christmas-list-${user.id}`"
                       >
-                        <div>
-                          <input
-                            :id="user.id"
-                            class="form-check-input"
-                            type="checkbox"
-                            @change="toggleCustomGiftCheckBox($event, user)"
-                            :checked="findCustomGift(user)"
-                          />
-                          I'll get them something <strong>not</strong> on their
-                          list
-                          <span v-if="findCustomGift(user)">
-                            -
-                            <button
-                              type="button"
-                              class="btn btn-primary btn-sm"
-                              data-bs-toggle="modal"
-                              data-bs-target="#customGiftModal"
-                              @click="setEditingCustomGift(user)"
-                            >
-                              Edit
-                            </button>
-
-                            -
-                            {{
-                              findCustomGift(user).note?.length > 0
-                                ? findCustomGift(user).note
-                                : "Custom Gift"
-                            }}
-                          </span>
-                        </div>
-                        <br />
                         <span v-if="user.wishedgifts.length < 1"
                           >{{ user.name }} hasn't made a christmas list yet!
                           Remind them! &#128578;</span
@@ -101,6 +69,43 @@
                           :me="me"
                           @toggleCheckBox="toggleCheckBox(item)"
                         />
+                        <div class="row">
+                          <div class="col-5"></div>
+                          <div class="col-2">
+                            <hr class="fw-light" />
+                          </div>
+                          <div class="col-5"></div>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                          <input
+                            :id="user.id"
+                            class="form-check-input"
+                            type="checkbox"
+                            @change="toggleCustomGiftCheckBox($event, user)"
+                            :checked="findCustomGift(user)"
+                          />
+                          <span
+                            class="text-truncate truncated"
+                            v-if="findCustomGift(user)?.note"
+                          >
+                            {{ findCustomGift(user).note }}
+                          </span>
+                          <span v-else>
+                            Something
+                            <strong>not</strong> on {{ user.name }}'s list
+                          </span>
+                          <button
+                            type="button"
+                            class="btn btn-secondary btn-sm ms-1"
+                            data-bs-toggle="modal"
+                            data-bs-target="#customGiftModal"
+                            @click="editCustomGift(user)"
+                            v-if="findCustomGift(user)"
+                          >
+                            <i class="bi bi-tools"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -212,51 +217,53 @@
       tabindex="-1"
       data-bs-backdrop="static"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered" key="loaded">
         <div class="modal-content">
-          <div class="modal-header">
-            <div>Buying something not on their list...</div>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
+          <form
+            @submit.prevent="updateCustomGift"
+            id="editingItemForm"
+            novalidate
+          >
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Something <strong>not</strong> on {{ editingUserName }}'s list
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
 
-          <div class="modal-body">
-            <label class="input-group-text">What are you geting them?</label>
-            <div class="input-group mb-2">
-              <input
-                type="text"
-                v-model="editingCustomGift.note"
-                class="form-control"
-                required
-                id="newItemName"
-              />
-              <div class="invalid-feedback">
-                A note of what you are getting them might be helpful!
+            <div class="modal-body">
+              <label class="input-group-text"
+                >What are you geting {{ editingUserName }}?</label
+              >
+              <div class="input-group mb-2">
+                <input
+                  type="text"
+                  v-model="editingCustomGift.note"
+                  class="form-control"
+                  required
+                  id="customGiftInput"
+                />
+                <div class="invalid-feedback">
+                  A note of what you are getting them might be helpful!
+                </div>
               </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <!-- <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button> -->
 
-            <button
-              type="submit"
-              class="btn btn-success"
-              data-bs-dismiss="modal"
-              @click="updateCustomGift()"
-            >
-              Save Changes
-            </button>
-          </div>
+            <div class="modal-footer">
+              <button
+                type="submit"
+                class="btn btn-success"
+                data-bs-dismiss="modal"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -274,6 +281,24 @@
 }
 .row {
   --bs-gutter-x: 0;
+}
+
+.truncated {
+  max-width: 200px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.mod-enter-active,
+.mod-leave-active {
+  transition: opacity 0.5s;
+}
+.mod-leave-active {
+  position: absolute;
+}
+.mod-enter-from,
+.mod-leave-to {
+  opacity: 0;
 }
 </style>
 
@@ -293,11 +318,13 @@ export default {
       christmasLists: {},
       contentLoaded: false,
       indexview: false,
+      loading: false,
       me: null,
       splashLoaded: false,
       pageLoaded: false,
       lowPresentCount: false,
       editingCustomGift: {},
+      editingUserName: "",
       errorMessage: "",
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
@@ -319,7 +346,6 @@ export default {
         this.getFamily();
       })
       .catch((errors) => {
-        console.log("errors: ", errors.response.data.errors);
         if (errors.response.status === 401) {
           this.$root.logOut();
         }
@@ -374,11 +400,18 @@ export default {
           console.log("errors: ", errors.response.data.errors);
         });
     },
+    editCustomGift(user) {
+      this.setEditingCustomGift(this.findCustomGift(user));
+      this.editingUserName = user.name;
+    },
+    focusInput() {
+      document.getElementById("customGiftInput").focus();
+    },
     setEditingCustomGift(gift) {
-      // let gift = this.findCustomGift(user);
       this.editingCustomGift = {
         id: gift.id,
         note: gift.note,
+        user: gift.user,
         user_id: gift.user_id,
         customgift_purchaser: gift.customgift_purchaser,
         customgift_purchaser_id: gift.customgift_purchaser_id,
@@ -387,29 +420,28 @@ export default {
     },
     toggleCustomGiftCheckBox: function (event, user) {
       if (event.target.checked) {
-        //create
+        this.loading = true;
         let params = {
           user_id: user.id,
           customgift_purchaser_id: this.me.id,
           note: "",
         };
+        let myModal = new Modal(document.getElementById("customGiftModal"), {});
+        myModal.show();
         axios.post("/customgifts", params).then((response) => {
-          console.log(response);
           if (response.status === 200) {
             this.setEditingCustomGift(response.data);
+            this.editingUserName = response.data.user.name;
             user.customgifts.push(response.data);
-            let myModal = new Modal(
-              document.getElementById("customGiftModal"),
-              {}
-            );
-            myModal.show();
+            this.loading = false;
+            setTimeout(() => {
+              document.getElementById("customGiftInput").focus();
+            }, 400);
           }
         });
       } else {
-        //destroy
         let gift = this.findCustomGift(user);
         axios.delete(`/customgifts/${gift.id}`).then((response) => {
-          console.log(response);
           gift.customgift_purchaser_id = null;
         });
       }
@@ -465,8 +497,6 @@ export default {
         .patch(`/customgifts/${id}`, params)
         .then((response) => {
           let newGift = response.data;
-          console.log(1, newGift);
-          console.log(2, editingGift);
           editingGift.id = newGift.id;
           editingGift.note = newGift.note;
           editingGift.user_id = newGift.user_id;

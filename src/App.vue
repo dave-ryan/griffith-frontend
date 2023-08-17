@@ -32,7 +32,7 @@
           <transition name="splash" mode="out-in">
             <li v-if="this.$router.currentRoute.value.path === '/'">
               <button
-                class="btn btn-success align-middle mt-2 pt-0 pb-0 ps-1 pe-1"
+                class="btn btn-success align-middle ms-2 mt-2 pt-0 pb-0 ps-1 pe-1"
                 @click="expandLists"
               >
                 Expand All Lists
