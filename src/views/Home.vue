@@ -1,41 +1,7 @@
 <template>
   <div class="container-fluid pe-0 ps-0 mt-5 mb-5 text-center">
-    <!-- <div class="row">
-      <div class="col">
-        <transition-group name="splash-transition" mode="out-in">
-          <div v-if="!contentLoaded && !pageLoaded" class="mt-5 pt-5" key="1">
-            <div
-              class="spinner-border text-secondary mt-2 mb-3 pt-5"
-              style="width: 4rem; height: 4rem"
-              role="status"
-            >
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-          <img
-            src="../assets/images/tree-cropped-compressed.jpg"
-            class="img splash shadow sticky-top"
-            alt=""
-            v-on:load="this.splashLoaded = true"
-            v-show="splashLoaded && pageLoaded"
-            key="2"
-          />
-        </transition-group>
-      </div>
-    </div>
-    <transition name="splash-transition" mode="out-in">
-      <div
-        class="alert alert-warning"
-        role="alert"
-        v-if="lowPresentCount && splashLoaded && pageLoaded"
-      >
-        You Need To Add More Things To
-        <router-link to="/my-list" class="alert-link">Your List!</router-link>
-        <i class="bi bi-gift ms-2"></i>
-      </div>
-    </transition> -->
-
     <Splash
+      :src="splashSrc"
       :contentLoaded="contentLoaded"
       :pageLoaded="pageLoaded"
       :splashLoaded="splashLoaded"
@@ -301,18 +267,6 @@
   display: inline-block;
   vertical-align: top;
 }
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 30s ease;
-}
-.v-leave-active {
-  position: absolute;
-}
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
 </style>
 
 <script>
@@ -342,6 +296,7 @@ export default {
       errorMessage: "",
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
+      splashSrc: "/img/tree-cropped-compressed.b58d5fb5.jpg",
     };
   },
   created: function () {

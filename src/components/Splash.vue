@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col">
         <transition-group mode="out-in">
-          <div v-if="!contentLoaded && !pageLoaded" class="mt-5 pt-5" key="1">
+          <div v-if="!contentLoaded" class="mt-5 pt-5" key="1">
             <div
               class="spinner-border text-secondary mt-2 mb-3 pt-5"
               style="width: 4rem; height: 4rem"
@@ -13,11 +13,11 @@
             </div>
           </div>
           <img
-            src="../assets/images/tree-cropped-compressed.jpg"
+            :src="src"
             class="img splash shadow sticky-top"
             alt=""
             v-on:load="$emit('loadSplash')"
-            v-show="splashLoaded && pageLoaded"
+            v-show="contentLoaded"
             key="2"
           />
         </transition-group>
@@ -28,7 +28,7 @@
       <div
         class="alert alert-warning"
         role="alert"
-        v-if="lowPresentCount && splashLoaded && pageLoaded"
+        v-if="lowPresentCount && splashLoaded && contentLoaded"
       >
         You Need To Add More Things To
         <router-link to="/my-list" class="alert-link">Your List!</router-link>
@@ -61,7 +61,7 @@ img {
 
 <script>
 export default {
-  props: ["contentLoaded", "pageLoaded", "splashLoaded", "lowPresentCount"],
+  props: ["src", "contentLoaded", "splashLoaded", "lowPresentCount"],
   emits: ["loadSplash"],
 };
 </script>

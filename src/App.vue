@@ -53,11 +53,11 @@
 <style>
 .content-enter-active,
 .content-leave-active {
-  transition: all 0.7s ease;
+  transition: all 1.4s ease;
 }
 .content-enter-from,
 .content-leave-to {
-  transform: translateY(15px);
+  transform: translateY(40px);
   opacity: 0;
 }
 @-webkit-keyframes pulse {
