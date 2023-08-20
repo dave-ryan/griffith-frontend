@@ -53,7 +53,7 @@
 <style>
 .content-enter-active,
 .content-leave-active {
-  transition: all 1.4s ease;
+  transition: all 1s ease;
 }
 .content-enter-from,
 .content-leave-to {

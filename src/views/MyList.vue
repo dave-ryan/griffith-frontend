@@ -1,22 +1,14 @@
 <template>
   <div class="container-fluid ps-0 pe-0 mt-5 mb-5 text-center">
-    <div v-if="!contentLoaded">
-      <img src="../assets/images/loading.gif" alt="" />
-    </div>
-    <transition name="splash" mode="out-in">
-      <div class="row mt-5" v-show="splashLoaded && pageLoaded">
-        <div class="col">
-          <img
-            src="../assets/images/presents-cropped-compressed.jpg"
-            class="img splash shadow"
-            alt=""
-            v-on:load="this.splashLoaded = true"
-          />
-        </div>
-      </div>
-    </transition>
+    <Splash
+      :src="splashSrc"
+      :contentLoaded="contentLoaded"
+      :splashLoaded="splashLoaded"
+      :lowPresentCount="false"
+      @loadSplash="this.splashLoaded = true"
+    />
     <transition name="content">
-      <div v-if="contentLoaded" class="ps-3 pe-3 mt-5">
+      <div v-if="contentLoaded && splashLoaded" class="ps-3 pe-3 mt-5">
         <div class="row">
           <div class="col"></div>
           <div class="col-lg-10">
@@ -389,7 +381,10 @@ textarea {
 
 <script>
 import axios from "axios";
+import Splash from "../components/Splash.vue";
+
 export default {
+  components: { Splash },
   data() {
     return {
       myList: [],
@@ -400,6 +395,7 @@ export default {
       batchItems: "",
       batchLinks: "",
       splashLoaded: false,
+      splashSrc: "/img/presents-cropped-compressed.160ef660.jpg",
       pageLoaded: false,
     };
   },

@@ -3,14 +3,16 @@
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
-      :pageLoaded="pageLoaded"
       :splashLoaded="splashLoaded"
       :lowPresentCount="lowPresentCount"
       @loadSplash="this.splashLoaded = true"
     />
 
     <transition name="content" mode="out-in">
-      <div v-if="contentLoaded" class="row ps-2 pe-2 text-break">
+      <div
+        v-if="contentLoaded && splashLoaded"
+        class="row ps-2 pe-2 text-break"
+      >
         <div class="col">
           <div class="row mb-5 mt-5">
             <div class="col">
