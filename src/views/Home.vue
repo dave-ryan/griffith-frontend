@@ -1,27 +1,48 @@
 <template>
   <div class="container-fluid pe-0 ps-0 mt-5 mb-5 text-center">
-    <div v-if="!contentLoaded && !pageLoaded" class="mt-5">
-      <img src="../assets/images/loading.gif" alt="" />
-    </div>
-    <transition name="splash" mode="out-in">
-      <div class="row" v-show="splashLoaded && pageLoaded">
-        <div class="col">
+    <!-- <div class="row">
+      <div class="col">
+        <transition-group name="splash-transition" mode="out-in">
+          <div v-if="!contentLoaded && !pageLoaded" class="mt-5 pt-5" key="1">
+            <div
+              class="spinner-border text-secondary mt-2 mb-3 pt-5"
+              style="width: 4rem; height: 4rem"
+              role="status"
+            >
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
           <img
             src="../assets/images/tree-cropped-compressed.jpg"
-            class="img splash shadow"
+            class="img splash shadow sticky-top"
             alt=""
             v-on:load="this.splashLoaded = true"
+            v-show="splashLoaded && pageLoaded"
+            key="2"
           />
-        </div>
+        </transition-group>
       </div>
-    </transition>
-    <transition name="content" mode="out-in">
-      <div class="alert alert-warning" role="alert" v-if="lowPresentCount">
+    </div>
+    <transition name="splash-transition" mode="out-in">
+      <div
+        class="alert alert-warning"
+        role="alert"
+        v-if="lowPresentCount && splashLoaded && pageLoaded"
+      >
         You Need To Add More Things To
         <router-link to="/my-list" class="alert-link">Your List!</router-link>
         <i class="bi bi-gift ms-2"></i>
       </div>
-    </transition>
+    </transition> -->
+
+    <Splash
+      :contentLoaded="contentLoaded"
+      :pageLoaded="pageLoaded"
+      :splashLoaded="splashLoaded"
+      :lowPresentCount="lowPresentCount"
+      @loadSplash="this.splashLoaded = true"
+    />
+
     <transition name="content" mode="out-in">
       <div v-if="contentLoaded" class="row ps-2 pe-2 text-break">
         <div class="col">
@@ -271,14 +292,6 @@
 </template>
 
 <style scoped>
-.splash {
-  object-fit: cover;
-  object-position: center;
-  object-position: 100% 0;
-  width: 100%;
-  max-height: 17em;
-  min-height: 10em;
-}
 .row {
   --bs-gutter-x: 0;
 }
@@ -289,15 +302,15 @@
   vertical-align: top;
 }
 
-.mod-enter-active,
-.mod-leave-active {
-  transition: opacity 0.5s;
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 30s ease;
 }
-.mod-leave-active {
+.v-leave-active {
   position: absolute;
 }
-.mod-enter-from,
-.mod-leave-to {
+.v-enter-from,
+.v-leave-to {
   opacity: 0;
 }
 </style>
@@ -306,10 +319,11 @@
 import axios from "axios";
 import { Toast } from "bootstrap";
 import WishList from "../components/WishList.vue";
+import Splash from "../components/Splash.vue";
 import { Modal } from "bootstrap";
 
 export default {
-  components: { WishList },
+  components: { WishList, Splash },
   data: function () {
     return {
       family: [],
@@ -346,7 +360,7 @@ export default {
         this.getFamily();
       })
       .catch((errors) => {
-        if (errors.response.status === 401) {
+        if (errors.response?.status === 401) {
           this.$root.logOut();
         }
       });
