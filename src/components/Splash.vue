@@ -15,10 +15,10 @@
           <img
             :src="src"
             class="img splash shadow sticky-top"
-            alt=""
             v-on:load="$emit('loadSplash')"
             v-show="contentLoaded"
             key="2"
+            alt="failed"
           />
         </transition-group>
       </div>
@@ -28,7 +28,7 @@
       <div
         class="alert alert-warning"
         role="alert"
-        v-if="lowPresentCount && contentLoaded"
+        v-if="lowPresentCount && splashLoaded && contentLoaded"
       >
         You Need To Add More Things To
         <router-link to="/my-list" class="alert-link">Your List!</router-link>

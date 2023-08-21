@@ -5,7 +5,7 @@
       :contentLoaded="contentLoaded"
       :splashLoaded="splashLoaded"
       :lowPresentCount="false"
-      @loadSplash="this.splashLoaded = true"
+      @loadSplash="splashLoaded = true"
     />
     <transition name="content">
       <div v-if="contentLoaded && splashLoaded" class="ps-3 pe-3 mt-5">
@@ -382,6 +382,7 @@ textarea {
 <script>
 import axios from "axios";
 import Splash from "../components/Splash.vue";
+import splashImage from "../assets/images/presents-cropped-compressed.jpg";
 
 export default {
   components: { Splash },
@@ -395,7 +396,7 @@ export default {
       batchItems: "",
       batchLinks: "",
       splashLoaded: false,
-      splashSrc: "/img/presents-cropped-compressed.160ef660.jpg",
+      splashSrc: splashImage,
       pageLoaded: false,
     };
   },

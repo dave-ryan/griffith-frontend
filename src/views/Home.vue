@@ -5,7 +5,7 @@
       :contentLoaded="contentLoaded"
       :splashLoaded="splashLoaded"
       :lowPresentCount="lowPresentCount"
-      @loadSplash="this.splashLoaded = true"
+      @loadSplash="splashLoaded = true"
     />
 
     <transition name="content" mode="out-in">
@@ -277,6 +277,7 @@ import { Toast } from "bootstrap";
 import WishList from "../components/WishList.vue";
 import Splash from "../components/Splash.vue";
 import { Modal } from "bootstrap";
+import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 
 export default {
   components: { WishList, Splash },
@@ -298,7 +299,7 @@ export default {
       errorMessage: "",
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
-      splashSrc: "/img/tree-cropped-compressed.b58d5fb5.jpg",
+      splashSrc: splashImage,
     };
   },
   created: function () {
