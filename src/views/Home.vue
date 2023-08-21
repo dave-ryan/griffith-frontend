@@ -259,7 +259,7 @@
   </div>
 </template>
 
-<style scoped>
+<style>
 .row {
   --bs-gutter-x: 0;
 }
