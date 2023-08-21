@@ -1,6 +1,14 @@
 <template>
   <div class="container-fluid me-0 text-center">
-    <img v-if="!errors" src="../assets/images/loading.gif" alt="" />
+    <div v-if="!errors" class="mt-5 pt-5">
+      <div
+        class="spinner-border text-secondary mt-2 mb-3 pt-5"
+        style="width: 4rem; height: 4rem"
+        role="status"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <div>{{ errors }}</div>
   </div>
 </template>

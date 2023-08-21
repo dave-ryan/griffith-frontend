@@ -1,7 +1,13 @@
 <template>
   <div class="container-fluid me-0 pt-5 pb-5 text-center">
-    <div v-if="!loaded">
-      <img src="../assets/images/loading.gif" alt="" />
+    <div v-if="!loaded" class="mt-5 pt-5">
+      <div
+        class="spinner-border text-secondary mt-2 mb-3 pt-5"
+        style="width: 4rem; height: 4rem"
+        role="status"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
     <transition>
       <div v-if="loaded" class="pt-5">
