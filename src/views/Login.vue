@@ -1,54 +1,59 @@
 <template>
-  <div class="container-fluid text-center">
-    <div class="d-flex align-items-center vh-100 justify-content-center">
-      <form @submit.prevent="logIn" id="loginForm" novalidate>
-        <fieldset id="loginFieldset">
-          <h2>Griffith</h2>
-          <div class="row g-3 align-items-center mb-2 mt-2">
-            <div class="col-auto">
-              <label class="form-label" for="name-input">First Name</label>
-            </div>
-            <div class="col-auto">
-              <input
-                type="text"
-                class="form-control form-control-sm"
-                id="name-input"
-                v-model="inputParams.name"
-                required
-              />
-              <div class="invalid-feedback">Please enter your first name</div>
-            </div>
-          </div>
-
-          <div class="row g-3 align-items-center mb-2">
-            <div class="col-auto">
-              <label class="form-label" for="password-input">Password</label>
-            </div>
-            <div class="col-auto">
-              <input
-                type="password"
-                class="form-control form-control-sm"
-                id="password-input"
-                v-model="inputParams.password"
-                required
-              />
-              <div class="invalid-feedback">
-                Please enter your password (last name)
+  <div class="container-fluid text-center" id="container">
+    <transition>
+      <div
+        class="d-flex align-items-center vh-100 justify-content-center"
+        v-show="imgLoaded"
+      >
+        <form @submit.prevent="logIn" id="loginForm" novalidate>
+          <fieldset id="loginFieldset">
+            <h2>Griffith</h2>
+            <div class="row g-3 align-items-center mb-2 mt-2">
+              <div class="col-auto">
+                <label class="form-label" for="name-input">First Name</label>
+              </div>
+              <div class="col-auto">
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="name-input"
+                  v-model="inputParams.name"
+                  required
+                />
+                <div class="invalid-feedback">Please enter your first name</div>
               </div>
             </div>
-          </div>
 
-          <div>
-            <button class="btn btn-success" type="submit">
-              {{ buttonName }}
-            </button>
-          </div>
-          <div class="text-danger">
-            {{ errors }}
-          </div>
-        </fieldset>
-      </form>
-    </div>
+            <div class="row g-3 align-items-center mb-2">
+              <div class="col-auto">
+                <label class="form-label" for="password-input">Password</label>
+              </div>
+              <div class="col-auto">
+                <input
+                  type="password"
+                  class="form-control form-control-sm"
+                  id="password-input"
+                  v-model="inputParams.password"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please enter your password (last name)
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <button class="btn btn-success" type="submit">
+                {{ buttonName }}
+              </button>
+            </div>
+            <div class="text-danger">
+              {{ errors }}
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -58,6 +63,13 @@
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.4s;
+}
+.v-enter-active {
+  transition-delay: 0.4s;
 }
 </style>
 
@@ -70,7 +82,16 @@ export default {
       errors: null,
       buttonName: "Log In",
       fieldset: null,
+      imgLoaded: false,
     };
+  },
+  mounted() {
+    var img = new Image();
+    img.src = "../assets/images/xmas2.jpg";
+    img.onload = function () {
+      this.imgLoaded = true;
+    };
+    img.onload();
   },
   methods: {
     checkForms: function () {
