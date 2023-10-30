@@ -1,59 +1,55 @@
 <template>
   <div class="container-fluid text-center" id="container">
-    <transition>
-      <div
-        class="d-flex align-items-center vh-100 justify-content-center"
-        v-show="imgLoaded"
-      >
-        <form @submit.prevent="logIn" id="loginForm" novalidate>
-          <fieldset id="loginFieldset">
-            <h2>Griffith</h2>
-            <div class="row g-3 align-items-center mb-2 mt-2">
-              <div class="col-auto">
-                <label class="form-label" for="name-input">First Name</label>
-              </div>
-              <div class="col-auto">
+    <div class="row">
+      <div class="col-4"></div>
+      <transition>
+        <div
+          class="col-4 d-flex align-items-center vh-100 justify-content-center"
+          v-show="imgLoaded"
+        >
+          <form @submit.prevent="logIn" id="loginForm" novalidate>
+            <fieldset id="loginFieldSet">
+              <h2>Griffith</h2>
+              <div class="form-row mt-3 mb-3">
                 <input
                   type="text"
-                  class="form-control form-control-sm"
+                  class="form-control"
                   id="name-input"
                   v-model="inputParams.name"
                   required
+                  placeholder="First Name"
                 />
                 <div class="invalid-feedback">Please enter your first name</div>
               </div>
-            </div>
 
-            <div class="row g-3 align-items-center mb-2">
-              <div class="col-auto">
-                <label class="form-label" for="password-input">Password</label>
-              </div>
-              <div class="col-auto">
+              <div class="form-row mb-3">
                 <input
                   type="password"
-                  class="form-control form-control-sm"
+                  class="form-control"
                   id="password-input"
                   v-model="inputParams.password"
                   required
+                  placeholder="Last Name"
                 />
                 <div class="invalid-feedback">
                   Please enter your password (last name)
                 </div>
               </div>
-            </div>
 
-            <div>
-              <button class="btn btn-success" type="submit">
-                {{ buttonName }}
-              </button>
-            </div>
-            <div class="text-danger">
-              {{ errors }}
-            </div>
-          </fieldset>
-        </form>
-      </div>
-    </transition>
+              <div>
+                <button class="btn btn-success" type="submit">
+                  {{ buttonName }}
+                </button>
+              </div>
+              <div class="text-danger mt-3">
+                {{ error }}
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </transition>
+      <div class="col-4"></div>
+    </div>
   </div>
 </template>
 
@@ -71,6 +67,10 @@
 .v-enter-active {
   transition-delay: 0.4s;
 }
+input:not(.is-invalid),
+input:not(.is-valid) {
+  padding-right: calc(1.5em + 0.75rem);
+}
 </style>
 
 <script>
@@ -79,10 +79,9 @@ export default {
   data() {
     return {
       inputParams: {},
-      errors: null,
-      buttonName: "Log In",
-      fieldset: null,
+      error: null,
       imgLoaded: false,
+      loading: false,
     };
   },
   mounted() {
@@ -93,24 +92,22 @@ export default {
     };
     img.onload();
   },
+  computed: {
+    buttonName() {
+      return this.loading ? "Loading..." : "Log In";
+    },
+  },
   methods: {
     checkForms: function () {
-      if (
-        this.inputParams["name"] &&
-        this.inputParams["name"].length > 0 &&
-        this.inputParams["password"] &&
-        this.inputParams["password"].length > 0
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+      return (
+        this.inputParams?.name?.length > 0 &&
+        this.inputParams?.password?.length > 0
+      );
     },
     logIn: function () {
-      this.fieldset = document.getElementById("loginFieldset");
-      document.getElementById("loginForm").classList.add("was-validated");
-
+      document.getElementById("loginForm")?.classList?.add("was-validated");
       if (this.checkForms()) {
+        this.error = null;
         this.toggleLoading();
         axios
           .post("/sessions", this.inputParams)
@@ -123,21 +120,23 @@ export default {
             this.$emit("login_change", response.data.user_name);
             this.$router.push("/");
           })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-            document
-              .getElementById("loginForm")
-              .classList.remove("was-validated");
-            this.errors = errors.response.data.errors;
-            this.fieldset.removeAttribute("disabled");
-            this.buttonName = "Log In";
+          .catch((error) => {
+            this.toggleLoading();
+            error.toString() === "Error: Network Error"
+              ? (this.error = "Server Error!! :( Please tell David!")
+              : (this.error = error.response?.data?.errors);
+            console.log(error);
+            console.log("response: ", error.response);
           });
       }
     },
     toggleLoading: function () {
-      this.errors = null;
-      this.fieldset.setAttribute("disabled", "");
-      this.buttonName = "Loading...";
+      document.getElementById("loginForm").classList?.remove("was-validated");
+      this.loading = !this.loading;
+      let field = document.getElementById("loginFieldSet");
+      this.loading
+        ? field.setAttribute("disabled", "")
+        : field.removeAttribute("disabled");
     },
   },
 };
