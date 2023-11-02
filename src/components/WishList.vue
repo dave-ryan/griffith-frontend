@@ -8,7 +8,7 @@
         ></span>
       </span>
     </transition>
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline me-0">
       <input
         class="form-check-input"
         type="checkbox"
