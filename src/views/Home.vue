@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid pe-0 ps-0 mt-5 mb-5 text-center">
+  <div class="container-fluid mb-5 ps-0 pe-0 text-center">
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
@@ -259,11 +259,7 @@
   </div>
 </template>
 
-<style>
-.row {
-  --bs-gutter-x: 0;
-}
-
+<style scoped>
 .truncated {
   max-width: 200px;
   display: inline-block;

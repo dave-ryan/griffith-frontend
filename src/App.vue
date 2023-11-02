@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar fixed-top navbar-expand-md navbar-dark bg-dark text-center"
+    class="navbar navbar-expand-md navbar-dark bg-dark text-center"
     v-if="userName"
     id="navbar"
   >
@@ -85,6 +85,9 @@ button:focus,
   animation-timing-function: linear;
   animation-iteration-count: 2;
   animation-direction: alternate;
+}
+.row {
+  --bs-gutter-x: 0 !important;
 }
 </style>
 

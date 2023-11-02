@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid ps-0 pe-0 mt-5 mb-5 text-center">
+  <div class="container-fluid ps-0 pe-0 mb-5 text-center">
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
