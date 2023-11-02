@@ -421,10 +421,12 @@ export default {
       }
     },
     toggleCheckBox: function (item) {
+      var el = document.getElementById(`checkbox-${item.id}`);
+      setTimeout(() => {
+        el.checked = !el.checked;
+      }, 10);
       item.loading = true;
       let purchasing = !item.purchaser_id ? true : false;
-      item.purchaser_id = purchasing ? this.me.id : null;
-      item.purchaser = purchasing ? this.me : null;
       axios
         .patch(`/wishedgifts/${item.id}`, {
           purchaser_id: this.me.id,
@@ -434,6 +436,7 @@ export default {
           item.purchaser_id = response.data.purchaser_id;
           item.purchaser = response.data.purchaser;
           item.loading = false;
+          el.checked = !el.checked;
         })
         .catch((errors) => {
           item.loading = false;
