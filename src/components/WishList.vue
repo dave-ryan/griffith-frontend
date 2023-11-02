@@ -1,6 +1,6 @@
 <template>
   <div>
-    <transition>
+    <transition name="spinner" mode="out-in">
       <span class="spinner-container" v-if="item.loading">
         <span
           class="spinner-border spinner-border-sm me-2"
@@ -15,13 +15,18 @@
         :value="item.id"
         :id="`checkbox-` + item.id"
         :checked="item.purchaser_id"
-        :disabled="item.purchaser_id && item.purchaser_id !== me.id"
+        :disabled="
+          (item.purchaser_id && item.purchaser_id !== me.id) || item.loading
+        "
         @change="$emit('toggleCheckBox')"
       />
-      <span
+      <label
         :class="
-          item.purchaser_id && item.purchaser_id !== me.id ? 'fw-light' : ''
+          (item.purchaser_id && item.purchaser_id !== me.id) || item.loading
+            ? 'fw-light'
+            : 'form-check-label'
         "
+        :for="`checkbox-` + item.id"
       >
         {{ item.name }}
         <span v-if="item.link">
@@ -32,7 +37,7 @@
             >link</a
           ></span
         >
-      </span>
+      </label>
       <span
         v-if="item.purchaser && item.purchaser_id"
         :class="item.purchaser_id === me.id ? 'text-success' : 'text-danger'"
@@ -45,14 +50,13 @@
   </div>
 </template>
 
-<style>
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
+<style scoped>
+.spinner-enter-active,
+.spinner-leave-active {
+  transition: all 1s ease;
 }
-
-.v-enter-from,
-.v-leave-to {
+.spinner-enter-from,
+.spinner-leave-to {
   opacity: 0;
 }
 
