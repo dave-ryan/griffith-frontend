@@ -20,13 +20,12 @@
         "
         @change="$emit('toggleCheckBox')"
       />
-      <label
+      <span
         :class="
           (item.purchaser_id && item.purchaser_id !== me.id) || item.loading
             ? 'fw-light'
             : 'form-check-label'
         "
-        :for="`checkbox-` + item.id"
       >
         {{ item.name }}
         <span v-if="item.link">
@@ -37,7 +36,7 @@
             >link</a
           ></span
         >
-      </label>
+      </span>
       <span
         v-if="item.purchaser && item.purchaser_id"
         :class="item.purchaser_id === me.id ? 'text-success' : 'text-danger'"
