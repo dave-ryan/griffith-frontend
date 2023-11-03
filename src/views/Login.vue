@@ -1,10 +1,9 @@
 <template>
   <div class="container-fluid text-center" id="container">
     <div class="row">
-      <div class="col-4"></div>
       <transition>
         <div
-          class="col-4 d-flex align-items-center vh-100 justify-content-center"
+          class="col d-flex align-items-center vh-100 justify-content-center"
           v-show="imgLoaded"
         >
           <form @submit.prevent="logIn" id="loginForm" novalidate>
@@ -48,7 +47,6 @@
           </form>
         </div>
       </transition>
-      <div class="col-4"></div>
     </div>
   </div>
 </template>
