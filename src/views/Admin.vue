@@ -503,10 +503,7 @@
                       class="form-control"
                     />
                   </div>
-                  <div
-                    class="input-group mb-3"
-                    v-if="editingUser.mystery_santa"
-                  >
+                  <div class="input-group mb-3" v-if="editingUser.santa_group">
                     <div class="input-group-prepend">
                       <label class="input-group-text" for="secretSantaSelector"
                         >Secret Santa</label
@@ -519,6 +516,25 @@
                     >
                       <option v-for="user in users" :key="user.id">
                         {{ user.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <label class="input-group-text" for="secretSantaSelector"
+                        >Santa Group</label
+                      >
+                    </div>
+                    <select
+                      id="santaGroupSelector"
+                      class="custom-select"
+                      v-model="editingUser.santa_group"
+                    >
+                      <option value="1">1 - Male</option>
+                      <option value="2">2 - Female</option>
+                      <option :value="null">
+                        Null - Not doing secret santa
                       </option>
                     </select>
                   </div>
@@ -789,7 +805,10 @@ export default {
         id: user.id,
         name: user.name,
         is_admin: user.is_admin ? true : false,
+        santa_group: user.santa_group,
       };
+
+      console.log("santa group:", user.santa_group);
       console.log("password", user.password);
 
       if (user.password !== "" && user.password) {
@@ -805,16 +824,25 @@ export default {
         }
       });
 
+      if (!userParams.santa_group) {
+        userParams.mystery_santa_id = null;
+      }
+
       this.families.forEach((family) => {
         if (family.name === user.familyName) {
           userParams.family_id = family.id;
         }
       });
 
-      axios.patch(`/users/${userParams.id}`, userParams).catch((errors) => {
-        console.log("errors: ", errors);
-        this.errors = errors.response;
-      });
+      axios
+        .patch(`/users/${userParams.id}`, userParams)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((errors) => {
+          console.log("errors: ", errors);
+          this.errors = errors.response;
+        });
     },
   },
 };
