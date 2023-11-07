@@ -634,7 +634,9 @@ export default {
     };
   },
   created: function () {
-    this.getUsers();
+    this.loaded = true;
+
+    // this.getUsers();
   },
   methods: {
     createFamily: function (familyParams) {
