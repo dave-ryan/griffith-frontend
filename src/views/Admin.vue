@@ -129,6 +129,7 @@
             <button class="btn btn-warning m-1" @click="testGetFamilies">
               GET /families
             </button>
+            <button @click="fixData">data fix</button>
           </div>
         </div>
 
@@ -710,6 +711,16 @@ export default {
     },
     flipAdmin: function (user) {
       user.is_admin = !user.is_admin;
+    },
+    fixData: function () {
+      axios
+        .put("/users/santagroupfix")
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((errors) => {
+          console.log("errors: ", errors.response.data.errors);
+        });
     },
     getUsers: function () {
       axios
