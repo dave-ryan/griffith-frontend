@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col">
         <transition-group mode="out-in">
-          <div v-if="!contentLoaded" class="mt-5 pt-5 spin" key="1">
+          <div v-if="!contentLoaded && !errorMessage" class="mt-5 spin" key="1">
             <div
               class="spinner-border text-secondary mt-2 mb-3 pt-5"
               style="width: 4rem; height: 4rem"
@@ -25,6 +25,20 @@
     </div>
 
     <transition mode="out-in">
+      <div v-if="errorMessage" class="mt-5">
+        <img
+          src="../assets/images/errorcat.jpg"
+          class="error-img"
+          v-on:load="$emit('loadSplash')"
+          alt="error"
+        />
+        <h2>
+          {{ errorMessage }}
+        </h2>
+      </div>
+    </transition>
+
+    <transition mode="out-in">
       <div
         class="alert alert-warning"
         role="alert"
@@ -38,13 +52,16 @@
   </div>
 </template>
 
-<style>
-img {
+<style scoped>
+.img {
   object-fit: cover;
   object-position: center;
   width: 100%;
   max-height: 17em;
   min-height: 10em;
+}
+.error-img {
+  max-width: 400px;
 }
 .v-enter-active,
 .v-leave-active {
@@ -67,7 +84,13 @@ img {
 
 <script>
 export default {
-  props: ["src", "contentLoaded", "splashLoaded", "lowPresentCount"],
+  props: [
+    "src",
+    "contentLoaded",
+    "splashLoaded",
+    "lowPresentCount",
+    "errorMessage",
+  ],
   emits: ["loadSplash"],
 };
 </script>

@@ -5,6 +5,7 @@
       :contentLoaded="contentLoaded"
       :splashLoaded="splashLoaded"
       :lowPresentCount="lowPresentCount"
+      :errorMessage="errorMessage"
       @loadSplash="splashLoaded = true"
     />
 
@@ -292,7 +293,7 @@ export default {
       lowPresentCount: false,
       editingCustomGift: {},
       editingUserName: "",
-      errorMessage: "",
+      errorMessage: null,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
       splashSrc: splashImage,
@@ -310,12 +311,14 @@ export default {
         ) {
           this.lowPresentCount = true;
         }
-
         this.getFamily();
       })
-      .catch((errors) => {
-        if (errors.response?.status === 401) {
+      .catch((error) => {
+        console.log("getMe error: ", error, error.message);
+        if (error.response?.status === 401) {
           this.$root.logOut();
+        } else {
+          this.launchErrorToast(error);
         }
       });
   },
@@ -338,24 +341,31 @@ export default {
             return user.id != my_id;
           });
         })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
+        .catch((error) => {
+          console.log("getEveryone error: ", error, error.message);
+          this.launchErrorToast(error);
         });
     },
     getFamily: function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
       this.contentLoaded = false;
       this.indexview = false;
-      axios.get(`/families/${this.me.family.id}`).then((response) => {
-        this.pageLoaded = true;
-        this.contentLoaded = true;
-        var my_id = this.me.id;
-        this.family = response.data.users
-          .filter(function (user) {
-            return user.id != my_id;
-          })
-          .sort((a, b) => a.name.localeCompare(b.name));
-      });
+      axios
+        .get(`/families/${this.me.family.id}`)
+        .then((response) => {
+          this.pageLoaded = true;
+          this.contentLoaded = true;
+          var my_id = this.me.id;
+          this.family = response.data.users
+            .filter(function (user) {
+              return user.id != my_id;
+            })
+            .sort((a, b) => a.name.localeCompare(b.name));
+        })
+        .catch((error) => {
+          console.log("getFamily: ", error, error.message);
+          this.launchErrorToast(error);
+        });
       this.me.mystery_santa ? this.getSecretSanta() : "";
     },
     getSecretSanta: function () {
@@ -364,8 +374,9 @@ export default {
         .then((response) => {
           this.secretSanta = response.data;
         })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
+        .catch((error) => {
+          console.log("getSecretSanta error: ", error, error.message);
+          this.launchErrorToast(error);
         });
     },
     editCustomGift(user) {
@@ -385,6 +396,16 @@ export default {
         customgift_purchaser_id: gift.customgift_purchaser_id,
       };
       this.customGiftCopy = gift;
+    },
+    launchErrorToast(error) {
+      this.errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        this.defaultErrorMessage;
+      this.errorMessage += " :(";
+      var toast = new Toast(document.getElementById("toast"));
+      this.loading = false;
+      toast.show();
     },
     toggleCustomGiftCheckBox: function (event, user) {
       if (event.target.checked) {
@@ -414,9 +435,13 @@ export default {
           .then(() => {
             gift.customgift_purchaser_id = null;
           })
-          .catch((errors) => {
-            console.log("errors: ", errors);
-            console.log("errors: ", errors.response?.data?.errors);
+          .catch((error) => {
+            console.log(
+              "toggleCustomGiftCheckBox error: ",
+              error,
+              error.message
+            );
+            this.launchErrorToast(error);
           });
       }
     },
@@ -438,21 +463,16 @@ export default {
           item.loading = false;
           el.checked = !el.checked;
         })
-        .catch((errors) => {
+        .catch((error) => {
           item.loading = false;
-          let error = errors.response.data;
-          if (error && error.purchaser) {
-            this.errorMessage = error.errors;
-            item.purchaser = error.purchaser;
-            item.purchaser_id = error.purchaser_id;
+          let errorData = error.response?.data;
+          if (errorData && errorData.purchaser) {
+            item.purchaser = errorData.purchaser;
+            item.purchaser_id = errorData.purchaser_id;
           } else {
             this.getEveryone();
-            this.errorMessage = error.errors
-              ? error.errors
-              : this.defaultErrorMessage;
           }
-          var toast = new Toast(document.getElementById("toast"));
-          toast.show();
+          this.launchErrorToast(error);
         });
     },
     toggleChristmasList: function (user) {
@@ -461,8 +481,9 @@ export default {
         .then((response) => {
           this.family[user.id] = response.data;
         })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
+        .catch((error) => {
+          console.log("toggleChristmasList error: ", error, error.message);
+          this.launchErrorToast(error);
         });
     },
     updateCustomGift() {
@@ -480,9 +501,9 @@ export default {
           editingGift.customgift_purchaser = newGift.customgift_purchaser;
           editingGift.customgift_purchaser_id = newGift.customgift_purchaser_id;
         })
-        .catch((errors) => {
-          console.log("errors: ", errors);
-          console.log("errors: ", errors.response?.data?.errors);
+        .catch((error) => {
+          console.log("updateCustomGift error: ", error, error.message);
+          this.launchErrorToast(error);
         });
     },
   },
