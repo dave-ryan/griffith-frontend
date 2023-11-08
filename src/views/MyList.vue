@@ -5,6 +5,7 @@
       :contentLoaded="contentLoaded"
       :splashLoaded="splashLoaded"
       :lowPresentCount="false"
+      :errorMessage="errorMessage"
       @loadSplash="splashLoaded = true"
     />
     <transition name="content">
@@ -455,8 +456,9 @@ export default {
               .getElementById("newItemForm")
               .classList.remove("was-validated");
           })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
+          .catch((error) => {
+            console.log("getEveryone error: ", error, error.message);
+            this.launchErrorToast(error);
           });
 
         setTimeout(() => {
@@ -473,8 +475,9 @@ export default {
         .then(() => {
           this.myList.splice(this.myList.indexOf(item), 1);
         })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
+        .catch((error) => {
+          console.log("getEveryone error: ", error, error.message);
+          this.launchErrorToast(error);
         });
     },
     editItem: function (item) {
@@ -490,10 +493,12 @@ export default {
           this.pageLoaded = true;
           this.myList = response.data;
         })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
-          if (errors.response.status === 401) {
+        .catch((error) => {
+          console.log("getMe error: ", error, error.message);
+          if (error.response?.status === 401) {
             this.$root.logOut();
+          } else {
+            this.launchErrorToast(error);
           }
         });
     },
@@ -517,8 +522,9 @@ export default {
             foundItem.name = this.editingItem.name;
             foundItem.link = this.editingItem.link;
           })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
+          .catch((error) => {
+            console.log("getEveryone error: ", error, error.message);
+            this.launchErrorToast(error);
           });
       }
     },

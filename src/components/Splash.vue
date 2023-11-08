@@ -25,20 +25,6 @@
     </div>
 
     <transition mode="out-in">
-      <div v-if="errorMessage" class="mt-5">
-        <img
-          src="../assets/images/errorcat.jpg"
-          class="error-img"
-          v-on:load="$emit('loadSplash')"
-          alt="error"
-        />
-        <h2>
-          {{ errorMessage }}
-        </h2>
-      </div>
-    </transition>
-
-    <transition mode="out-in">
       <div
         class="alert alert-warning"
         role="alert"
@@ -60,9 +46,6 @@
   max-height: 17em;
   min-height: 10em;
 }
-.error-img {
-  max-width: 400px;
-}
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.3s;
@@ -70,15 +53,15 @@
 .v-enter-active {
   transition-delay: 0.3s;
 }
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 .spin {
   position: absolute;
   top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
 }
 </style>
 

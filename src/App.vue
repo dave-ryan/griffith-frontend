@@ -47,7 +47,55 @@
       </div>
     </div>
   </nav>
-  <router-view @login_change="loginUpdate"> </router-view>
+
+  <!-- Error Section -->
+  <transition name="error" mode="out-in">
+    <div v-if="errorMessage" class="mt-5 row text-center">
+      <div class="col"></div>
+      <div class="col">
+        <img src="./assets/images/errorcat.jpg" class="error-img" alt="error" />
+        <h2>
+          {{ errorMessage }}
+        </h2>
+      </div>
+      <div class="col"></div>
+    </div>
+  </transition>
+
+  <!-- Error Toast -->
+  <div class="position-fixed top-0 start-50 translate-middle-x mt-5">
+    <div
+      id="toast"
+      class="toast fade align-items-center text-white bg-danger border-0"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      data-bs-delay="3500"
+    >
+      <div class="d-flex p-2">
+        <div
+          class="toast-body position-absolute top-50 start-50 translate-middle"
+        >
+          {{ errorMessage }}
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Router View -->
+  <router-view
+    @login_change="loginUpdate"
+    @logOut="logOut"
+    @onError="onError"
+    :errorMessage="errorMessage"
+  >
+  </router-view>
 </template>
 
 <style>
@@ -60,6 +108,19 @@
   transform: translateY(40px);
   opacity: 0;
 }
+
+.error-enter-active,
+.error-leave-active {
+  transition: opacity 0.3s;
+}
+.error-enter-active {
+  transition-delay: 0.3s;
+}
+.error-enter-from,
+.error-leave-to {
+  opacity: 0;
+}
+
 @-webkit-keyframes pulse {
   to {
     -webkit-transform: scale(1.1);
@@ -89,15 +150,26 @@ button:focus,
 .row {
   --bs-gutter-x: 0 !important;
 }
+.toast {
+  z-index: 1100;
+}
+.error-img {
+  max-width: 20rem;
+}
 </style>
 
 <script>
 import axios from "axios";
+import { Toast } from "bootstrap";
+
 export default {
   data() {
     return {
       userName: null,
       isAdmin: false,
+      errorMessage: null,
+      defaultErrorMessage:
+        "Oops! Something went wrong. Try refreshing the page",
     };
   },
   created: function () {
@@ -112,6 +184,18 @@ export default {
     collapseBurger: function () {
       var burger = document.getElementsByClassName("navbar-collapse");
       burger[0].classList.remove("show");
+    },
+    onError(error, methodName) {
+      console.log(`${methodName} error: ${error}`);
+      console.log(`Message: ${error.message}`);
+      console.log(`Rails error: ${error.response?.data?.error}`);
+      this.errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        this.defaultErrorMessage;
+      this.errorMessage += " :(";
+      var toast = new Toast(document.getElementById("toast"));
+      toast.show();
     },
     expandLists: function () {
       var lists = document.getElementsByClassName("list-collapse");

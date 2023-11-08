@@ -174,32 +174,6 @@
       </div>
     </transition>
 
-    <div
-      class="position-fixed top-0 start-50 translate-middle-x p-3"
-      style="z-index: 1100"
-    >
-      <div
-        id="toast"
-        class="toast fade align-items-center text-white bg-danger border-0"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        data-bs-delay="3500"
-      >
-        <div class="d-flex">
-          <div class="toast-body">
-            {{ errorMessage }}
-          </div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
-        </div>
-      </div>
-    </div>
-
     <!-- Note Modal -->
     <div
       class="modal fade"
@@ -270,7 +244,6 @@
 
 <script>
 import axios from "axios";
-import { Toast } from "bootstrap";
 import WishList from "../components/WishList.vue";
 import Splash from "../components/Splash.vue";
 import { Modal } from "bootstrap";
@@ -278,6 +251,7 @@ import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 
 export default {
   components: { WishList, Splash },
+  props: ["errorMessage"],
   data: function () {
     return {
       family: [],
@@ -293,7 +267,6 @@ export default {
       lowPresentCount: false,
       editingCustomGift: {},
       editingUserName: "",
-      errorMessage: null,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
       splashSrc: splashImage,
@@ -314,11 +287,10 @@ export default {
         this.getFamily();
       })
       .catch((error) => {
-        console.log("getMe error: ", error, error.message);
         if (error.response?.status === 401) {
-          this.$root.logOut();
+          this.$emit("logOut");
         } else {
-          this.launchErrorToast(error);
+          this.$emit("onError", error, "getEveryone");
         }
       });
   },
@@ -342,8 +314,7 @@ export default {
           });
         })
         .catch((error) => {
-          console.log("getEveryone error: ", error, error.message);
-          this.launchErrorToast(error);
+          this.$emit("onError", error, "getEveryone");
         });
     },
     getFamily: function () {
@@ -363,8 +334,7 @@ export default {
             .sort((a, b) => a.name.localeCompare(b.name));
         })
         .catch((error) => {
-          console.log("getFamily: ", error, error.message);
-          this.launchErrorToast(error);
+          this.$emit("onError", error, "getFamily");
         });
       this.me.mystery_santa ? this.getSecretSanta() : "";
     },
@@ -375,8 +345,7 @@ export default {
           this.secretSanta = response.data;
         })
         .catch((error) => {
-          console.log("getSecretSanta error: ", error, error.message);
-          this.launchErrorToast(error);
+          this.$emit("onError", error, "getSecretSanta");
         });
     },
     editCustomGift(user) {
@@ -396,16 +365,6 @@ export default {
         customgift_purchaser_id: gift.customgift_purchaser_id,
       };
       this.customGiftCopy = gift;
-    },
-    launchErrorToast(error) {
-      this.errorMessage =
-        error.response?.data?.error ||
-        error.message ||
-        this.defaultErrorMessage;
-      this.errorMessage += " :(";
-      var toast = new Toast(document.getElementById("toast"));
-      this.loading = false;
-      toast.show();
     },
     toggleCustomGiftCheckBox: function (event, user) {
       if (event.target.checked) {
@@ -436,12 +395,7 @@ export default {
             gift.customgift_purchaser_id = null;
           })
           .catch((error) => {
-            console.log(
-              "toggleCustomGiftCheckBox error: ",
-              error,
-              error.message
-            );
-            this.launchErrorToast(error);
+            this.$emit("onError", error, "toggleCustomGiftCheckBox");
           });
       }
     },
@@ -472,7 +426,6 @@ export default {
           } else {
             this.getEveryone();
           }
-          this.launchErrorToast(error);
         });
     },
     toggleChristmasList: function (user) {
@@ -482,8 +435,7 @@ export default {
           this.family[user.id] = response.data;
         })
         .catch((error) => {
-          console.log("toggleChristmasList error: ", error, error.message);
-          this.launchErrorToast(error);
+          this.$emit("onError", error, "toggleChristmasList");
         });
     },
     updateCustomGift() {
@@ -502,10 +454,10 @@ export default {
           editingGift.customgift_purchaser_id = newGift.customgift_purchaser_id;
         })
         .catch((error) => {
-          console.log("updateCustomGift error: ", error, error.message);
-          this.launchErrorToast(error);
+          this.$emit("onError", error, "updateCustomGift");
         });
     },
   },
+  emits: ["logOut, onError"],
 };
 </script>
