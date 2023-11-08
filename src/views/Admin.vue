@@ -99,11 +99,6 @@
           </div>
           <div class="col-4"></div>
         </div>
-        <div class="row mb-3">
-          <div class="col-4"></div>
-          <div class="col-4 text-danger">{{ errors }}</div>
-          <div class="col-4"></div>
-        </div>
         <div class="row">
           <div class="col-4"></div>
           <div class="col-4">
@@ -129,7 +124,6 @@
             <button class="btn btn-warning m-1" @click="testGetFamilies">
               GET /families
             </button>
-            <button @click="fixData">data fix</button>
           </div>
         </div>
 
@@ -619,6 +613,8 @@
 <script>
 import axios from "axios";
 export default {
+  emits: ["logOut", "onError", "clearError"],
+
   data: function () {
     return {
       me: null,
@@ -635,15 +631,19 @@ export default {
   },
   created: function () {
     this.loaded = true;
-
-    // this.getUsers();
+    this.getMe();
   },
   methods: {
     createFamily: function (familyParams) {
-      axios.post("/families", familyParams).then((response) => {
-        console.log(response.data);
-        this.families.push(familyParams);
-      });
+      axios
+        .post("/families", familyParams)
+        .then((response) => {
+          console.log(response.data);
+          this.families.push(familyParams);
+        })
+        .catch((error) => {
+          this.$emit("onError", error, "createFamily");
+        });
     },
     createUser: function (userParams) {
       userParams.santa_group = parseInt(userParams.santa_group.charAt());
@@ -660,11 +660,16 @@ export default {
           userParams.mystery_santa_id = user.id;
         }
       });
-      console.log(userParams);
-      axios.post("/users", userParams).then((response) => {
-        console.log(response.data);
-        this.users.push(userParams);
-      });
+      console.log("user params: ", userParams);
+      axios
+        .post("/users", userParams)
+        .then((response) => {
+          console.log(response.data);
+          this.users.push(userParams);
+        })
+        .catch((error) => {
+          this.$emit("onError", error, "createUser");
+        });
     },
     deleteFamily: function (family) {
       if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FAMILY?")) {
@@ -678,8 +683,8 @@ export default {
               });
             }
           })
-          .catch((errors) => {
-            console.log("errors: ", errors);
+          .catch((error) => {
+            this.$emit("onError", error, "deleteFamily");
           });
       }
     },
@@ -696,8 +701,8 @@ export default {
               });
             }
           })
-          .catch((errors) => {
-            console.log("errors: ", errors.response);
+          .catch((error) => {
+            this.$emit("onError", error, "deleteUser");
           });
       }
     },
@@ -714,44 +719,37 @@ export default {
     flipAdmin: function (user) {
       user.is_admin = !user.is_admin;
     },
-    fixData: function () {
+    getMe() {
       axios
-        .put("/users/santagroupfix")
+        .get("/users/me")
         .then((response) => {
-          console.log(response.data);
+          if (!response.data?.is_admin) {
+            this.$emit("logOut");
+          } else {
+            console.log(response.data);
+            this.me = response.data;
+            this.getUsers();
+          }
         })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
+        .catch((error) => {
+          this.$emit("onError", error, "getMe");
         });
     },
     getUsers: function () {
       axios
-        .get("/users/me")
+        .get("/families")
         .then((response) => {
           console.log(response.data);
-          this.me = response.data;
-          if (!response.data.is_admin) {
-            this.$root.logOut();
-          } else {
-            axios
-              .get("/families")
-              .then((response) => {
-                console.log(response.data);
 
-                this.families = response.data;
-                this.users = response.data
-                  .map((family) => family.users)
-                  .flat()
-                  .sort((a, b) => a.name.localeCompare(b.name));
-                this.loaded = true;
-              })
-              .catch((errors) => {
-                console.log("errors: ", errors.response.data.errors);
-              });
-          }
+          this.families = response.data;
+          this.users = response.data
+            .map((family) => family.users)
+            .flat()
+            .sort((a, b) => a.name.localeCompare(b.name));
+          this.loaded = true;
         })
-        .catch((errors) => {
-          console.log("errors: ", errors.response.data.errors);
+        .catch((error) => {
+          this.$emit("onError", error, "getUsers");
         });
     },
     resetData: function () {
@@ -761,11 +759,10 @@ export default {
         axios
           .put("users/wipe", this.me)
           .then(() => {
-            this.$root.logOut();
+            this.$emit("logOut");
           })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-            this.errors = errors.response;
+          .catch((error) => {
+            this.$emit("onError", error, "resetData");
             this.loaded = true;
           });
       }
@@ -781,26 +778,43 @@ export default {
             this.visible = true;
             this.getUsers();
           })
-          .catch((errors) => {
-            console.log("errors: ", errors.response.data.errors);
-            this.errors = errors.response;
+          .catch((error) => {
+            this.$emit("onError", error, "secretSantaShuffle");
           });
       }
     },
     testGetUsers: function () {
-      axios.get("/users").then((response) => {
-        console.log(response.data);
-      });
+      this.$emit("clearError");
+      axios
+        .get("/users")
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          this.$emit("onError", error, "testGetUsers");
+        });
     },
     testGetMe: function () {
-      axios.get("/users/me").then((response) => {
-        console.log(response.data);
-      });
+      this.$emit("clearError");
+      axios
+        .get("/users/me")
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          this.$emit("onError", error, "testGetMe");
+        });
     },
     testGetFamilies: function () {
-      axios.get("/families").then((response) => {
-        console.log(response.data);
-      });
+      this.$emit("clearError");
+      axios
+        .get("/families")
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          this.$emit("onError", error, "testGetFamilies");
+        });
     },
     updateFamily: function (family) {
       axios
@@ -808,9 +822,8 @@ export default {
         .then((response) => {
           console.log(response.data);
         })
-        .catch((errors) => {
-          console.log("errors: ", errors);
-          this.errors = errors.response;
+        .catch((error) => {
+          this.$emit("onError", error, "updateFamily");
         });
     },
     updateUser: function (user) {
@@ -852,9 +865,8 @@ export default {
         .then((response) => {
           console.log(response);
         })
-        .catch((errors) => {
-          console.log("errors: ", errors);
-          this.errors = errors.response;
+        .catch((error) => {
+          this.$emit("onError", error, "updateUser");
         });
     },
   },
