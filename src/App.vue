@@ -30,7 +30,12 @@
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <transition name="splash" mode="out-in">
-            <li v-if="this.$router.currentRoute.value.path === '/'">
+            <li
+              v-if="
+                this.$router.currentRoute?.value?.path === '/' &&
+                !this.errorMessage
+              "
+            >
               <button
                 class="btn btn-success align-middle ms-2 mt-2 pt-0 pb-0 ps-1 pe-1"
                 @click="expandLists"
@@ -93,6 +98,7 @@
     @login_change="loginUpdate"
     @logOut="logOut"
     @onError="onError"
+    @clearError="clearError"
     :errorMessage="errorMessage"
   >
   </router-view>
@@ -185,10 +191,15 @@ export default {
       var burger = document.getElementsByClassName("navbar-collapse");
       burger[0].classList.remove("show");
     },
+    clearError() {
+      this.errorMessage = null;
+      var toast = new Toast(document.getElementById("toast"));
+      toast.hide();
+    },
     onError(error, methodName) {
       console.log(`${methodName} error: ${error}`);
       console.log(`Message: ${error.message}`);
-      console.log(`Rails error: ${error.response?.data?.error}`);
+      console.log(`Server Response: ${error.response}`);
       this.errorMessage =
         error.response?.data?.error ||
         error.message ||
@@ -208,6 +219,7 @@ export default {
       this.isAdmin = localStorage.is_admin;
     },
     logOut: function () {
+      this.errorMessage = null;
       delete axios.defaults.headers.common["Authorization"];
       localStorage.removeItem("jwt");
       localStorage.removeItem("user_name");

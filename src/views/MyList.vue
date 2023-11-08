@@ -387,6 +387,8 @@ import splashImage from "../assets/images/presents-cropped-compressed.jpg";
 
 export default {
   components: { Splash },
+  props: ["errorMessage"],
+  emits: ["logOut", "onError", "clearError"],
   data() {
     return {
       myList: [],
@@ -410,6 +412,9 @@ export default {
       }
     },
   },
+  created() {
+    this.$emit("clearError");
+  },
   mounted() {
     this.getMyList();
   },
@@ -429,8 +434,8 @@ export default {
               newItem.id = response.data.id;
               this.myList.push(newItem);
             })
-            .catch((errors) => {
-              console.log("errors: ", errors.response.data.errors);
+            .catch((error) => {
+              this.$emit("onError", error, "batchCreate");
             });
         }
       }
@@ -457,8 +462,7 @@ export default {
               .classList.remove("was-validated");
           })
           .catch((error) => {
-            console.log("getEveryone error: ", error, error.message);
-            this.launchErrorToast(error);
+            this.$emit("onError", error, "createItem");
           });
 
         setTimeout(() => {
@@ -476,8 +480,7 @@ export default {
           this.myList.splice(this.myList.indexOf(item), 1);
         })
         .catch((error) => {
-          console.log("getEveryone error: ", error, error.message);
-          this.launchErrorToast(error);
+          this.$emit("onError", error, "deleteItem");
         });
     },
     editItem: function (item) {
@@ -494,11 +497,10 @@ export default {
           this.myList = response.data;
         })
         .catch((error) => {
-          console.log("getMe error: ", error, error.message);
           if (error.response?.status === 401) {
-            this.$root.logOut();
+            this.$emit("logOut");
           } else {
-            this.launchErrorToast(error);
+            this.$emit("onError", error, "getMyList");
           }
         });
     },
@@ -523,8 +525,7 @@ export default {
             foundItem.link = this.editingItem.link;
           })
           .catch((error) => {
-            console.log("getEveryone error: ", error, error.message);
-            this.launchErrorToast(error);
+            this.$emit("onError", error, "updateItem");
           });
       }
     },

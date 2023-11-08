@@ -252,6 +252,7 @@ import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 export default {
   components: { WishList, Splash },
   props: ["errorMessage"],
+  emits: ["logOut", "onError", "clearError"],
   data: function () {
     return {
       family: [],
@@ -273,6 +274,7 @@ export default {
     };
   },
   created: function () {
+    this.$emit("clearError");
     axios
       .get("/users/me")
       .then((response) => {
@@ -458,6 +460,5 @@ export default {
         });
     },
   },
-  emits: ["logOut, onError"],
 };
 </script>
