@@ -81,7 +81,7 @@
               Create User
             </button>
             <button
-              class="btn btn-outline-success ms-3"
+              class="btn btn-outline-success m-3"
               data-bs-toggle="modal"
               data-bs-target="#createFamily"
             >
@@ -95,6 +95,9 @@
           <div class="col-4">
             <button class="btn btn-danger" @click="resetData">
               Wipe data and reseed
+            </button>
+            <button class="btn btn-danger m-3" @click="cleanupGifts">
+              Cleanup Gifts from Last Year
             </button>
           </div>
           <div class="col-4"></div>
@@ -634,6 +637,17 @@ export default {
     this.getMe();
   },
   methods: {
+    cleanupGifts() {
+      axios
+        .put("/wishedgifts/cleanup")
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$emit("onError", error, "cleanupGifts");
+        });
+    },
     createFamily: function (familyParams) {
       axios
         .post("/families", familyParams)
