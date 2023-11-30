@@ -494,7 +494,9 @@ export default {
         .then((response) => {
           this.contentLoaded = true;
           this.pageLoaded = true;
-          this.myList = response.data;
+          this.myList = response.data?.sort(function (a, b) {
+            return a.id - b.id;
+          });
         })
         .catch((error) => {
           if (error.response?.status === 401) {
