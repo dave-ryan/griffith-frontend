@@ -129,14 +129,14 @@
 
 @-webkit-keyframes pulse {
   to {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
+    -webkit-transform: scale(1.275);
+    transform: scale(1.275);
   }
 }
 @keyframes pulse {
   to {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
+    -webkit-transform: scale(1.275);
+    transform: scale(1.275);
   }
 }
 button,
@@ -144,11 +144,9 @@ button,
   transform: perspective(1px) translateZ(0);
 }
 button:active,
-button:focus,
-.nav-link:active,
-.nav-link:focus {
+.nav-link:active {
   animation-name: pulse;
-  animation-duration: 0.1s;
+  animation-duration: 0.15s;
   animation-timing-function: linear;
   animation-iteration-count: 2;
   animation-direction: alternate;
