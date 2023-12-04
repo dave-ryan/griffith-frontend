@@ -351,8 +351,8 @@ export default {
         });
     },
     editCustomGift(user) {
-      this.setEditingCustomGift(this.findCustomGift(user));
       this.editingUserName = user.name;
+      this.setEditingCustomGift(this.findCustomGift(user));
     },
     focusInput() {
       document.getElementById("customGiftInput").focus();
