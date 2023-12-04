@@ -4,10 +4,15 @@
       :src="splashSrc"
       :contentLoaded="contentLoaded"
       :splashLoaded="splashLoaded"
-      :lowPresentCount="lowPresentCount"
       :errorMessage="errorMessage"
       @loadSplash="splashLoaded = true"
     />
+
+    <transition name="content" mode="out-in">
+      <LowPresentWarning
+        v-if="lowPresentCount && splashLoaded && contentLoaded"
+      />
+    </transition>
 
     <transition name="content" mode="out-in">
       <div
@@ -246,11 +251,12 @@
 import axios from "axios";
 import WishList from "../components/WishList.vue";
 import Splash from "../components/Splash.vue";
+import LowPresentWarning from "../components/LowPresentWarning.vue";
 import { Modal } from "bootstrap";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 
 export default {
-  components: { WishList, Splash },
+  components: { WishList, Splash, LowPresentWarning },
   props: ["errorMessage"],
   emits: ["logOut", "onError", "clearError"],
   data: function () {
