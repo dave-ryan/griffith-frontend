@@ -68,24 +68,24 @@
   </transition>
 
   <!-- Error Toast -->
-  <div class="position-fixed top-0 start-50 translate-middle-x mt-5">
+  <div
+    class="toast-wrapper position-fixed top-0 start-50 translate-middle-x mt-5"
+  >
     <div
       id="toast"
-      class="toast fade align-items-center text-white bg-danger border-0"
+      class="toast fade text-white bg-danger border-0"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
       data-bs-delay="3500"
     >
-      <div class="d-flex p-2">
-        <div
-          class="toast-body position-absolute top-50 start-50 translate-middle"
-        >
-          {{ errorMessage }}
-        </div>
+      <div class="text-center p-3">
+        <span class="toast-body">
+          {{ errorToast }}
+        </span>
         <button
           type="button"
-          class="btn-close btn-close-white me-2 m-auto"
+          class="btn-close btn-close-white float-end"
           data-bs-dismiss="toast"
           aria-label="Close"
         ></button>
@@ -99,6 +99,7 @@
     @logOut="logOut"
     @onError="onError"
     @clearError="clearError"
+    @launchErrorToast="launchErrorToast"
     :errorMessage="errorMessage"
   >
   </router-view>
@@ -154,8 +155,8 @@ button:active,
 .row {
   --bs-gutter-x: 0 !important;
 }
-.toast {
-  z-index: 1100;
+.toast-wrapper {
+  z-index: 9999;
 }
 .error-img {
   max-width: 20rem;
@@ -172,6 +173,7 @@ export default {
       userName: null,
       isAdmin: false,
       errorMessage: null,
+      errorToast: null,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
     };
@@ -193,6 +195,7 @@ export default {
       this.errorMessage = null;
       var toast = new Toast(document.getElementById("toast"));
       toast.hide();
+      this.errorToast = null;
     },
     onError(error, methodName) {
       console.log(`${methodName} error: ${error}`);
@@ -203,14 +206,18 @@ export default {
         error.message ||
         this.defaultErrorMessage;
       this.errorMessage += " :(";
-      var toast = new Toast(document.getElementById("toast"));
-      toast.show();
+      this.launchErrorToast(this.errorMessage);
     },
     expandLists: function () {
       var lists = document.getElementsByClassName("list-collapse");
       for (let i = 0; i < lists.length; i++) {
         lists[i].classList.add("show");
       }
+    },
+    launchErrorToast(errorMessage) {
+      this.errorToast = errorMessage;
+      var toast = new Toast(document.getElementById("toast"));
+      toast.show();
     },
     loginUpdate: function (userName) {
       this.userName = userName;

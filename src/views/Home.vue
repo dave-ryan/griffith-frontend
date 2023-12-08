@@ -258,7 +258,7 @@ import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 export default {
   components: { WishList, Splash, LowPresentWarning },
   props: ["errorMessage"],
-  emits: ["logOut", "onError", "clearError"],
+  emits: ["logOut", "onError", "clearError", "launchErrorToast"],
   data: function () {
     return {
       family: [],
@@ -428,7 +428,8 @@ export default {
         .catch((error) => {
           item.loading = false;
           let errorData = error.response?.data;
-          if (errorData && errorData.purchaser) {
+          if (errorData?.purchaser) {
+            this.$emit("launchErrorToast", "Someone Else Purchased This!");
             item.purchaser = errorData.purchaser;
             item.purchaser_id = errorData.purchaser_id;
           } else {
