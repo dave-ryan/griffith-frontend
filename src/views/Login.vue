@@ -83,6 +83,9 @@ export default {
     };
   },
   mounted() {
+    if (localStorage.jwt && localStorage.user_name) {
+      this.$router.push("/");
+    }
     var img = new Image();
     img.src = "../assets/images/xmas2.jpg";
     img.onload = function () {

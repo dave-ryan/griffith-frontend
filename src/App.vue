@@ -1,7 +1,7 @@
 <template>
   <nav
     class="navbar navbar-expand-md navbar-dark bg-dark text-center"
-    v-if="userName"
+    v-if="userName && jwt"
     id="navbar"
   >
     <div class="container-fluid">
@@ -171,6 +171,7 @@ export default {
   data() {
     return {
       userName: null,
+      jwt: null,
       isAdmin: false,
       errorMessage: null,
       errorToast: null,
@@ -181,6 +182,7 @@ export default {
   created: function () {
     if (localStorage.jwt && localStorage.user_name) {
       this.userName = localStorage.user_name;
+      this.jwt = localStorage.jwt;
       this.isAdmin = localStorage.is_admin;
     } else if (window.location.pathname !== "/fly") {
       this.$router.push("/login");
