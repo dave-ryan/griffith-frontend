@@ -22,7 +22,7 @@ export default {
       errors: null,
     };
   },
-  created: function () {
+  created() {
     axios
       .put("/users/wipe")
       .then((r) => {

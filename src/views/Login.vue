@@ -99,13 +99,13 @@ export default {
     },
   },
   methods: {
-    checkForms: function () {
+    checkForms() {
       return (
         this.inputParams?.name?.length > 0 &&
         this.inputParams?.password?.length > 0
       );
     },
-    logIn: function () {
+    logIn() {
       document.getElementById("loginForm")?.classList?.add("was-validated");
       if (this.checkForms()) {
         this.error = null;
@@ -131,7 +131,7 @@ export default {
           });
       }
     },
-    toggleLoading: function () {
+    toggleLoading() {
       document.getElementById("loginForm").classList?.remove("was-validated");
       this.loading = !this.loading;
       let field = document.getElementById("loginFieldSet");

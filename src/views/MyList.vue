@@ -404,7 +404,7 @@ export default {
     };
   },
   computed: {
-    isDisabled: function () {
+    isDisabled() {
       if (!this.newItem.name || this.newItem.name === "") {
         return true;
       } else {
@@ -419,7 +419,7 @@ export default {
     this.getMyList();
   },
   methods: {
-    batchCreate: function () {
+    batchCreate() {
       var arrayOfItems = this.batchItems.split("\n");
       var arrayOfLinks = this.batchLinks.split("\n");
       for (let i = 0; i < arrayOfItems.length; i++) {
@@ -442,14 +442,14 @@ export default {
       this.batchItems = "";
       this.batchLinks = "";
     },
-    checkForms: function (input) {
+    checkForms(input) {
       if (input["name"] && input["name"].length > 0) {
         return true;
       } else {
         return false;
       }
     },
-    createItem: function () {
+    createItem() {
       document.getElementById("newItemForm").classList.add("was-validated");
       if (this.checkForms(this.newItem)) {
         axios
@@ -473,7 +473,7 @@ export default {
         }, 400);
       }
     },
-    deleteItem: function (item) {
+    deleteItem(item) {
       axios
         .delete(`/wishedgifts/${item.id}`)
         .then(() => {
@@ -483,12 +483,12 @@ export default {
           this.$emit("onError", error, "deleteItem");
         });
     },
-    editItem: function (item) {
+    editItem(item) {
       this.editingItem.name = item.name;
       this.editingItem.link = item.link;
       this.editingItem.id = item.id;
     },
-    getMyList: function () {
+    getMyList() {
       axios
         .get("/wishedgifts")
         .then((response) => {
@@ -506,14 +506,14 @@ export default {
           }
         });
     },
-    needsWordWrap: function (items) {
+    needsWordWrap(items) {
       if (items === "") {
         return "";
       } else {
         return "text-nowrap";
       }
     },
-    updateItem: function () {
+    updateItem() {
       document.getElementById("editingItemForm").classList.add("was-validated");
       if (this.checkForms(this.editingItem)) {
         axios

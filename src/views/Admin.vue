@@ -618,7 +618,7 @@ import axios from "axios";
 export default {
   emits: ["logOut", "onError", "clearError"],
 
-  data: function () {
+  data() {
     return {
       me: null,
       visible: false,
@@ -632,7 +632,7 @@ export default {
       loaded: false,
     };
   },
-  created: function () {
+  created() {
     this.loaded = true;
     this.getMe();
   },
@@ -648,7 +648,7 @@ export default {
           this.$emit("onError", error, "cleanupGifts");
         });
     },
-    createFamily: function (familyParams) {
+    createFamily(familyParams) {
       axios
         .post("/families", familyParams)
         .then((response) => {
@@ -659,7 +659,7 @@ export default {
           this.$emit("onError", error, "createFamily");
         });
     },
-    createUser: function (userParams) {
+    createUser(userParams) {
       userParams.santa_group = parseInt(userParams.santa_group.charAt());
       this.families.forEach((family) => {
         if (family.name === userParams.familyName) {
@@ -685,7 +685,7 @@ export default {
           this.$emit("onError", error, "createUser");
         });
     },
-    deleteFamily: function (family) {
+    deleteFamily(family) {
       if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS FAMILY?")) {
         axios
           .delete(`/families/${family.id}`)
@@ -702,7 +702,7 @@ export default {
           });
       }
     },
-    deleteUser: function (user) {
+    deleteUser(user) {
       if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS USER?")) {
         axios
           .delete(`/users/${user.id}`)
@@ -720,17 +720,17 @@ export default {
           });
       }
     },
-    editFamily: function (family) {
+    editFamily(family) {
       this.editFamilyParams = family;
     },
-    editUser: function (user) {
+    editUser(user) {
       this.editingUser = user;
       this.editingUser.familyName = user.family.name;
       this.editingUser.secretSantaName = user.mystery_santa
         ? user.mystery_santa.name
         : null;
     },
-    flipAdmin: function (user) {
+    flipAdmin(user) {
       user.is_admin = !user.is_admin;
     },
     getMe() {
@@ -749,7 +749,7 @@ export default {
           this.$emit("onError", error, "getMe");
         });
     },
-    getUsers: function () {
+    getUsers() {
       axios
         .get("/families")
         .then((response) => {
@@ -766,7 +766,7 @@ export default {
           this.$emit("onError", error, "getUsers");
         });
     },
-    resetData: function () {
+    resetData() {
       if (confirm("ARE YOU SURE YOU WANT TO RESET EVERYTHING???")) {
         this.loaded = false;
 
@@ -781,7 +781,7 @@ export default {
           });
       }
     },
-    secretSantaShuffle: function () {
+    secretSantaShuffle() {
       if (
         confirm("ARE YOU SURE YOU WANT TO SHUFFLE EVERYONE'S SECRET SANTA?")
       ) {
@@ -797,7 +797,7 @@ export default {
           });
       }
     },
-    testGetUsers: function () {
+    testGetUsers() {
       this.$emit("clearError");
       axios
         .get("/users")
@@ -808,7 +808,7 @@ export default {
           this.$emit("onError", error, "testGetUsers");
         });
     },
-    testGetMe: function () {
+    testGetMe() {
       this.$emit("clearError");
       axios
         .get("/users/me")
@@ -819,7 +819,7 @@ export default {
           this.$emit("onError", error, "testGetMe");
         });
     },
-    testGetFamilies: function () {
+    testGetFamilies() {
       this.$emit("clearError");
       axios
         .get("/families")
@@ -830,7 +830,7 @@ export default {
           this.$emit("onError", error, "testGetFamilies");
         });
     },
-    updateFamily: function (family) {
+    updateFamily(family) {
       axios
         .patch(`/families/${family.id}`, family)
         .then((response) => {
@@ -840,7 +840,7 @@ export default {
           this.$emit("onError", error, "updateFamily");
         });
     },
-    updateUser: function (user) {
+    updateUser(user) {
       var userParams = {
         id: user.id,
         name: user.name,

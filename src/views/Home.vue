@@ -259,7 +259,7 @@ export default {
   components: { WishList, Splash, LowPresentWarning },
   props: ["errorMessage"],
   emits: ["logOut", "onError", "clearError", "launchErrorToast"],
-  data: function () {
+  data() {
     return {
       family: [],
       everyone: [],
@@ -279,7 +279,7 @@ export default {
       splashSrc: splashImage,
     };
   },
-  created: function () {
+  created() {
     this.$emit("clearError");
     axios
       .get("/users/me")
@@ -308,7 +308,7 @@ export default {
         (item) => item.customgift_purchaser_id === this.me.id
       );
     },
-    getEveryone: function () {
+    getEveryone() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       this.indexview = true;
       this.contentLoaded = false;
@@ -325,7 +325,7 @@ export default {
           this.$emit("onError", error, "getEveryone");
         });
     },
-    getFamily: function () {
+    getFamily() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       this.contentLoaded = false;
       this.indexview = false;
@@ -346,7 +346,7 @@ export default {
         });
       this.me.mystery_santa ? this.getSecretSanta() : "";
     },
-    getSecretSanta: function () {
+    getSecretSanta() {
       axios
         .get(`/users/${this.me.mystery_santa.id}`)
         .then((response) => {
@@ -374,7 +374,7 @@ export default {
       };
       this.customGiftCopy = gift;
     },
-    toggleCustomGiftCheckBox: function (event, user) {
+    toggleCustomGiftCheckBox(event, user) {
       if (event.target.checked) {
         this.loading = true;
         let params = {
@@ -407,7 +407,7 @@ export default {
           });
       }
     },
-    toggleCheckBox: function (item) {
+    toggleCheckBox(item) {
       var el = document.getElementById(`checkbox-${item.id}`);
       setTimeout(() => {
         el.checked = !el.checked;
@@ -437,7 +437,7 @@ export default {
           }
         });
     },
-    toggleChristmasList: function (user) {
+    toggleChristmasList(user) {
       axios
         .get(`/users/${user.id}/christmaslist`)
         .then((response) => {
