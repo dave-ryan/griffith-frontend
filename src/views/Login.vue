@@ -113,13 +113,16 @@ export default {
         axios
           .post("/sessions", this.inputParams)
           .then((response) => {
-            axios.defaults.headers.common["Authorization"] =
-              "Bearer " + response.data.jwt;
-            localStorage.setItem("jwt", response.data.jwt);
-            localStorage.setItem("is_admin", response.data.is_admin);
-            localStorage.setItem("user_name", response.data.user_name);
-            this.$emit("login_change", response.data.user_name);
-            this.$router.push("/");
+            if (response.data && response.status === 201) {
+              axios.defaults.headers.common["Authorization"] =
+                "Bearer " + response.data.jwt;
+              this.$emit("onLogin", response.data);
+              this.$router.push("/");
+            } else {
+              console.log(response);
+              this.error = "Unknown Error, please tell David!";
+              this.toggleLoading();
+            }
           })
           .catch((error) => {
             this.toggleLoading();

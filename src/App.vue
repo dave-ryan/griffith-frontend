@@ -95,7 +95,7 @@
 
   <!-- Router View -->
   <router-view
-    @login_change="loginUpdate"
+    @onLogin="onLogin"
     @logOut="logOut"
     @onError="onError"
     @clearError="clearError"
@@ -191,7 +191,7 @@ export default {
   methods: {
     collapseBurger: function () {
       var burger = document.getElementsByClassName("navbar-collapse");
-      burger[0].classList.remove("show");
+      burger[0]?.classList?.remove("show");
     },
     clearError() {
       this.errorMessage = null;
@@ -221,17 +221,21 @@ export default {
       var toast = new Toast(document.getElementById("toast"));
       toast.show();
     },
-    loginUpdate: function (userName) {
-      this.userName = userName;
-      this.isAdmin = localStorage.is_admin;
+    onLogin: function (data) {
+      this.userName = data.user_name;
+      this.jwt = data.jwt;
+      this.isAdmin = data.is_admin;
+      localStorage.setItem("user_name", data.user_name);
+      localStorage.setItem("jwt", data.jwt);
+      localStorage.setItem("is_admin", data.is_admin);
     },
     logOut: function () {
-      this.errorMessage = null;
+      localStorage.clear();
       delete axios.defaults.headers.common["Authorization"];
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("user_name");
-      localStorage.removeItem("is_admin");
       this.userName = null;
+      this.jwt = null;
+      this.isAdmin = null;
+      this.errorMessage = null;
       this.$router.push("/login");
     },
   },
