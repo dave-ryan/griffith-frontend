@@ -1,10 +1,25 @@
 <template>
   <div class="container-fluid text-center" id="container">
     <div class="row">
-      <transition>
+      <transition-group mode="out-in">
+        <img
+          src="../assets/images/xmas2.jpg"
+          alt=""
+          class="background-image position-absolute top-50 start-50 translate-middle"
+          style="
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            object-position: center;
+          "
+          v-show="imgLoaded"
+          v-on:load="loadedImg"
+          key="1"
+        />
         <div
           class="col d-flex align-items-center vh-100 justify-content-center"
-          v-show="imgLoaded"
+          v-if="imgLoaded"
+          key="2"
         >
           <form @submit.prevent="logIn" id="loginForm" novalidate>
             <fieldset id="loginFieldSet">
@@ -46,25 +61,24 @@
             </fieldset>
           </form>
         </div>
-      </transition>
+      </transition-group>
     </div>
   </div>
 </template>
 
 <style scoped>
-.container-fluid {
-  background-image: url("../assets/images/xmas2.jpg");
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
-}
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.4s;
+  transition: opacity 1s;
 }
 .v-enter-active {
-  transition-delay: 0.4s;
+  transition-delay: 0s;
 }
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+/* to make the valid/invalid text less jarring */
 input:not(.is-invalid),
 input:not(.is-valid) {
   padding-right: calc(1.5em + 0.75rem);
@@ -85,13 +99,6 @@ export default {
   mounted() {
     if (localStorage.jwt && localStorage.user_name) {
       this.$router.push("/");
-    } else {
-      var img = new Image();
-      img.src = "../assets/images/xmas2.jpg";
-      img.onload = function () {
-        this.imgLoaded = true;
-      };
-      img.onload();
     }
   },
   computed: {
@@ -147,6 +154,9 @@ export default {
             console.log("response: ", error.response);
           });
       }
+    },
+    loadedImg() {
+      this.imgLoaded = true;
     },
     toggleLoading() {
       document.getElementById("loginForm").classList?.remove("was-validated");
