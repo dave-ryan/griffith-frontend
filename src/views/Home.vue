@@ -3,20 +3,19 @@
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
-      :splashLoaded="splashLoaded"
       :errorMessage="errorMessage"
-      @loadSplash="splashLoaded = true"
+      @splashImgLoaded="splashImgLoaded = true"
     />
 
     <transition name="content" mode="out-in">
       <LowPresentWarning
-        v-if="lowPresentCount && splashLoaded && contentLoaded"
+        v-if="lowPresentCount && splashImgLoaded && contentLoaded"
       />
     </transition>
 
     <transition name="content" mode="out-in">
       <div
-        v-if="contentLoaded && splashLoaded"
+        v-if="contentLoaded && splashImgLoaded"
         class="row ps-2 pe-2 text-break"
       >
         <div class="col">
@@ -269,7 +268,7 @@ export default {
       indexview: false,
       loading: false,
       me: null,
-      splashLoaded: false,
+      splashImgLoaded: false,
       pageLoaded: false,
       lowPresentCount: false,
       editingCustomGift: {},

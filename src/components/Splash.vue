@@ -2,8 +2,12 @@
   <div>
     <div class="row">
       <div class="col">
-        <transition-group mode="out-in">
-          <div v-if="!contentLoaded && !errorMessage" class="mt-5 spin" key="1">
+        <transition-group name="splash" mode="out-in">
+          <div
+            v-if="!imgLoaded || !errorMessage || !contentLoaded"
+            class="mt-5 spin"
+            key="1"
+          >
             <div
               class="spinner-border text-secondary mt-2 mb-3 pt-5"
               style="width: 4rem; height: 4rem"
@@ -15,8 +19,8 @@
           <img
             :src="src"
             class="img splash shadow sticky-top"
-            v-on:load="$emit('loadSplash')"
-            v-show="contentLoaded"
+            v-on:load="loadedImg"
+            v-show="imgLoaded && contentLoaded"
             key="2"
             alt="failed"
           />
@@ -34,15 +38,12 @@
   max-height: 17em;
   min-height: 10em;
 }
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.3s;
+.splash-enter-active,
+.splash-leave-active {
+  transition: opacity 0.75s;
 }
-.v-enter-active {
-  transition-delay: 0.3s;
-}
-.v-enter-from,
-.v-leave-to {
+.splash-enter-from,
+.splash-leave-to {
   opacity: 0;
 }
 .spin {
@@ -55,13 +56,18 @@
 
 <script>
 export default {
-  props: [
-    "src",
-    "contentLoaded",
-    "splashLoaded",
-    "lowPresentCount",
-    "errorMessage",
-  ],
-  emits: ["loadSplash"],
+  props: ["src", "contentLoaded", "errorMessage"],
+  emits: ["splashImgLoaded"],
+  data() {
+    return {
+      imgLoaded: false,
+    };
+  },
+  methods: {
+    loadedImg() {
+      this.imgLoaded = true;
+      this.$emit("splashImgLoaded");
+    },
+  },
 };
 </script>

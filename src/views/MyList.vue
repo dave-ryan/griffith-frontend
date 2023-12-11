@@ -3,13 +3,11 @@
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
-      :splashLoaded="splashLoaded"
-      :lowPresentCount="false"
       :errorMessage="errorMessage"
-      @loadSplash="splashLoaded = true"
+      @splashImgLoaded="splashImgLoaded = true"
     />
     <transition name="content">
-      <div v-if="contentLoaded && splashLoaded" class="ps-3 pe-3 mt-5">
+      <div v-if="contentLoaded && splashImgLoaded" class="ps-3 pe-3 mt-5">
         <div class="row">
           <div class="col"></div>
           <div class="col-lg-10">
@@ -398,7 +396,7 @@ export default {
       contentLoaded: false,
       batchItems: "",
       batchLinks: "",
-      splashLoaded: false,
+      splashImgLoaded: false,
       splashSrc: splashImage,
       pageLoaded: false,
     };

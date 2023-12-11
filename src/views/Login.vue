@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid text-center" id="container">
     <div class="row">
-      <transition-group mode="out-in">
+      <transition-group name="login" mode="out-in">
         <img
           src="../assets/images/xmas2.jpg"
           alt=""
@@ -67,15 +67,12 @@
 </template>
 
 <style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 1s;
+.login-enter-active,
+.login-leave-active {
+  transition: opacity 1.5s;
 }
-.v-enter-active {
-  transition-delay: 0s;
-}
-.v-enter-from,
-.v-leave-to {
+.login-enter-from,
+.login-leave-to {
   opacity: 0;
 }
 /* to make the valid/invalid text less jarring */

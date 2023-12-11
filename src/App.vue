@@ -108,20 +108,16 @@
 <style>
 .content-enter-active,
 .content-leave-active {
-  transition: all 1s ease;
+  transition: all 0.75s ease;
 }
 .content-enter-from,
 .content-leave-to {
   transform: translateY(40px);
   opacity: 0;
 }
-
 .error-enter-active,
 .error-leave-active {
-  transition: opacity 0.3s;
-}
-.error-enter-active {
-  transition-delay: 0.3s;
+  transition: opacity 0.75s;
 }
 .error-enter-from,
 .error-leave-to {
