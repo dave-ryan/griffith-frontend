@@ -36,7 +36,7 @@
               </div>
 
               <div>
-                <button class="btn btn-success" type="submit">
+                <button class="btn btn-success" type="submit" id="loginButton">
                   {{ buttonName }}
                 </button>
               </div>
@@ -85,18 +85,22 @@ export default {
   mounted() {
     if (localStorage.jwt && localStorage.user_name) {
       this.$router.push("/");
+    } else {
+      var img = new Image();
+      img.src = "../assets/images/xmas2.jpg";
+      img.onload = function () {
+        this.imgLoaded = true;
+      };
+      img.onload();
     }
-    var img = new Image();
-    img.src = "../assets/images/xmas2.jpg";
-    img.onload = function () {
-      this.imgLoaded = true;
-    };
-    img.onload();
   },
   computed: {
     buttonName() {
       return this.loading ? "Loading..." : "Log In";
     },
+  },
+  created() {
+    window.addEventListener("keypress", this.enterPress);
   },
   methods: {
     checkForms() {
@@ -104,6 +108,15 @@ export default {
         this.inputParams?.name?.length > 0 &&
         this.inputParams?.password?.length > 0
       );
+    },
+    enterPress(event) {
+      if (
+        event.key === "Enter" &&
+        document.activeElement?.id !== "name-input" &&
+        document.activeElement?.id !== "password-input"
+      ) {
+        document.getElementById("loginButton")?.click();
+      }
     },
     logIn() {
       document.getElementById("loginForm")?.classList?.add("was-validated");
@@ -117,6 +130,7 @@ export default {
               axios.defaults.headers.common["Authorization"] =
                 "Bearer " + response.data.jwt;
               this.$emit("onLogin", response.data);
+              window.removeEventListener("keypress", this.enterPress);
               this.$router.push("/");
             } else {
               console.log(response);
