@@ -95,7 +95,7 @@ export default {
   },
   mounted() {
     if (localStorage.jwt && localStorage.user_name) {
-      this.$router.push("/");
+      this.$router.push("/home");
     }
   },
   computed: {
@@ -135,7 +135,7 @@ export default {
                 "Bearer " + response.data.jwt;
               this.$emit("onLogin", response.data);
               window.removeEventListener("keypress", this.enterPress);
-              this.$router.push("/");
+              this.$router.push("/home");
             } else {
               console.log(response);
               this.error = "Unknown Error, please tell David!";

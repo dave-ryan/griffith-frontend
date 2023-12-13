@@ -21,7 +21,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto text-center" @click="collapseBurger">
           <li>
-            <router-link class="nav-link" to="/">Home</router-link>
+            <router-link class="nav-link" to="/home">Home</router-link>
           </li>
           <li>
             <router-link class="nav-link" to="/my-list">My List</router-link>
@@ -32,7 +32,7 @@
           <transition name="splash" mode="out-in">
             <li
               v-if="
-                this.$router.currentRoute?.value?.path === '/' &&
+                this.$router.currentRoute?.value?.path === '/home' &&
                 !this.errorMessage
               "
             >
@@ -173,6 +173,7 @@ export default {
       errorToast: null,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
+      routes: ["/home", "/login", "/my-list", "/admin", "/fly"],
     };
   },
   created: function () {
