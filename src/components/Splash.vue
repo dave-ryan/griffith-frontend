@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!errorMessage">
     <div class="row">
       <div class="col">
         <transition-group mode="out-in">

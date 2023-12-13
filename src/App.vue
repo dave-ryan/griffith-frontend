@@ -53,18 +53,8 @@
     </div>
   </nav>
 
-  <!-- Error Section -->
   <transition mode="out-in">
-    <div v-if="errorMessage" class="mt-5 row text-center">
-      <div class="col"></div>
-      <div class="col">
-        <img src="./assets/images/errorcat.jpg" class="error-img" alt="error" />
-        <h2>
-          {{ errorMessage }}
-        </h2>
-      </div>
-      <div class="col"></div>
-    </div>
+    <Error v-if="errorMessage" :errorMessage="errorMessage" />
   </transition>
 
   <!-- Error Toast -->
@@ -162,8 +152,10 @@ button:active,
 <script>
 import axios from "axios";
 import { Toast } from "bootstrap";
+import Error from "./components/Error.vue";
 
 export default {
+  components: { Error },
   data() {
     return {
       userName: null,
