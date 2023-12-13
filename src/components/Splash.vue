@@ -3,11 +3,7 @@
     <div class="row">
       <div class="col">
         <transition-group mode="out-in">
-          <div
-            v-if="!imgLoaded || !errorMessage || !contentLoaded"
-            class="mt-5 spin"
-            key="1"
-          >
+          <div v-if="!(contentLoaded && imgLoaded)" class="mt-5 spin" key="1">
             <div
               class="spinner-border text-secondary mt-2 mb-3 pt-5"
               style="width: 4rem; height: 4rem"

@@ -7,7 +7,7 @@
       @splashImgLoaded="splashImgLoaded = true"
     />
 
-    <transition name="content" mode="out-in">
+    <transition mode="out-in">
       <LowPresentWarning
         v-if="lowPresentCount && splashImgLoaded && contentLoaded"
       />
@@ -15,7 +15,7 @@
 
     <transition name="content" mode="out-in">
       <div
-        v-if="contentLoaded && splashImgLoaded"
+        v-if="splashImgLoaded && contentLoaded"
         class="row ps-2 pe-2 text-break"
       >
         <div class="col">

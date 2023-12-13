@@ -29,10 +29,10 @@
           <li v-if="isAdmin === `true`">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
-          <transition name="splash" mode="out-in">
+          <transition mode="out-in">
             <li
               v-if="
-                this.$router.currentRoute?.value?.path === '/home' &&
+                this.$router?.currentRoute?.value?.path === '/home' &&
                 !this.errorMessage
               "
             >
