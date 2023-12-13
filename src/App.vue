@@ -173,7 +173,6 @@ export default {
       errorToast: null,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
-      routes: ["/home", "/login", "/my-list", "/admin", "/fly"],
     };
   },
   created: function () {

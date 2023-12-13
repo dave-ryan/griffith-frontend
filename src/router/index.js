@@ -4,6 +4,7 @@ import MyList from "../views/MyList.vue";
 import Login from "../views/Login.vue";
 import Admin from "../views/Admin.vue";
 import Fly from "../views/Fly.vue";
+import PathNotFound from "../components/PathNotFound.vue";
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: "/fly",
     name: "Fly",
     component: Fly,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "404",
+    component: PathNotFound,
   },
 ];
 
