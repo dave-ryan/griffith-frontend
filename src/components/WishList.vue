@@ -1,6 +1,6 @@
 <template>
   <div>
-    <transition name="spinner" mode="out-in">
+    <transition mode="out-in">
       <span class="spinner-container" v-if="item.loading">
         <span
           class="spinner-border spinner-border-sm me-2"
@@ -50,15 +50,6 @@
 </template>
 
 <style scoped>
-.spinner-enter-active,
-.spinner-leave-active {
-  transition: all 1s ease;
-}
-.spinner-enter-from,
-.spinner-leave-to {
-  opacity: 0;
-}
-
 .spinner-container {
   position: absolute;
   transform: translate(-100%);

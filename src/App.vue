@@ -54,7 +54,7 @@
   </nav>
 
   <!-- Error Section -->
-  <transition name="error" mode="out-in">
+  <transition mode="out-in">
     <div v-if="errorMessage" class="mt-5 row text-center">
       <div class="col"></div>
       <div class="col">
@@ -115,12 +115,12 @@
   transform: translateY(40px);
   opacity: 0;
 }
-.error-enter-active,
-.error-leave-active {
+.v-enter-active,
+.v-leave-active {
   transition: opacity 0.75s;
 }
-.error-enter-from,
-.error-leave-to {
+.v-enter-from,
+.v-leave-to {
   opacity: 0;
 }
 
@@ -175,7 +175,7 @@ export default {
         "Oops! Something went wrong. Try refreshing the page",
     };
   },
-  created: function () {
+  created() {
     if (localStorage.jwt && localStorage.user_name) {
       this.userName = localStorage.user_name;
       this.jwt = localStorage.jwt;
@@ -185,7 +185,7 @@ export default {
     }
   },
   methods: {
-    collapseBurger: function () {
+    collapseBurger() {
       var burger = document.getElementsByClassName("navbar-collapse");
       burger[0]?.classList?.remove("show");
     },
@@ -206,7 +206,7 @@ export default {
       this.errorMessage += " :(";
       this.launchErrorToast(this.errorMessage);
     },
-    expandLists: function () {
+    expandLists() {
       var lists = document.getElementsByClassName("list-collapse");
       for (let i = 0; i < lists.length; i++) {
         lists[i].classList.add("show");
@@ -217,7 +217,7 @@ export default {
       var toast = new Toast(document.getElementById("toast"));
       toast.show();
     },
-    onLogin: function (data) {
+    onLogin(data) {
       this.userName = data.user_name;
       this.jwt = data.jwt;
       this.isAdmin = data.is_admin;
@@ -225,7 +225,7 @@ export default {
       localStorage.setItem("jwt", data.jwt);
       localStorage.setItem("is_admin", data.is_admin);
     },
-    logOut: function () {
+    logOut() {
       localStorage.clear();
       delete axios.defaults.headers.common["Authorization"];
       this.userName = null;

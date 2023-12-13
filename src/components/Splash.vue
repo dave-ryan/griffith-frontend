@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col">
-        <transition-group name="splash" mode="out-in">
+        <transition-group mode="out-in">
           <div
             v-if="!imgLoaded || !errorMessage || !contentLoaded"
             class="mt-5 spin"
@@ -37,14 +37,6 @@
   width: 100%;
   max-height: 17em;
   min-height: 10em;
-}
-.splash-enter-active,
-.splash-leave-active {
-  transition: opacity 0.75s;
-}
-.splash-enter-from,
-.splash-leave-to {
-  opacity: 0;
 }
 .spin {
   position: absolute;
