@@ -525,6 +525,9 @@ export default {
         axios
           .patch(`/wishedgifts/${this.editingItem.id}`, this.editingItem)
           .then(() => {
+            document
+              .getElementById("editingItemForm")
+              .classList.remove("was-validated");
             var foundItem = this.myList.find(
               (item) => item.id === this.editingItem.id
             );
