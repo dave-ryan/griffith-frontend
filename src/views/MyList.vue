@@ -227,7 +227,7 @@
                     data-bs-dismiss="modal"
                     v-if="editingItem.name"
                   >
-                    Save changes
+                    Save Changes
                   </button>
                 </div>
               </form>
