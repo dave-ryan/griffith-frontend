@@ -337,6 +337,7 @@ export default {
       axios
         .get(`/families/${this.me.family.id}`)
         .then((response) => {
+          this.$emit("onHomePageLoaded");
           this.pageLoaded = true;
           this.contentLoaded = true;
           var my_id = this.me.id;

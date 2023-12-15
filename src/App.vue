@@ -33,7 +33,8 @@
             <li
               v-if="
                 this.$router?.currentRoute?.value?.path === '/home' &&
-                !this.errorMessage
+                !this.errorMessage &&
+                homePageLoaded
               "
             >
               <button
@@ -88,6 +89,7 @@
     @onLogin="onLogin"
     @logOut="logOut"
     @onError="onError"
+    @onHomePageLoaded="onHomePageLoaded"
     @clearError="clearError"
     @launchErrorToast="launchErrorToast"
     :errorMessage="errorMessage"
@@ -163,6 +165,7 @@ export default {
       isAdmin: false,
       errorMessage: null,
       errorToast: null,
+      homePageLoaded: false,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
     };
@@ -197,6 +200,9 @@ export default {
         this.defaultErrorMessage;
       this.errorMessage += " :(";
       this.launchErrorToast(this.errorMessage);
+    },
+    onHomePageLoaded() {
+      this.homePageLoaded = true;
     },
     expandLists() {
       var lists = document.getElementsByClassName("list-collapse");
