@@ -263,7 +263,13 @@ import Spinner from "../components/Spinner.vue";
 export default {
   components: { WishList, Splash, LowPresentWarning, Spinner },
   props: ["errorMessage"],
-  emits: ["logOut", "onError", "clearError", "launchErrorToast"],
+  emits: [
+    "logOut",
+    "onError",
+    "clearError",
+    "launchErrorToast",
+    "onHomePageLoaded",
+  ],
   data() {
     return {
       family: [],
