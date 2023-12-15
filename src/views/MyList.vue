@@ -172,32 +172,36 @@
                 </div>
 
                 <div class="modal-body">
-                  <label class="input-group-text" for="editName"
-                    >Name/Description</label
-                  >
-                  <div class="input-group mb-3">
+                  <div class="form-floating mb-2">
                     <input
-                      type="text"
                       v-model="editingItem.name"
                       class="form-control"
                       required
-                      id="editName"
+                      id="editItemName"
+                      placeholder="books"
+                      autocomplete="off"
                     />
+                    <label class="pt-2" for="editItemName"
+                      >Name/Description</label
+                    >
+
                     <div class="invalid-feedback">
                       What Do You Want For Christmas?
                     </div>
                   </div>
-                  <label class="input-group-text" for="editLink">
-                    Online Shopping Link&nbsp;
-                    <span class="fw-light"> (optional) </span>
-                  </label>
-                  <div class="input-group mb-3">
+
+                  <div class="form-floating mb-2">
                     <input
-                      type="text"
                       v-model="editingItem.link"
                       class="form-control"
-                      id="editLink"
+                      id="editItemLink"
+                      placeholder="example.com"
+                      autocomplete="off"
                     />
+                    <label class="pt-2" for="editItemLink">
+                      Online Shopping Link
+                      <span class="fw-light ms-1">optional</span>
+                    </label>
                   </div>
                 </div>
                 <div class="modal-footer">
