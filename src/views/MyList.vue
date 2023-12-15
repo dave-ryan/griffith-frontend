@@ -89,30 +89,34 @@
               novalidate
             >
               <h5 class="mb-2">Add To Your Christmas List</h5>
-              <label class="input-group-text">Name/Description</label>
-              <div class="input-group mb-2">
+              <div class="form-floating mb-2">
                 <input
-                  type="text"
                   v-model="newItem.name"
                   class="form-control"
                   required
                   id="newItemName"
+                  placeholder="books"
+                  autocomplete="off"
                 />
+                <label class="pt-2" for="newItemName">Name/Description</label>
+
                 <div class="invalid-feedback">
                   What Do You Want For Christmas?
                 </div>
               </div>
-              <label class="input-group-text">
-                <span class="me-auto"> Online Shopping Link </span>
-                <span class="fw-light float-end">optional</span>
-              </label>
-              <div class="input-group mb-2">
+
+              <div class="form-floating mb-2">
                 <input
-                  type="text"
                   v-model="newItem.link"
                   class="form-control"
                   id="newItemLink"
+                  placeholder="example.com"
+                  autocomplete="off"
                 />
+                <label class="pt-2" for="newItemLink">
+                  Online Shopping Link
+                  <span class="fw-light ms-1">optional</span>
+                </label>
               </div>
               <div class="d-grid ms-5 me-5">
                 <button class="btn btn-success" type="submit">Add It!</button>
