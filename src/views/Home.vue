@@ -4,6 +4,7 @@
       :src="splashSrc"
       :contentLoaded="contentLoaded"
       :errorMessage="errorMessage"
+      :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
 
@@ -11,6 +12,10 @@
       <LowPresentWarning
         v-if="lowPresentCount && splashImgLoaded && contentLoaded"
       />
+    </transition>
+
+    <transition name="content" mode="out-in">
+      <Spinner v-if="pageLoaded && !contentLoaded" topPosition="75%" />
     </transition>
 
     <transition name="content" mode="out-in">
@@ -248,14 +253,15 @@
 
 <script>
 import axios from "axios";
+import { Modal } from "bootstrap";
+import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 import WishList from "../components/WishList.vue";
 import Splash from "../components/Splash.vue";
 import LowPresentWarning from "../components/LowPresentWarning.vue";
-import { Modal } from "bootstrap";
-import splashImage from "../assets/images/tree-cropped-compressed.jpg";
+import Spinner from "../components/Spinner.vue";
 
 export default {
-  components: { WishList, Splash, LowPresentWarning },
+  components: { WishList, Splash, LowPresentWarning, Spinner },
   props: ["errorMessage"],
   emits: ["logOut", "onError", "clearError", "launchErrorToast"],
   data() {
