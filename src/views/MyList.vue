@@ -18,7 +18,7 @@
                 <thead class="table-light">
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Wished Gift</th>
+                    <th scope="col">What You Wish For</th>
                     <th scope="col">Link</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
@@ -88,7 +88,7 @@
               class="mt-4 mb-4"
               novalidate
             >
-              <h5 class="mb-2">New Item For Your Christmas List</h5>
+              <h5 class="mb-2">Add To Your Christmas List</h5>
               <label class="input-group-text">Name/Description</label>
               <div class="input-group mb-2">
                 <input
@@ -103,8 +103,8 @@
                 </div>
               </div>
               <label class="input-group-text">
-                Online Shopping Link&nbsp;
-                <span class="fw-light"> (optional) </span>
+                <span class="me-auto"> Online Shopping Link </span>
+                <span class="fw-light float-end">optional</span>
               </label>
               <div class="input-group mb-2">
                 <input
@@ -114,9 +114,9 @@
                   id="newItemLink"
                 />
               </div>
-              <button class="btn btn-success" type="submit">
-                Add This To Your List
-              </button>
+              <div class="d-grid ms-5 me-5">
+                <button class="btn btn-success" type="submit">Add It!</button>
+              </div>
             </form>
           </div>
           <div class="col"></div>
@@ -132,7 +132,7 @@
           data-bs-toggle="modal"
           data-bs-target="#batchModal"
         >
-          Add Multiple Items To Your List At Once
+          Add Multiple Things To Your List At Once
         </button>
 
         <!-- Edit Modal -->
@@ -301,8 +301,10 @@
               <div class="modal-body">
                 <div class="row">
                   <div class="col mb-3 fw-light">
-                    If you have links, make sure they line up. See the example
-                    below..
+                    If you have online links (they are optional), make sure they
+                    line up.
+                    <br />
+                    See the example below..
                   </div>
                 </div>
                 <div class="row">
@@ -310,7 +312,7 @@
                     <div class="input">
                       <h4>
                         <label for="floatingTextarea-Gift" class="fw-bold"
-                          >Wished For</label
+                          >What You Wish For</label
                         >
                       </h4>
                       <textarea
@@ -327,7 +329,7 @@
                     <div class="input">
                       <h4>
                         <label for="floatingTextarea-Link" class="fw-bold"
-                          >Links</label
+                          >Online Shopping Links</label
                         >
                       </h4>
                       <textarea
@@ -370,9 +372,6 @@
 <style scoped>
 .form-control.batch {
   min-height: 50vh;
-}
-.row {
-  --bs-gutter-x: 0;
 }
 textarea {
   white-space: pre-wrap;
