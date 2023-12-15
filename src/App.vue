@@ -26,7 +26,7 @@
           <li>
             <router-link class="nav-link" to="/my-list">My List</router-link>
           </li>
-          <li v-if="isAdmin === `true`">
+          <li v-if="isAdmin">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <transition mode="out-in">
