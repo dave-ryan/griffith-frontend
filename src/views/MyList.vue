@@ -4,6 +4,7 @@
       :src="splashSrc"
       :contentLoaded="contentLoaded"
       :errorMessage="errorMessage"
+      :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
     <transition name="content">
