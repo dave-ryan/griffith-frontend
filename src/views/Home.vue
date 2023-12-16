@@ -225,10 +225,7 @@
                 />
               </transition>
 
-              <label class="input-group-text"
-                >What are you geting {{ editingUserName }}?</label
-              >
-              <div class="input-group mb-2" :disabled="loadingCustomGiftModal">
+              <div class="form-floating" :disabled="loadingCustomGiftModal">
                 <input
                   type="text"
                   v-model="editingCustomGift.note"
@@ -236,7 +233,11 @@
                   required
                   id="customGiftInput"
                   :disabled="loadingCustomGiftModal"
+                  placeholder="books"
                 />
+                <label class="pt-2" for="customGiftInput"
+                  >What are you geting {{ editingUserName }}?</label
+                >
                 <div class="invalid-feedback">
                   A note of what you are getting them might be helpful!
                 </div>
