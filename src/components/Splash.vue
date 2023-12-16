@@ -6,7 +6,8 @@
           <Spinner
             v-if="!(contentLoaded && imgLoaded && pageLoaded)"
             key="1"
-            topPosition="25%"
+            top="25%"
+            position="absolute"
           />
           <img
             :src="src"

@@ -12,15 +12,16 @@
 
 <style scoped>
 .spin {
-  position: absolute;
-  top: v-bind("topPosition");
+  position: v-bind("position");
+  top: v-bind("top");
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1100;
 }
 </style>
 
 <script>
 export default {
-  props: ["topPosition"],
+  props: ["top", "position"],
 };
 </script>

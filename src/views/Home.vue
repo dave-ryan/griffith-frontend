@@ -15,7 +15,11 @@
     </transition>
 
     <transition name="content" mode="out-in">
-      <Spinner v-if="pageLoaded && !contentLoaded" topPosition="75%" />
+      <Spinner
+        v-if="pageLoaded && !contentLoaded"
+        top="75%"
+        position="absolute"
+      />
     </transition>
 
     <transition name="content" mode="out-in">
@@ -183,7 +187,8 @@
       </div>
     </transition>
 
-    <!-- Note Modal -->
+    <!-- Custom Gift Modal -->
+
     <div
       class="modal fade"
       id="customGiftModal"
@@ -196,6 +201,7 @@
             @submit.prevent="updateCustomGift"
             id="editingItemForm"
             novalidate
+            :disabled="loadingCustomGiftModal"
           >
             <div class="modal-header">
               <h5 class="modal-title">
@@ -206,20 +212,30 @@
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                :disabled="loadingCustomGiftModal"
               ></button>
             </div>
 
             <div class="modal-body">
+              <transition mode="out-in">
+                <Spinner
+                  v-if="loadingCustomGiftModal"
+                  top="50%"
+                  position="fixed"
+                />
+              </transition>
+
               <label class="input-group-text"
                 >What are you geting {{ editingUserName }}?</label
               >
-              <div class="input-group mb-2">
+              <div class="input-group mb-2" :disabled="loadingCustomGiftModal">
                 <input
                   type="text"
                   v-model="editingCustomGift.note"
                   class="form-control"
                   required
                   id="customGiftInput"
+                  :disabled="loadingCustomGiftModal"
                 />
                 <div class="invalid-feedback">
                   A note of what you are getting them might be helpful!
@@ -232,6 +248,7 @@
                 type="submit"
                 class="btn btn-success"
                 data-bs-dismiss="modal"
+                :disabled="loadingCustomGiftModal"
               >
                 Save Changes
               </button>
@@ -278,7 +295,7 @@ export default {
       christmasLists: {},
       contentLoaded: false,
       indexview: false,
-      loading: false,
+      loadingCustomGiftModal: false,
       me: null,
       splashImgLoaded: false,
       pageLoaded: false,
@@ -387,24 +404,29 @@ export default {
       this.customGiftCopy = gift;
     },
     toggleCustomGiftCheckBox(event, user) {
-      if (event.target.checked) {
-        this.loading = true;
+      if (event?.target?.checked) {
+        this.loadingCustomGiftModal = true;
+        this.editingUserName = user.name;
+        let myModal = new Modal(document.getElementById("customGiftModal"), {});
+        myModal.show();
         let params = {
           user_id: user.id,
           customgift_purchaser_id: this.me.id,
           note: "",
         };
-        let myModal = new Modal(document.getElementById("customGiftModal"), {});
-        myModal.show();
         axios.post("/customgifts", params).then((response) => {
-          if (response.status === 200) {
+          this.loadingCustomGiftModal = false;
+          if (response?.status === 200) {
             this.setEditingCustomGift(response.data);
-            this.editingUserName = response.data.user.name;
             user.customgifts.push(response.data);
-            this.loading = false;
-            setTimeout(() => {
-              document.getElementById("customGiftInput").focus();
-            }, 400);
+            console.log(2);
+          } else {
+            myModal.hide();
+            this.$emit(
+              "onError",
+              response,
+              "toggleCustomGiftCheckBox, post /customgifts"
+            );
           }
         });
       } else {
