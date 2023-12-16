@@ -46,6 +46,7 @@
             </li>
           </transition>
         </ul>
+
         <div class="nav-link disabled align-middle">
           Logged in as {{ userName }}
         </div>
@@ -95,6 +96,21 @@
     :errorMessage="errorMessage"
   >
   </router-view>
+
+  <transition mode="out-in">
+    <div
+      v-if="showScrollToTopButton"
+      class="position-fixed scroll-to-top-button"
+    >
+      <button
+        v-if="showScrollToTopButton"
+        class="btn btn-dark"
+        @click="scrollToTop()"
+      >
+        <i class="bi bi-arrow-up-short"></i>
+      </button>
+    </div>
+  </transition>
 </template>
 
 <style>
@@ -149,6 +165,10 @@ button:active,
 .error-img {
   max-width: 20rem;
 }
+.scroll-to-top-button {
+  bottom: 2%;
+  right: 2%;
+}
 </style>
 
 <script>
@@ -166,6 +186,8 @@ export default {
       errorMessage: null,
       errorToast: null,
       homePageLoaded: false,
+      scrollLimit: 150,
+      showScrollToTopButton: false,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
     };
@@ -178,6 +200,12 @@ export default {
     } else if (window.location.pathname !== "/fly") {
       this.$router.push("/login");
     }
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     collapseBurger() {
@@ -231,6 +259,16 @@ export default {
       this.isAdmin = null;
       this.errorMessage = null;
       this.$router.push("/login");
+    },
+    handleScroll() {
+      if (window.scrollY > this.scrollLimit) {
+        this.showScrollToTopButton = true;
+      } else {
+        this.showScrollToTopButton = false;
+      }
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
 };
