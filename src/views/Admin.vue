@@ -1,20 +1,75 @@
 <template>
-  <div class="container-fluid ps-0 pe-0 mb-5 text-center">
-    <div v-if="!loaded" class="mt-5">
-      <div
-        class="spinner-border text-secondary mt-2 mb-3 pt-5"
-        style="width: 4rem; height: 4rem"
-        role="status"
-      >
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-    <transition>
-      <div v-if="loaded" class="mt-5">
+  <div class="container-fluid ps-0 pe-0 text-center">
+    <Splash
+      :src="splashSrc"
+      :contentLoaded="contentLoaded"
+      :errorMessage="null"
+      :pageLoaded="pageLoaded"
+      @splashImgLoaded="splashImgLoaded = true"
+    />
+    <transition name="content" mode="out-in">
+      <div v-if="splashImgLoaded && contentLoaded" class="mt-5">
+        <div class="row mt-5">
+          <h2>Admin</h2>
+          <!-- Endpoints -->
+          <div class="col-4"></div>
+          <div class="col-4">
+            <button
+              class="btn btn-success m-2"
+              data-bs-toggle="modal"
+              data-bs-target="#createUser"
+            >
+              Create User
+            </button>
+            <button
+              class="btn btn-outline-success m-2"
+              data-bs-toggle="modal"
+              data-bs-target="#createFamily"
+            >
+              Create Family
+            </button>
+          </div>
+          <div class="col-4"></div>
+        </div>
         <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <button class="btn btn-danger m-2" @click="resetData">
+              Wipe data and reseed
+            </button>
+            <button class="btn btn-danger m-2" @click="cleanupGifts">
+              Cleanup Gifts from Last Year
+            </button>
+            <button class="btn btn-outline-danger" @click="secretSantaShuffle">
+              Secret Santa Shuffle
+            </button>
+          </div>
+          <div class="col-2"></div>
+        </div>
+        <div class="row" v-if="visible">
+          <div class="alert alert-success" role="alert">
+            Secret Santas have been shuffled!
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-warning m-2" @click="testGetUsers">
+              GET /users
+            </button>
+            <button class="btn btn-warning m-2" @click="testGetMe">
+              GET /me
+            </button>
+            <button class="btn btn-warning m-2" @click="testGetFamilies">
+              GET /families
+            </button>
+          </div>
+        </div>
+
+        <!-- Edit Users -->
+        <div class="row mt-5">
+          <h4>Users</h4>
           <div class="col-3"></div>
           <div class="col-6">
-            <h2>Admin</h2>
             <div v-for="user in users" :key="user.id" class="row mb-3">
               <div class="col-6">
                 {{ user.name }} - id:<strong>{{ user.id }}</strong>
@@ -45,7 +100,8 @@
           <div class="col-3"></div>
         </div>
 
-        <div class="row mt-3">
+        <!-- Edit Families -->
+        <div class="row mt-5">
           <div v-for="family in families" :key="family.id" class="col">
             {{ family.name }} - id:<strong>{{ family.id }}</strong>
             <div class="row">
@@ -70,64 +126,48 @@
           </div>
         </div>
 
-        <div class="row mt-5 mb-3">
-          <div class="col-4"></div>
-          <div class="col-4">
-            <button
-              class="btn btn-success"
-              data-bs-toggle="modal"
-              data-bs-target="#createUser"
-            >
-              Create User
-            </button>
-            <button
-              class="btn btn-outline-success m-3"
-              data-bs-toggle="modal"
-              data-bs-target="#createFamily"
-            >
-              Create Family
-            </button>
+        <!-- Secret Santa Map -->
+        <div class="row mb-5 mt-5">
+          <div class="col-1"></div>
+          <div class="col-5 m-1">
+            <h4>Men</h4>
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Buying For:</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="user in men" :key="user.id">
+                  <th scope="row">{{ user.id }}</th>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.mystery_santa?.name }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="col-4"></div>
-        </div>
-        <div class="row mt-3 mb-3">
-          <div class="col-4"></div>
-          <div class="col-4">
-            <button class="btn btn-danger" @click="resetData">
-              Wipe data and reseed
-            </button>
-            <button class="btn btn-danger m-3" @click="cleanupGifts">
-              Cleanup Gifts from Last Year
-            </button>
+          <div class="col-5 m-1">
+            <h4>Women</h4>
+            <table class="table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Buying For:</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="user in women" :key="user.id">
+                  <th scope="row">{{ user.id }}</th>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.mystery_santa?.name }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="col-4"></div>
-        </div>
-        <div class="row">
-          <div class="col-4"></div>
-          <div class="col-4">
-            <button class="btn btn-outline-danger" @click="secretSantaShuffle">
-              Secret Santa Shuffle
-            </button>
-          </div>
-          <div class="col-4"></div>
-        </div>
-        <div class="row mt-3" v-if="visible">
-          <div class="alert alert-success" role="alert">
-            Secret Santas have been shuffled!
-          </div>
-        </div>
-        <div class="row mt-5 mb-3">
-          <div class="col">
-            <button class="btn btn-warning m-1" @click="testGetUsers">
-              GET /users
-            </button>
-            <button class="btn btn-warning m-1" @click="testGetMe">
-              GET /me
-            </button>
-            <button class="btn btn-warning m-1" @click="testGetFamilies">
-              GET /families
-            </button>
-          </div>
+          <div class="col-1"></div>
         </div>
 
         <!-- Create Family Modal -->
@@ -615,7 +655,11 @@
 
 <script>
 import axios from "axios";
+import Splash from "../components/Splash.vue";
+import splashImage from "../assets/images/snowman.jpg";
+
 export default {
+  components: { Splash },
   emits: ["logOut", "onError", "clearError"],
 
   data() {
@@ -629,12 +673,26 @@ export default {
       newFamilyParams: {},
       errors: null,
       families: [],
-      loaded: false,
+      splashSrc: splashImage,
+      contentLoaded: false,
+      pageLoaded: false,
+      splashImgLoaded: false,
     };
   },
   created() {
-    this.loaded = true;
     this.getMe();
+  },
+  computed: {
+    men() {
+      return this.users.filter((user) => {
+        return user.santa_group === 1;
+      });
+    },
+    women() {
+      return this.users.filter((user) => {
+        return user.santa_group === 2;
+      });
+    },
   },
   methods: {
     cleanupGifts() {
@@ -760,7 +818,8 @@ export default {
             .map((family) => family.users)
             .flat()
             .sort((a, b) => a.name.localeCompare(b.name));
-          this.loaded = true;
+          this.contentLoaded = true;
+          this.pageLoaded = true;
         })
         .catch((error) => {
           this.$emit("onError", error, "getUsers");
@@ -768,7 +827,7 @@ export default {
     },
     resetData() {
       if (confirm("ARE YOU SURE YOU WANT TO RESET EVERYTHING???")) {
-        this.loaded = false;
+        this.contentLoaded = false;
 
         axios
           .put("users/wipe", this.me)
@@ -777,7 +836,7 @@ export default {
           })
           .catch((error) => {
             this.$emit("onError", error, "resetData");
-            this.loaded = true;
+            this.contentLoaded = true;
           });
       }
     },
