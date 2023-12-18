@@ -1,24 +1,22 @@
 <template>
-  <div v-if="!errorMessage">
-    <div class="row">
-      <div class="col">
-        <transition-group mode="out-in">
-          <Spinner
-            v-if="!(contentLoaded && imgLoaded && pageLoaded)"
-            key="1"
-            top="25%"
-            position="absolute"
-          />
-          <img
-            :src="src"
-            class="img splash shadow sticky-top"
-            v-on:load="loadedImg"
-            v-show="(imgLoaded && pageLoaded) || (imgLoaded && contentLoaded)"
-            key="2"
-            alt="failed"
-          />
-        </transition-group>
-      </div>
+  <div class="row">
+    <div class="col">
+      <transition-group mode="out-in">
+        <Spinner
+          v-if="!(contentLoaded && imgLoaded && pageLoaded)"
+          key="1"
+          top="25%"
+          position="absolute"
+        />
+        <img
+          :src="src"
+          class="img splash shadow sticky-top"
+          v-on:load="loadedImg"
+          v-show="(imgLoaded && pageLoaded) || (imgLoaded && contentLoaded)"
+          key="2"
+          alt="failed"
+        />
+      </transition-group>
     </div>
   </div>
 </template>
@@ -38,7 +36,7 @@ import Spinner from "./Spinner.vue";
 
 export default {
   components: { Spinner },
-  props: ["src", "contentLoaded", "errorMessage", "pageLoaded"],
+  props: ["src", "contentLoaded", "pageLoaded"],
   emits: ["splashImgLoaded"],
   data() {
     return {
@@ -49,6 +47,7 @@ export default {
     loadedImg() {
       this.imgLoaded = true;
       this.$emit("splashImgLoaded");
+      console.log(1);
     },
   },
 };

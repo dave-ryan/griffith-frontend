@@ -3,7 +3,6 @@
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
-      :errorMessage="errorMessage"
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
@@ -280,14 +279,7 @@ import Spinner from "../components/Spinner.vue";
 
 export default {
   components: { WishList, Splash, LowPresentWarning, Spinner },
-  props: ["errorMessage"],
-  emits: [
-    "logOut",
-    "onError",
-    "clearError",
-    "launchErrorToast",
-    "onHomePageLoaded",
-  ],
+  emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
   data() {
     return {
       family: [],
@@ -310,26 +302,7 @@ export default {
   },
   created() {
     this.$emit("clearError");
-    axios
-      .get("/users/me")
-      .then((response) => {
-        this.me = response.data;
-        if (
-          this.me.wishedgifts.reduce((total, currentgift) => {
-            return currentgift.purchaser ? total : (total += 1);
-          }, 0) < 4
-        ) {
-          this.lowPresentCount = true;
-        }
-        this.getFamily();
-      })
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          this.$emit("logOut");
-        } else {
-          this.$emit("onError", error, "getEveryone");
-        }
-      });
+    this.getMe();
   },
   methods: {
     findCustomGift(user) {
@@ -351,7 +324,9 @@ export default {
           });
         })
         .catch((error) => {
-          this.$emit("onError", error, "getEveryone");
+          error.critical = true;
+          error.function = "getEveryone";
+          this.$emit("onError", error);
         });
     },
     getFamily() {
@@ -372,9 +347,35 @@ export default {
             .sort((a, b) => a.name.localeCompare(b.name));
         })
         .catch((error) => {
-          this.$emit("onError", error, "getFamily");
+          error.critical = true;
+          error.function = "getFamily";
+          this.$emit("onError", error);
         });
       this.me.mystery_santa ? this.getSecretSanta() : "";
+    },
+    getMe() {
+      axios
+        .get("/users/me")
+        .then((response) => {
+          this.me = response.data;
+          if (
+            this.me.wishedgifts.reduce((total, currentgift) => {
+              return currentgift.purchaser ? total : (total += 1);
+            }, 0) < 4
+          ) {
+            this.lowPresentCount = true;
+          }
+          this.getFamily();
+        })
+        .catch((error) => {
+          if (error.response?.status === 401) {
+            this.$emit("logOut");
+          } else {
+            error.critical = true;
+            error.function = "getMe";
+            this.$emit("onError", error);
+          }
+        });
     },
     getSecretSanta() {
       axios
@@ -383,7 +384,9 @@ export default {
           this.secretSanta = response.data;
         })
         .catch((error) => {
-          this.$emit("onError", error, "getSecretSanta");
+          error.critical = true;
+          error.function = "getSecretSanta";
+          this.$emit("onError", error);
         });
     },
     editCustomGift(user) {
@@ -415,21 +418,18 @@ export default {
           customgift_purchaser_id: this.me.id,
           note: "",
         };
-        axios.post("/customgifts", params).then((response) => {
-          this.loadingCustomGiftModal = false;
-          if (response?.status === 200) {
+        axios
+          .post("/customgifts", params)
+          .then((response) => {
+            this.loadingCustomGiftModal = false;
             this.setEditingCustomGift(response.data);
             user.customgifts.push(response.data);
-            console.log(2);
-          } else {
+          })
+          .catch((error) => {
+            error.function = "toggleCustomGiftCheckBox, post /customgifts";
+            this.$emit("Error", error);
             myModal.hide();
-            this.$emit(
-              "onError",
-              response,
-              "toggleCustomGiftCheckBox, post /customgifts"
-            );
-          }
-        });
+          });
       } else {
         let gift = this.findCustomGift(user);
         axios
@@ -438,7 +438,8 @@ export default {
             gift.customgift_purchaser_id = null;
           })
           .catch((error) => {
-            this.$emit("onError", error, "toggleCustomGiftCheckBox");
+            error.function = "toggleCustomGiftCheckBox";
+            this.$emit("Error", error);
           });
       }
     },
@@ -468,18 +469,9 @@ export default {
             item.purchaser = errorData.purchaser;
             item.purchaser_id = errorData.purchaser_id;
           } else {
-            this.getEveryone();
+            error.function = "toggleCheckBox";
+            this.$emit("Error", error);
           }
-        });
-    },
-    toggleChristmasList(user) {
-      axios
-        .get(`/users/${user.id}/christmaslist`)
-        .then((response) => {
-          this.family[user.id] = response.data;
-        })
-        .catch((error) => {
-          this.$emit("onError", error, "toggleChristmasList");
         });
     },
     updateCustomGift() {
@@ -498,7 +490,8 @@ export default {
           editingGift.customgift_purchaser_id = newGift.customgift_purchaser_id;
         })
         .catch((error) => {
-          this.$emit("onError", error, "updateCustomGift");
+          error.function = "updateCustomGift";
+          this.$emit("Error", error);
         });
     },
   },

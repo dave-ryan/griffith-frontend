@@ -3,7 +3,6 @@
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
-      :errorMessage="null"
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
@@ -702,8 +701,8 @@ export default {
           console.log(response.data);
         })
         .catch((error) => {
-          console.log(error);
-          this.$emit("onError", error, "cleanupGifts");
+          error.function = "cleanupGifts";
+          this.$emit("onError", error);
         });
     },
     createFamily(familyParams) {
@@ -714,7 +713,8 @@ export default {
           this.families.push(familyParams);
         })
         .catch((error) => {
-          this.$emit("onError", error, "createFamily");
+          error.function = "createFamily";
+          this.$emit("onError", error);
         });
     },
     createUser(userParams) {
@@ -740,7 +740,8 @@ export default {
           this.users.push(userParams);
         })
         .catch((error) => {
-          this.$emit("onError", error, "createUser");
+          error.function = "createUser";
+          this.$emit("onError", error);
         });
     },
     deleteFamily(family) {
@@ -756,7 +757,8 @@ export default {
             }
           })
           .catch((error) => {
-            this.$emit("onError", error, "deleteFamily");
+            error.function = "deleteFamily";
+            this.$emit("onError", error);
           });
       }
     },
@@ -774,7 +776,8 @@ export default {
             }
           })
           .catch((error) => {
-            this.$emit("onError", error, "deleteUser");
+            error.function = "deleteUser";
+            this.$emit("onError", error);
           });
       }
     },
@@ -804,7 +807,9 @@ export default {
           }
         })
         .catch((error) => {
-          this.$emit("onError", error, "getMe");
+          error.critical = true;
+          error.function = "getMe";
+          this.$emit("onError", error);
         });
     },
     getUsers() {
@@ -822,7 +827,9 @@ export default {
           this.pageLoaded = true;
         })
         .catch((error) => {
-          this.$emit("onError", error, "getUsers");
+          error.critical = true;
+          error.function = "getUsers";
+          this.$emit("onError", error);
         });
     },
     resetData() {
@@ -835,7 +842,8 @@ export default {
             this.$emit("logOut");
           })
           .catch((error) => {
-            this.$emit("onError", error, "resetData");
+            error.function = "resetData";
+            this.$emit("onError", error);
             this.contentLoaded = true;
           });
       }
@@ -852,7 +860,8 @@ export default {
             this.getUsers();
           })
           .catch((error) => {
-            this.$emit("onError", error, "secretSantaShuffle");
+            error.function = "secretSantaShuffle";
+            this.$emit("onError", error);
           });
       }
     },
@@ -864,7 +873,8 @@ export default {
           console.log(response.data);
         })
         .catch((error) => {
-          this.$emit("onError", error, "testGetUsers");
+          error.function = "testGetUsers";
+          this.$emit("onError", error);
         });
     },
     testGetMe() {
@@ -875,7 +885,8 @@ export default {
           console.log(response.data);
         })
         .catch((error) => {
-          this.$emit("onError", error, "testGetMe");
+          error.function = "testGetMe";
+          this.$emit("onError", error);
         });
     },
     testGetFamilies() {
@@ -886,7 +897,8 @@ export default {
           console.log(response.data);
         })
         .catch((error) => {
-          this.$emit("onError", error, "testGetFamilies");
+          error.function = "testGetFamilies";
+          this.$emit("onError", error);
         });
     },
     updateFamily(family) {
@@ -896,7 +908,8 @@ export default {
           console.log(response.data);
         })
         .catch((error) => {
-          this.$emit("onError", error, "updateFamily");
+          error.function = "updateFamily";
+          this.$emit("onError", error);
         });
     },
     updateUser(user) {
@@ -939,7 +952,8 @@ export default {
           console.log(response);
         })
         .catch((error) => {
-          this.$emit("onError", error, "updateUser");
+          error.function = "updateUser";
+          this.$emit("onError", error);
         });
     },
   },

@@ -33,7 +33,7 @@
             <li
               v-if="
                 this.$router?.currentRoute?.value?.path === '/home' &&
-                !this.errorMessage &&
+                !this.error &&
                 homePageLoaded
               "
             >
@@ -56,7 +56,7 @@
   </nav>
 
   <transition mode="out-in">
-    <Error v-if="errorMessage" :errorMessage="errorMessage" />
+    <ErrorSplash v-if="error?.critical" :error="error" />
   </transition>
 
   <!-- Error Toast -->
@@ -69,31 +69,36 @@
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
-      data-bs-delay="3500"
+      data-bs-delay="4000"
     >
-      <div class="text-center p-3">
-        <span class="toast-body">
-          {{ errorToast }}
-        </span>
-        <button
-          type="button"
-          class="btn-close btn-close-white float-end"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
+      <div class="text-center p-2 row">
+        <div class="col-1"></div>
+
+        <div class="col-10">
+          {{ error?.report }}!
+          <br />
+          Try Refreshing The Page
+        </div>
+        <div class="col-1">
+          <button
+            type="button"
+            class="btn-close btn-close-white pt-4"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Router View -->
   <router-view
+    v-show="!error?.critical"
     @onLogin="onLogin"
     @logOut="logOut"
-    @onError="onError"
     @onHomePageLoaded="onHomePageLoaded"
     @clearError="clearError"
-    @launchErrorToast="launchErrorToast"
-    :errorMessage="errorMessage"
+    @onError="onError"
   >
   </router-view>
 
@@ -174,20 +179,19 @@ button:active,
 <script>
 import axios from "axios";
 import { Toast } from "bootstrap";
-import Error from "./components/Error.vue";
+import ErrorSplash from "./components/ErrorSplash.vue";
 
 export default {
-  components: { Error },
+  components: { ErrorSplash },
   data() {
     return {
       userName: null,
       jwt: null,
       isAdmin: false,
-      errorMessage: null,
-      errorToast: null,
       homePageLoaded: false,
       scrollLimit: 150,
       showScrollToTopButton: false,
+      error: null,
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
     };
@@ -213,21 +217,22 @@ export default {
       burger[0]?.classList?.remove("show");
     },
     clearError() {
-      this.errorMessage = null;
-      var toast = new Toast(document.getElementById("toast"));
+      this.error = null;
+      let toast = new Toast(document.getElementById("toast"));
       toast.hide();
-      this.errorToast = null;
     },
-    onError(error, methodName) {
-      console.log(`${methodName} error: ${error}`);
-      console.log(`Message: ${error.message}`);
-      console.log(`Server Response: ${error.response}`);
-      this.errorMessage =
+    launchErrorToast() {
+      let toast = new Toast(document.getElementById("toast"));
+      toast.show();
+    },
+    onError(error) {
+      this.logError(error);
+      this.error = error;
+      this.error.report =
         error.response?.data?.error ||
         error.message ||
         this.defaultErrorMessage;
-      this.errorMessage += " :(";
-      this.launchErrorToast(this.errorMessage);
+      this.launchErrorToast(this.error.report);
     },
     onHomePageLoaded() {
       this.homePageLoaded = true;
@@ -238,11 +243,6 @@ export default {
         lists[i].classList.add("show");
       }
     },
-    launchErrorToast(errorMessage) {
-      this.errorToast = errorMessage;
-      var toast = new Toast(document.getElementById("toast"));
-      toast.show();
-    },
     onLogin(data) {
       this.userName = data.user_name;
       this.jwt = data.jwt;
@@ -251,13 +251,33 @@ export default {
       localStorage.setItem("jwt", data.jwt);
       localStorage.setItem("is_admin", data.is_admin);
     },
+    logError(error) {
+      console.log("Error JSON", error.toJSON());
+      console.log(`${error.function} error!`);
+      console.log("Config", error.config);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("data", error.response.data);
+        console.log("status", error.response.status);
+        console.log("headers", error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log("request", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("message", error.message);
+      }
+    },
     logOut() {
       localStorage.clear();
       delete axios.defaults.headers.common["Authorization"];
       this.userName = null;
       this.jwt = null;
       this.isAdmin = null;
-      this.errorMessage = null;
+      this.error = null;
       this.$router.push("/login");
     },
     handleScroll() {

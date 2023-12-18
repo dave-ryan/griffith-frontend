@@ -3,7 +3,6 @@
     <Splash
       :src="splashSrc"
       :contentLoaded="contentLoaded"
-      :errorMessage="errorMessage"
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
@@ -393,7 +392,6 @@ import splashImage from "../assets/images/presents-cropped-compressed.jpg";
 
 export default {
   components: { Splash },
-  props: ["errorMessage"],
   emits: ["logOut", "onError", "clearError"],
   data() {
     return {
@@ -441,7 +439,8 @@ export default {
               this.myList.push(newItem);
             })
             .catch((error) => {
-              this.$emit("onError", error, "batchCreate");
+              error.function = "batchCreate";
+              this.$emit("onError", error);
             });
         }
       }
@@ -468,7 +467,8 @@ export default {
               .classList.remove("was-validated");
           })
           .catch((error) => {
-            this.$emit("onError", error, "createItem");
+            error.function = "createItem";
+            this.$emit("onError", error);
           });
 
         setTimeout(() => {
@@ -486,7 +486,8 @@ export default {
           this.myList.splice(this.myList.indexOf(item), 1);
         })
         .catch((error) => {
-          this.$emit("onError", error, "deleteItem");
+          error.function = "deleteItem";
+          this.$emit("onError", error);
         });
     },
     editItem(item) {
@@ -508,7 +509,9 @@ export default {
           if (error.response?.status === 401) {
             this.$emit("logOut");
           } else {
-            this.$emit("onError", error, "getMyList");
+            error.function = "getMyList";
+            error.critical = true;
+            this.$emit("onError", error);
           }
         });
     },
@@ -536,7 +539,8 @@ export default {
             foundItem.link = this.editingItem.link;
           })
           .catch((error) => {
-            this.$emit("onError", error, "updateItem");
+            error.function = "updateItem";
+            this.$emit("onError", error);
           });
       }
     },
