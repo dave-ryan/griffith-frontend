@@ -47,7 +47,6 @@ export default {
     loadedImg() {
       this.imgLoaded = true;
       this.$emit("splashImgLoaded");
-      console.log(1);
     },
   },
 };

@@ -6,7 +6,7 @@
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
-    <transition name="content">
+    <transition name="content" mode="out-in">
       <div v-if="contentLoaded && splashImgLoaded" class="ps-3 pe-3 mt-5">
         <div class="row">
           <div class="col"></div>
@@ -96,14 +96,16 @@
                   id="newItemName"
                   placeholder="books"
                   autocomplete="off"
+                  :disabled="newItemLoading"
                 />
                 <label class="pt-2" for="newItemName">Name/Description</label>
-
                 <div class="invalid-feedback">
                   What Do You Want For Christmas?
                 </div>
               </div>
-
+              <transition mode="out-in">
+                <Spinner v-if="newItemLoading" position="absolute" />
+              </transition>
               <div class="form-floating mb-2">
                 <input
                   v-model="newItem.link"
@@ -111,6 +113,7 @@
                   id="newItemLink"
                   placeholder="example.com"
                   autocomplete="off"
+                  :disabled="newItemLoading"
                 />
                 <label class="pt-2" for="newItemLink">
                   Online Shopping Link
@@ -118,7 +121,9 @@
                 </label>
               </div>
               <div class="d-grid ms-5 me-5">
-                <button class="btn btn-success" type="submit">Add It!</button>
+                <button class="btn btn-success" type="submit">
+                  {{ newItemLoading ? "Loading..." : "Add It!" }}
+                </button>
               </div>
             </form>
           </div>
@@ -388,15 +393,17 @@ textarea {
 <script>
 import axios from "axios";
 import Splash from "../components/Splash.vue";
+import Spinner from "../components/Spinner.vue";
 import splashImage from "../assets/images/presents-cropped-compressed.jpg";
 
 export default {
-  components: { Splash },
+  components: { Splash, Spinner },
   emits: ["logOut", "onError", "clearError"],
   data() {
     return {
       myList: [],
       newItem: {},
+      newItemLoading: false,
       editingItem: {},
       deletingItem: {},
       contentLoaded: false,
@@ -457,16 +464,19 @@ export default {
     createItem() {
       document.getElementById("newItemForm").classList.add("was-validated");
       if (this.checkForms(this.newItem)) {
+        this.newItemLoading = true;
         axios
           .post("/wishedgifts", this.newItem)
           .then((response) => {
             this.myList.push(response.data);
             this.newItem = {};
+            this.newItemLoading = false;
             document
               .getElementById("newItemForm")
               .classList.remove("was-validated");
           })
           .catch((error) => {
+            this.newItemLoading = false;
             error.function = "createItem";
             this.$emit("onError", error);
           });
