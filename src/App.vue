@@ -252,8 +252,8 @@ export default {
       localStorage.setItem("is_admin", data.is_admin);
     },
     logError(error) {
-      console.log("Error JSON", error.toJSON());
-      console.log(`${error.function} error!`);
+      console.log("Error!", error);
+      console.log("Method:", error.function);
       console.log("Config", error.config);
       if (error.response) {
         // The request was made and the server responded with a status code

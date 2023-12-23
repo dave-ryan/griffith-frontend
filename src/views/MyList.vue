@@ -303,13 +303,14 @@
                   </h4>
                 </div>
                 <button
+                  ref="Close"
                   type="button"
                   class="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
+                  :disabled="batchItemsLoading"
                 ></button>
               </div>
-
               <div class="modal-body">
                 <div class="row">
                   <div class="col mb-3 fw-light">
@@ -329,14 +330,22 @@
                       </h4>
                       <textarea
                         class="form-control batch"
-                        :class="needsWordWrap(batchItems)"
+                        :class="isWrappingTextItems"
                         placeholder="Socks&#10;Throw pillows&#10;Marvel Blurays"
                         id="floatingTextarea-Gift"
                         v-model="batchItems"
+                        :disabled="batchItemsLoading"
                       >
                       </textarea>
                     </div>
                   </div>
+                  <transition mode="out-in">
+                    <Spinner
+                      v-if="batchItemsLoading"
+                      position="absolute"
+                      top="50%"
+                    />
+                  </transition>
                   <div class="col-6">
                     <div class="input">
                       <h4>
@@ -345,11 +354,12 @@
                         >
                       </h4>
                       <textarea
-                        class="form-control batch word-wrap"
-                        :class="needsWordWrap(batchLinks)"
+                        class="form-control batch"
+                        :class="isWrappingTextLinks"
                         placeholder="socks.com&#10;&#10;g.com/blurays"
                         id="floatingTextarea-Link"
                         v-model="batchLinks"
+                        :disabled="batchItemsLoading"
                       ></textarea>
                     </div>
                   </div>
@@ -360,6 +370,7 @@
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
+                  :disabled="batchItemsLoading"
                 >
                   Cancel
                 </button>
@@ -367,10 +378,10 @@
                 <button
                   type="submit"
                   class="btn btn-success"
-                  data-bs-dismiss="modal"
                   @click="batchCreate"
+                  :disabled="batchItemsLoading"
                 >
-                  Add All Items!
+                  {{ batchItemsLoading ? "Loading..." : "Add All Items!" }}
                 </button>
               </div>
             </div>
@@ -395,6 +406,7 @@ import axios from "axios";
 import Splash from "../components/Splash.vue";
 import Spinner from "../components/Spinner.vue";
 import splashImage from "../assets/images/presents-cropped-compressed.jpg";
+import { nextTick } from "vue";
 
 export default {
   components: { Splash, Spinner },
@@ -409,6 +421,8 @@ export default {
       contentLoaded: false,
       batchItems: "",
       batchLinks: "",
+      batchItemsLoading: false,
+      maxBatch: 25,
       splashImgLoaded: false,
       splashSrc: splashImage,
       pageLoaded: false,
@@ -422,6 +436,20 @@ export default {
         return false;
       }
     },
+    isWrappingTextItems() {
+      if (this.batchItems === "" || this.batchItemsLoading) {
+        return "";
+      } else {
+        return "text-prewrap";
+      }
+    },
+    isWrappingTextLinks() {
+      if (this.batchLinks === "" || this.batchItemsLoading) {
+        return "";
+      } else {
+        return "text-prewrap";
+      }
+    },
   },
   created() {
     this.$emit("clearError");
@@ -431,28 +459,49 @@ export default {
   },
   methods: {
     batchCreate() {
-      var arrayOfItems = this.batchItems.split("\n");
-      var arrayOfLinks = this.batchLinks.split("\n");
-      for (let i = 0; i < arrayOfItems.length; i++) {
-        if (arrayOfItems[i] != "") {
-          let newItem = {
-            name: arrayOfItems[i],
-            link: arrayOfLinks[i],
-          };
-          axios
-            .post("/wishedgifts", newItem)
-            .then((response) => {
-              newItem.id = response.data.id;
-              this.myList.push(newItem);
-            })
-            .catch((error) => {
-              error.function = "batchCreate";
-              this.$emit("onError", error);
-            });
+      this.batchItemsLoading = true;
+      var items = this.batchItems.split("\n");
+      if (items.length > this.maxBatch) {
+        var error = {
+          message: `Don't be greedy!! Maximum ${this.maxBatch} at a time`,
+        };
+        this.$emit("onError", error);
+        this.batchItemsLoading = false;
+        return false;
+      }
+      var links = this.batchLinks.split("\n");
+      var giftObjects = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i] !== "") {
+          giftObjects.push({
+            name: items[i],
+            link: links[i],
+            loaded: false,
+          });
         }
       }
-      this.batchItems = "";
-      this.batchLinks = "";
+
+      for (let i = 0; i < giftObjects.length; i++) {
+        axios
+          .post("/wishedgifts", giftObjects[i])
+          .then((response) => {
+            giftObjects[i].id = response.data?.id;
+            giftObjects[i].created = true;
+            this.myList.push(giftObjects[i]);
+            if (giftObjects.every(this.checkCreated)) {
+              this.hideBatchModal();
+            }
+          })
+          .catch((error) => {
+            error.function = "batchCreate";
+            this.$emit("onError", error);
+            this.hideBatchModal();
+          });
+        setTimeout(() => {}, 50);
+      }
+    },
+    checkCreated(wishedGIft) {
+      return wishedGIft.created;
     },
     checkForms(input) {
       if (input["name"] && input["name"].length > 0) {
@@ -525,12 +574,12 @@ export default {
           }
         });
     },
-    needsWordWrap(items) {
-      if (items === "") {
-        return "";
-      } else {
-        return "text-nowrap";
-      }
+    async hideBatchModal() {
+      this.batchItemsLoading = false;
+      this.batchItems = "";
+      this.batchLinks = "";
+      await nextTick();
+      this.$refs.Close.click();
     },
     updateItem() {
       document.getElementById("editingItemForm").classList.add("was-validated");
