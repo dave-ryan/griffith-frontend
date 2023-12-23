@@ -13,7 +13,7 @@
       />
     </transition>
 
-    <transition name="content" mode="out-in">
+    <transition mode="out-in">
       <Spinner
         v-if="pageLoaded && !contentLoaded"
         top="75%"
