@@ -64,7 +64,7 @@
                           >{{ user.name }} hasn't made a christmas list yet!
                           Remind them! &#128578;</span
                         >
-                        <WishList
+                        <WishlistItem
                           v-for="item in user.wishedgifts"
                           :key="item.id"
                           :item="item"
@@ -171,7 +171,7 @@
                     >{{ secretSanta.name }} hasn't made their christmas list
                     yet! Remind them! &#128578;</span
                   >
-                  <WishList
+                  <WishlistItem
                     v-for="item in secretSanta.wishedgifts"
                     :key="item.id"
                     :item="item"
@@ -272,13 +272,13 @@
 import axios from "axios";
 import { Modal } from "bootstrap";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
-import WishList from "../components/WishList.vue";
+import WishlistItem from "../components/WishlistItem.vue";
 import Splash from "../components/Splash.vue";
 import LowPresentWarning from "../components/LowPresentWarning.vue";
 import Spinner from "../components/Spinner.vue";
 
 export default {
-  components: { WishList, Splash, LowPresentWarning, Spinner },
+  components: { WishlistItem, Splash, LowPresentWarning, Spinner },
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
   data() {
     return {
