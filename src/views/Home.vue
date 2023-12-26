@@ -186,77 +186,60 @@
       </div>
     </transition>
 
-    <!-- Custom Gift Modal -->
-
-    <div
-      class="modal fade"
-      id="customGiftModal"
-      tabindex="-1"
-      data-bs-backdrop="static"
+    <form
+      @submit.prevent="updateCustomGift"
+      id="editingItemForm"
+      novalidate
+      :disabled="loadingCustomGiftModal"
     >
-      <div class="modal-dialog modal-dialog-centered" key="loaded">
-        <div class="modal-content">
-          <form
-            @submit.prevent="updateCustomGift"
-            id="editingItemForm"
-            novalidate
+      <ModalComponent id="customGiftModal">
+        <template #title>
+          Something <strong>not</strong> on {{ editingUserName }}'s list
+        </template>
+        <template #closeButton>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            :disabled="loadingCustomGiftModal"
+          ></button>
+        </template>
+        <template #body>
+          <transition mode="out-in">
+            <Spinner v-if="loadingCustomGiftModal" top="50%" position="fixed" />
+          </transition>
+
+          <div class="form-floating" :disabled="loadingCustomGiftModal">
+            <input
+              type="text"
+              v-model="editingCustomGift.note"
+              class="form-control"
+              required
+              id="customGiftInput"
+              :disabled="loadingCustomGiftModal"
+              placeholder="books"
+            />
+            <label class="pt-2" for="customGiftInput"
+              >What are you geting {{ editingUserName }}?</label
+            >
+            <div class="invalid-feedback">
+              A note of what you are getting them might be helpful!
+            </div>
+          </div>
+        </template>
+        <template #footer>
+          <button
+            type="submit"
+            class="btn btn-success"
+            data-bs-dismiss="modal"
             :disabled="loadingCustomGiftModal"
           >
-            <div class="modal-header">
-              <h5 class="modal-title">
-                Something <strong>not</strong> on {{ editingUserName }}'s list
-              </h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                :disabled="loadingCustomGiftModal"
-              ></button>
-            </div>
-
-            <div class="modal-body">
-              <transition mode="out-in">
-                <Spinner
-                  v-if="loadingCustomGiftModal"
-                  top="50%"
-                  position="fixed"
-                />
-              </transition>
-
-              <div class="form-floating" :disabled="loadingCustomGiftModal">
-                <input
-                  type="text"
-                  v-model="editingCustomGift.note"
-                  class="form-control"
-                  required
-                  id="customGiftInput"
-                  :disabled="loadingCustomGiftModal"
-                  placeholder="books"
-                />
-                <label class="pt-2" for="customGiftInput"
-                  >What are you geting {{ editingUserName }}?</label
-                >
-                <div class="invalid-feedback">
-                  A note of what you are getting them might be helpful!
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button
-                type="submit"
-                class="btn btn-success"
-                data-bs-dismiss="modal"
-                :disabled="loadingCustomGiftModal"
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+            Save Changes
+          </button>
+        </template>
+      </ModalComponent>
+    </form>
   </div>
 </template>
 
@@ -273,12 +256,19 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 import WishlistItem from "../components/WishlistItem.vue";
+import ModalComponent from "../components/ModalComponent.vue";
 import Splash from "../components/Splash.vue";
 import LowPresentWarning from "../components/LowPresentWarning.vue";
 import Spinner from "../components/Spinner.vue";
 
 export default {
-  components: { WishlistItem, Splash, LowPresentWarning, Spinner },
+  components: {
+    WishlistItem,
+    Splash,
+    LowPresentWarning,
+    Spinner,
+    ModalComponent,
+  },
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
   data() {
     return {
