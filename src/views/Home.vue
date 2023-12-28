@@ -187,7 +187,6 @@
     </transition>
 
     <!-- Custom Gift Modal -->
-
     <div
       class="modal fade"
       id="customGiftModal"
@@ -197,14 +196,14 @@
       <div class="modal-dialog modal-dialog-centered" key="loaded">
         <div class="modal-content">
           <form
-            @submit.prevent="updateCustomGift"
+            @submit.prevent="createOrUpdateCustomGift()"
             id="editingItemForm"
             novalidate
-            :disabled="loadingCustomGiftModal"
           >
             <div class="modal-header">
               <h5 class="modal-title">
-                Something <strong>not</strong> on {{ editingUserName }}'s list
+                Something <strong>not</strong> on
+                {{ editingCustomGiftUser?.name }}'s list
               </h5>
               <button
                 type="button"
@@ -235,7 +234,7 @@
                   placeholder="books"
                 />
                 <label class="pt-2" for="customGiftInput"
-                  >What are you geting {{ editingUserName }}?</label
+                  >What are you geting {{ editingCustomGiftUser?.name }}?</label
                 >
                 <div class="invalid-feedback">
                   A note of what you are getting them might be helpful!
@@ -282,22 +281,20 @@ export default {
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
   data() {
     return {
+      me: {},
       family: [],
       everyone: [],
-      secretSanta: null,
+      secretSanta: {},
       christmasLists: {},
-      contentLoaded: false,
       indexview: false,
-      loadingCustomGiftModal: false,
-      me: null,
-      splashImgLoaded: false,
-      pageLoaded: false,
       lowPresentCount: false,
       editingCustomGift: {},
-      editingUserName: "",
-      defaultErrorMessage:
-        "Oops! Something went wrong. Try refreshing the page",
+      editingCustomGiftUser: {},
+      loadingCustomGiftModal: false,
+      splashImgLoaded: false,
       splashSrc: splashImage,
+      contentLoaded: false,
+      pageLoaded: false,
     };
   },
   created() {
@@ -305,8 +302,33 @@ export default {
     this.getMe();
   },
   methods: {
+    createOrUpdateCustomGift() {
+      this.editingCustomGift.id
+        ? this.updateCustomGift()
+        : this.createCustomGift();
+    },
+    createCustomGift() {
+      this.loadingCustomGiftModal = true;
+      let params = {
+        user_id: this.editingCustomGiftUser.id,
+        customgift_purchaser_id: this.me.id,
+        note: this.editingCustomGift.note || "",
+      };
+      axios
+        .post("/customgifts", params)
+        .then((response) => {
+          this.loadingCustomGiftModal = false;
+          this.editingCustomGiftUser.customgifts.push(response.data);
+        })
+        .catch((error) => {
+          error.function = "toggleCustomGiftCheckBox, post /customgifts";
+          this.$emit("onError", error);
+          let modal = new Modal(document.getElementById("customGiftModal"), {});
+          modal.hide();
+        });
+    },
     findCustomGift(user) {
-      return user.customgifts.find(
+      return user?.customgifts?.find(
         (item) => item.customgift_purchaser_id === this.me.id
       );
     },
@@ -390,46 +412,14 @@ export default {
         });
     },
     editCustomGift(user) {
-      this.editingUserName = user.name;
-      this.setEditingCustomGift(this.findCustomGift(user));
-    },
-    focusInput() {
+      this.editingCustomGiftUser = user;
+      this.editingCustomGift = this.findCustomGift(user);
       document.getElementById("customGiftInput").focus();
-    },
-    setEditingCustomGift(gift) {
-      this.editingCustomGift = {
-        id: gift.id,
-        note: gift.note,
-        user: gift.user,
-        user_id: gift.user_id,
-        customgift_purchaser: gift.customgift_purchaser,
-        customgift_purchaser_id: gift.customgift_purchaser_id,
-      };
-      this.customGiftCopy = gift;
     },
     toggleCustomGiftCheckBox(event, user) {
       if (event?.target?.checked) {
-        this.loadingCustomGiftModal = true;
-        this.editingUserName = user.name;
-        let myModal = new Modal(document.getElementById("customGiftModal"), {});
-        myModal.show();
-        let params = {
-          user_id: user.id,
-          customgift_purchaser_id: this.me.id,
-          note: "",
-        };
-        axios
-          .post("/customgifts", params)
-          .then((response) => {
-            this.loadingCustomGiftModal = false;
-            this.setEditingCustomGift(response.data);
-            user.customgifts.push(response.data);
-          })
-          .catch((error) => {
-            error.function = "toggleCustomGiftCheckBox, post /customgifts";
-            this.$emit("Error", error);
-            myModal.hide();
-          });
+        this.editingCustomGiftUser = user;
+        new Modal(document.getElementById("customGiftModal"), {}).show();
       } else {
         let gift = this.findCustomGift(user);
         axios
@@ -475,19 +465,12 @@ export default {
         });
     },
     updateCustomGift() {
-      let id = this.editingCustomGift.id;
-      let params = this.editingCustomGift;
-      let user = this.family.find((user) => user.id === params.user_id);
-      let editingGift = this.findCustomGift(user);
+      this.loadingCustomGiftModal = true;
+      let gift = this.editingCustomGift;
       axios
-        .patch(`/customgifts/${id}`, params)
-        .then((response) => {
-          let newGift = response.data;
-          editingGift.id = newGift.id;
-          editingGift.note = newGift.note;
-          editingGift.user_id = newGift.user_id;
-          editingGift.customgift_purchaser = newGift.customgift_purchaser;
-          editingGift.customgift_purchaser_id = newGift.customgift_purchaser_id;
+        .patch(`/customgifts/${gift.id}`, gift)
+        .then(() => {
+          this.loadingCustomGiftModal = false;
         })
         .catch((error) => {
           error.function = "updateCustomGift";
