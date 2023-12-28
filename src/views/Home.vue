@@ -206,6 +206,7 @@
                 {{ editingCustomGiftUser?.name }}'s list
               </h5>
               <button
+                ref="Close"
                 type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
@@ -246,7 +247,6 @@
               <button
                 type="submit"
                 class="btn btn-success"
-                data-bs-dismiss="modal"
                 :disabled="loadingCustomGiftModal"
               >
                 Save Changes
@@ -270,6 +270,7 @@
 <script>
 import axios from "axios";
 import { Modal } from "bootstrap";
+import { nextTick } from "vue";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 import WishlistItem from "../components/WishlistItem.vue";
 import Splash from "../components/Splash.vue";
@@ -317,14 +318,13 @@ export default {
       axios
         .post("/customgifts", params)
         .then((response) => {
-          this.loadingCustomGiftModal = false;
           this.editingCustomGiftUser.customgifts.push(response.data);
+          this.hideCustomGiftModal();
         })
         .catch((error) => {
+          this.loadingCustomGiftModal = false;
           error.function = "toggleCustomGiftCheckBox, post /customgifts";
           this.$emit("onError", error);
-          let modal = new Modal(document.getElementById("customGiftModal"), {});
-          modal.hide();
         });
     },
     findCustomGift(user) {
@@ -411,6 +411,13 @@ export default {
           this.$emit("onError", error);
         });
     },
+    async hideCustomGiftModal() {
+      this.loadingCustomGiftModal = false;
+      this.editingCustomGift = {};
+      this.editingCustomGiftUser = {};
+      await nextTick();
+      this.$refs.Close.click();
+    },
     editCustomGift(user) {
       this.editingCustomGiftUser = user;
       this.editingCustomGift = this.findCustomGift(user);
@@ -470,9 +477,10 @@ export default {
       axios
         .patch(`/customgifts/${gift.id}`, gift)
         .then(() => {
-          this.loadingCustomGiftModal = false;
+          this.hideCustomGiftModal();
         })
         .catch((error) => {
+          this.loadingCustomGiftModal = false;
           error.function = "updateCustomGift";
           this.$emit("Error", error);
         });
