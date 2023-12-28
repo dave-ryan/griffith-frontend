@@ -102,7 +102,7 @@
                             class="btn btn-secondary btn-sm ms-1"
                             data-bs-toggle="modal"
                             data-bs-target="#customGiftModal"
-                            @click="setCustomGift(user)"
+                            @click="editCustomGift(user)"
                             v-if="findCustomGift(user)"
                           >
                             <i class="bi bi-tools"></i>
@@ -186,12 +186,77 @@
       </div>
     </transition>
 
-    <CustomGiftModal
-      :loading="loadingCustomGiftModal"
-      :userName="editingCustomGiftUser.name"
-      :editingCustomGift="editingCustomGift"
-      @submit="createOrEditCustomGift"
-    />
+    <!-- Custom Gift Modal -->
+
+    <div
+      class="modal fade"
+      id="customGiftModal"
+      tabindex="-1"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog modal-dialog-centered" key="loaded">
+        <div class="modal-content">
+          <form
+            @submit.prevent="updateCustomGift"
+            id="editingItemForm"
+            novalidate
+            :disabled="loadingCustomGiftModal"
+          >
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Something <strong>not</strong> on {{ editingUserName }}'s list
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                :disabled="loadingCustomGiftModal"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <transition mode="out-in">
+                <Spinner
+                  v-if="loadingCustomGiftModal"
+                  top="50%"
+                  position="fixed"
+                />
+              </transition>
+
+              <div class="form-floating" :disabled="loadingCustomGiftModal">
+                <input
+                  type="text"
+                  v-model="editingCustomGift.note"
+                  class="form-control"
+                  required
+                  id="customGiftInput"
+                  :disabled="loadingCustomGiftModal"
+                  placeholder="books"
+                />
+                <label class="pt-2" for="customGiftInput"
+                  >What are you geting {{ editingUserName }}?</label
+                >
+                <div class="invalid-feedback">
+                  A note of what you are getting them might be helpful!
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="submit"
+                class="btn btn-success"
+                data-bs-dismiss="modal"
+                :disabled="loadingCustomGiftModal"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -208,19 +273,12 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
 import WishlistItem from "../components/WishlistItem.vue";
-import CustomGiftModal from "../components/CustomGiftModal.vue";
 import Splash from "../components/Splash.vue";
 import LowPresentWarning from "../components/LowPresentWarning.vue";
 import Spinner from "../components/Spinner.vue";
 
 export default {
-  components: {
-    WishlistItem,
-    Splash,
-    LowPresentWarning,
-    Spinner,
-    CustomGiftModal,
-  },
+  components: { WishlistItem, Splash, LowPresentWarning, Spinner },
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
   data() {
     return {
@@ -236,8 +294,7 @@ export default {
       pageLoaded: false,
       lowPresentCount: false,
       editingCustomGift: {},
-      editingCustomGiftUser: {},
-      editingGift: "",
+      editingUserName: "",
       defaultErrorMessage:
         "Oops! Something went wrong. Try refreshing the page",
       splashSrc: splashImage,
@@ -249,7 +306,7 @@ export default {
   },
   methods: {
     findCustomGift(user) {
-      return user?.customgifts?.find(
+      return user.customgifts.find(
         (item) => item.customgift_purchaser_id === this.me.id
       );
     },
@@ -332,51 +389,57 @@ export default {
           this.$emit("onError", error);
         });
     },
-    setCustomGift(user) {
-      this.editingCustomGiftUser = user;
-      this.editingCustomGift = this.findCustomGift(user);
+    editCustomGift(user) {
+      this.editingUserName = user.name;
+      this.setEditingCustomGift(this.findCustomGift(user));
     },
     focusInput() {
       document.getElementById("customGiftInput").focus();
     },
-    createCustomGift(gift) {
-      let params = {
-        user_id: this.editingCustomGiftUser.id,
-        customgift_purchaser_id: this.me.id,
-        note: gift.note || "",
+    setEditingCustomGift(gift) {
+      this.editingCustomGift = {
+        id: gift.id,
+        note: gift.note,
+        user: gift.user,
+        user_id: gift.user_id,
+        customgift_purchaser: gift.customgift_purchaser,
+        customgift_purchaser_id: gift.customgift_purchaser_id,
       };
-      axios
-        .post("/customgifts", params)
-        .then((response) => {
-          this.loadingCustomGiftModal = false;
-          this.editingCustomGift = response.data;
-          this.editingCustomGiftUser.customgifts.push(response.data);
-        })
-        .catch((error) => {
-          error.function = "toggleCustomGiftCheckBox, post /customgifts";
-          this.$emit("onError", error);
-          let modal = new Modal(document.getElementById("customGiftModal"), {});
-          modal.hide();
-        });
-    },
-    createOrEditCustomGift(gift) {
-      gift.id ? this.updateCustomGift(gift) : this.createCustomGift(gift);
+      this.customGiftCopy = gift;
     },
     toggleCustomGiftCheckBox(event, user) {
-      this.editingCustomGift = this.findCustomGift(user) || {};
-      this.editingCustomGiftUser = user;
       if (event?.target?.checked) {
-        let modal = new Modal(document.getElementById("customGiftModal"), {});
-        modal.show();
-      } else {
+        this.loadingCustomGiftModal = true;
+        this.editingUserName = user.name;
+        let myModal = new Modal(document.getElementById("customGiftModal"), {});
+        myModal.show();
+        let params = {
+          user_id: user.id,
+          customgift_purchaser_id: this.me.id,
+          note: "",
+        };
         axios
-          .delete(`/customgifts/${this.editingCustomGift.id}`)
+          .post("/customgifts", params)
+          .then((response) => {
+            this.loadingCustomGiftModal = false;
+            this.setEditingCustomGift(response.data);
+            user.customgifts.push(response.data);
+          })
+          .catch((error) => {
+            error.function = "toggleCustomGiftCheckBox, post /customgifts";
+            this.$emit("Error", error);
+            myModal.hide();
+          });
+      } else {
+        let gift = this.findCustomGift(user);
+        axios
+          .delete(`/customgifts/${gift.id}`)
           .then(() => {
-            this.editingCustomGift.customgift_purchaser_id = null;
+            gift.customgift_purchaser_id = null;
           })
           .catch((error) => {
             error.function = "toggleCustomGiftCheckBox";
-            this.$emit("onError", error);
+            this.$emit("Error", error);
           });
       }
     },
@@ -407,17 +470,28 @@ export default {
             item.purchaser_id = errorData.purchaser_id;
           } else {
             error.function = "toggleCheckBox";
-            this.$emit("onError", error);
+            this.$emit("Error", error);
           }
         });
     },
-    updateCustomGift(customGift) {
+    updateCustomGift() {
+      let id = this.editingCustomGift.id;
+      let params = this.editingCustomGift;
+      let user = this.family.find((user) => user.id === params.user_id);
+      let editingGift = this.findCustomGift(user);
       axios
-        .patch(`/customgifts/${customGift.id}`, customGift)
-        .then(() => {})
+        .patch(`/customgifts/${id}`, params)
+        .then((response) => {
+          let newGift = response.data;
+          editingGift.id = newGift.id;
+          editingGift.note = newGift.note;
+          editingGift.user_id = newGift.user_id;
+          editingGift.customgift_purchaser = newGift.customgift_purchaser;
+          editingGift.customgift_purchaser_id = newGift.customgift_purchaser_id;
+        })
         .catch((error) => {
           error.function = "updateCustomGift";
-          this.$emit("onError", error);
+          this.$emit("Error", error);
         });
     },
   },
