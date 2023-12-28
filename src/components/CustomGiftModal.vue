@@ -8,14 +8,14 @@
     <div class="modal-dialog modal-dialog-centered" key="loaded">
       <div class="modal-content">
         <form
-          @submit.prevent="emitUpdate"
+          @submit.prevent="createOrUpdateCustomGift()"
           id="editingItemForm"
           novalidate
           :disabled="loading"
         >
           <div class="modal-header">
             <h5 class="modal-title">
-              Something <strong>not</strong> on {{ userName }}'s list
+              Something <strong>not</strong> on {{ user?.name }}'s list
             </h5>
             <button
               type="button"
@@ -42,7 +42,7 @@
                 placeholder="books"
               />
               <label class="pt-2" for="customGiftInput"
-                >What are you geting {{ userName }}?</label
+                >What are you geting {{ user?.name }}?</label
               >
               <div class="invalid-feedback">
                 A note of what you are getting them might be helpful!
@@ -70,23 +70,55 @@
 
 <script>
 import Spinner from "../components/Spinner.vue";
+import axios from "axios";
+import { Modal } from "bootstrap";
+
 export default {
   components: { Spinner },
-  props: ["loading", "userName", "editingCustomGift"],
-  emits: ["submit"],
+  props: ["loading", "user", "gift", "me"],
+  emits: ["onCustomGiftChange"],
   computed: {
     customGiftLocal: {
       get: function () {
-        return this.editingCustomGift;
+        return this.gift;
       },
-      set: function (value) {
-        this.$emit("editingCustomGiftChange", value);
+      set: function (gift) {
+        this.$emit("onCustomGiftChange", gift);
       },
     },
   },
   methods: {
-    emitUpdate() {
-      this.$emit("submit", this.customGiftLocal);
+    createOrUpdateCustomGift() {
+      this.gift.id ? this.updateCustomGift() : this.createCustomGift();
+    },
+    createCustomGift() {
+      console.log(this.gift);
+      let params = {
+        user_id: this.user.id,
+        customgift_purchaser_id: this.me.id,
+        note: this.gift.note || "",
+      };
+      axios
+        .post("/customgifts", params)
+        .then((response) => {
+          this.loadingCustomGiftModal = false;
+          this.customGiftLocal = response.data;
+        })
+        .catch((error) => {
+          error.function = "toggleCustomGiftCheckBox, post /customgifts";
+          this.$emit("onError", error);
+          let modal = new Modal(document.getElementById("customGiftModal"), {});
+          modal.hide();
+        });
+    },
+    updateCustomGift() {
+      axios
+        .patch(`/customgifts/${this.gift.id}`, this.gift)
+        .then(() => {})
+        .catch((error) => {
+          error.function = "updateCustomGift";
+          this.$emit("onError", error);
+        });
     },
   },
 };

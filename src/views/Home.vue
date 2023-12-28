@@ -188,9 +188,10 @@
 
     <CustomGiftModal
       :loading="loadingCustomGiftModal"
-      :userName="editingCustomGiftUser.name"
-      :editingCustomGift="editingCustomGift"
-      @submit="createOrEditCustomGift"
+      :user="editingCustomGiftUser"
+      :gift="editingCustomGift"
+      :me="me"
+      @onCustomGiftChange="onCustomGiftChange"
     />
   </div>
 </template>
@@ -335,32 +336,13 @@ export default {
     setCustomGift(user) {
       this.editingCustomGiftUser = user;
       this.editingCustomGift = this.findCustomGift(user);
+      this.focusInput();
     },
     focusInput() {
       document.getElementById("customGiftInput").focus();
     },
-    createCustomGift(gift) {
-      let params = {
-        user_id: this.editingCustomGiftUser.id,
-        customgift_purchaser_id: this.me.id,
-        note: gift.note || "",
-      };
-      axios
-        .post("/customgifts", params)
-        .then((response) => {
-          this.loadingCustomGiftModal = false;
-          this.editingCustomGift = response.data;
-          this.editingCustomGiftUser.customgifts.push(response.data);
-        })
-        .catch((error) => {
-          error.function = "toggleCustomGiftCheckBox, post /customgifts";
-          this.$emit("onError", error);
-          let modal = new Modal(document.getElementById("customGiftModal"), {});
-          modal.hide();
-        });
-    },
-    createOrEditCustomGift(gift) {
-      gift.id ? this.updateCustomGift(gift) : this.createCustomGift(gift);
+    onCustomGiftChange(gift) {
+      this.editingCustomGiftUser.customgifts.push(gift);
     },
     toggleCustomGiftCheckBox(event, user) {
       this.editingCustomGift = this.findCustomGift(user) || {};
@@ -409,15 +391,6 @@ export default {
             error.function = "toggleCheckBox";
             this.$emit("onError", error);
           }
-        });
-    },
-    updateCustomGift(customGift) {
-      axios
-        .patch(`/customgifts/${customGift.id}`, customGift)
-        .then(() => {})
-        .catch((error) => {
-          error.function = "updateCustomGift";
-          this.$emit("onError", error);
         });
     },
   },
