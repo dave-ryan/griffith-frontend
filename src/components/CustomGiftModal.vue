@@ -8,14 +8,14 @@
     <div class="modal-dialog modal-dialog-centered" key="loaded">
       <div class="modal-content">
         <form
-          @submit.prevent="createOrUpdateCustomGift()"
+          @submit.prevent="emitUpdate"
           id="editingItemForm"
           novalidate
           :disabled="loading"
         >
           <div class="modal-header">
             <h5 class="modal-title">
-              Something <strong>not</strong> on {{ user?.name }}'s list
+              Something <strong>not</strong> on {{ userName }}'s list
             </h5>
             <button
               type="button"
@@ -42,7 +42,7 @@
                 placeholder="books"
               />
               <label class="pt-2" for="customGiftInput"
-                >What are you geting {{ user?.name }}?</label
+                >What are you geting {{ userName }}?</label
               >
               <div class="invalid-feedback">
                 A note of what you are getting them might be helpful!
@@ -70,55 +70,23 @@
 
 <script>
 import Spinner from "../components/Spinner.vue";
-import axios from "axios";
-import { Modal } from "bootstrap";
-
 export default {
   components: { Spinner },
-  props: ["loading", "user", "gift", "me"],
-  emits: ["onCustomGiftChange"],
+  props: ["loading", "userName", "editingCustomGift"],
+  emits: ["submit"],
   computed: {
     customGiftLocal: {
       get: function () {
-        return this.gift;
+        return this.editingCustomGift;
       },
-      set: function (gift) {
-        this.$emit("onCustomGiftChange", gift);
+      set: function (value) {
+        this.$emit("editingCustomGiftChange", value);
       },
     },
   },
   methods: {
-    createOrUpdateCustomGift() {
-      this.gift.id ? this.updateCustomGift() : this.createCustomGift();
-    },
-    createCustomGift() {
-      console.log(this.gift);
-      let params = {
-        user_id: this.user.id,
-        customgift_purchaser_id: this.me.id,
-        note: this.gift.note || "",
-      };
-      axios
-        .post("/customgifts", params)
-        .then((response) => {
-          this.loadingCustomGiftModal = false;
-          this.customGiftLocal = response.data;
-        })
-        .catch((error) => {
-          error.function = "toggleCustomGiftCheckBox, post /customgifts";
-          this.$emit("onError", error);
-          let modal = new Modal(document.getElementById("customGiftModal"), {});
-          modal.hide();
-        });
-    },
-    updateCustomGift() {
-      axios
-        .patch(`/customgifts/${this.gift.id}`, this.gift)
-        .then(() => {})
-        .catch((error) => {
-          error.function = "updateCustomGift";
-          this.$emit("onError", error);
-        });
+    emitUpdate() {
+      this.$emit("submit", this.customGiftLocal);
     },
   },
 };
