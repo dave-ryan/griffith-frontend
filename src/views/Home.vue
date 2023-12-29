@@ -80,7 +80,9 @@
                           <div class="col-5"></div>
                         </div>
 
-                        <Spinner size="small" v-if="deletingCustomGift" />
+                        <transition mode="out-in">
+                          <Spinner size="small" v-if="deletingCustomGift" />
+                        </transition>
                         <div class="form-check form-check-inline me-0">
                           <input
                             :id="user.id"
