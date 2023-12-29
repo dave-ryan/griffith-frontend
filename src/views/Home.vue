@@ -18,6 +18,7 @@
         v-if="pageLoaded && !contentLoaded"
         top="75%"
         position="absolute"
+        size="large"
       />
     </transition>
 
@@ -79,31 +80,39 @@
                           <div class="col-5"></div>
                         </div>
 
-                        <div class="form-check form-check-inline">
+                        <Spinner size="small" v-if="deletingCustomGift" />
+                        <div class="form-check form-check-inline me-0">
                           <input
                             :id="user.id"
                             class="form-check-input"
                             type="checkbox"
                             @change="toggleCustomGiftCheckBox($event, user)"
                             :checked="findCustomGift(user)"
+                            :disabled="deletingCustomGift"
                           />
                           <span
-                            class="text-truncate truncated"
+                            class="text-truncate truncated align-middle"
+                            :class="deletingCustomGift ? 'fw-light' : ''"
                             v-if="findCustomGift(user)?.note"
                           >
                             {{ findCustomGift(user).note }}
                           </span>
-                          <span v-else>
+                          <span
+                            v-else
+                            class="align-middle"
+                            :class="deletingCustomGift ? 'fw-light' : ''"
+                          >
                             Something
                             <strong>not</strong> on {{ user.name }}'s list
                           </span>
                           <button
                             type="button"
-                            class="btn btn-secondary btn-sm ms-1"
+                            class="btn btn-secondary btn-sm ms-2"
                             data-bs-toggle="modal"
                             data-bs-target="#customGiftModal"
                             @click="editCustomGift(user)"
                             v-if="findCustomGift(user)"
+                            :disabled="deletingCustomGift"
                           >
                             <i class="bi bi-tools"></i>
                           </button>
@@ -265,6 +274,9 @@
   display: inline-block;
   vertical-align: top;
 }
+.form-check-input {
+  margin-top: 8px;
+}
 </style>
 
 <script>
@@ -289,6 +301,7 @@ export default {
       christmasLists: {},
       indexview: false,
       lowPresentCount: false,
+      deletingCustomGift: false,
       editingCustomGift: {},
       editingCustomGiftUser: {},
       loadingCustomGiftModal: false,
@@ -326,6 +339,26 @@ export default {
           error.function = "toggleCustomGiftCheckBox, post /customgifts";
           this.$emit("onError", error);
         });
+    },
+    deleteCustomGift(user) {
+      this.deletingCustomGift = true;
+      let gift = this.findCustomGift(user);
+      axios
+        .delete(`/customgifts/${gift.id}`)
+        .then(() => {
+          gift.customgift_purchaser_id = null;
+          this.deletingCustomGift = false;
+        })
+        .catch((error) => {
+          this.deletingCustomGift = false;
+          error.function = "toggleCustomGiftCheckBox";
+          this.$emit("Error", error);
+        });
+    },
+    editCustomGift(user) {
+      this.editingCustomGiftUser = user;
+      this.editingCustomGift = this.findCustomGift(user);
+      document.getElementById("customGiftInput").focus();
     },
     findCustomGift(user) {
       return user?.customgifts?.find(
@@ -418,26 +451,12 @@ export default {
       await nextTick();
       this.$refs.Close.click();
     },
-    editCustomGift(user) {
-      this.editingCustomGiftUser = user;
-      this.editingCustomGift = this.findCustomGift(user);
-      document.getElementById("customGiftInput").focus();
-    },
     toggleCustomGiftCheckBox(event, user) {
       if (event?.target?.checked) {
         this.editingCustomGiftUser = user;
         new Modal(document.getElementById("customGiftModal"), {}).show();
       } else {
-        let gift = this.findCustomGift(user);
-        axios
-          .delete(`/customgifts/${gift.id}`)
-          .then(() => {
-            gift.customgift_purchaser_id = null;
-          })
-          .catch((error) => {
-            error.function = "toggleCustomGiftCheckBox";
-            this.$emit("Error", error);
-          });
+        this.deleteCustomGift(user);
       }
     },
     toggleCheckBox(item) {

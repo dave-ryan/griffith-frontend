@@ -1,27 +1,38 @@
 <template>
-  <div class="spin">
-    <div
+  <span class="spinner-container align-middle">
+    <span
       class="spinner-border text-secondary"
-      style="width: 3rem; height: 3rem"
+      :class="{
+        large: size === 'large',
+        'spinner-border-sm': size === 'small',
+        'me-2': size === 'small',
+      }"
       role="status"
     >
       <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
+    </span>
+  </span>
 </template>
 
 <style scoped>
-.spin {
+.spinner-container {
   position: v-bind("position");
   top: v-bind("top");
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1100;
 }
+.large {
+  width: 3rem;
+  height: 3rem;
+}
 </style>
 
 <script>
 export default {
-  props: ["top", "position"],
+  props: ["top", "position", "size"],
+  created() {
+    console.log("size:", this.size);
+  },
 };
 </script>

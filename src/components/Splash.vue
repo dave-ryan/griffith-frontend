@@ -7,6 +7,7 @@
           key="1"
           top="25%"
           position="absolute"
+          size="large"
         />
         <img
           :src="src"
