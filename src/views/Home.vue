@@ -78,20 +78,27 @@
                           <div class="col-5"></div>
                         </div>
 
-                        <Spinner size="small" :visible="deletingCustomGift" />
+                        <Spinner
+                          size="small"
+                          :visible="deletingCustomGift?.user_id === user.id"
+                        />
 
                         <div class="form-check form-check-inline me-0">
                           <input
-                            :id="user.id"
+                            :id="'customGiftCheckbox-' + user.id"
                             class="form-check-input"
                             type="checkbox"
                             @change="toggleCustomGiftCheckBox($event, user)"
                             :checked="findCustomGift(user)"
-                            :disabled="deletingCustomGift"
+                            :disabled="deletingCustomGift?.user_id === user.id"
                           />
                           <span
                             class="text-truncate truncated align-middle"
-                            :class="deletingCustomGift ? 'fw-light' : ''"
+                            :class="
+                              deletingCustomGift?.user_id === user.id
+                                ? 'fw-light'
+                                : ''
+                            "
                             v-if="findCustomGift(user)?.note"
                           >
                             {{ findCustomGift(user).note }}
@@ -99,7 +106,11 @@
                           <span
                             v-else
                             class="align-middle"
-                            :class="deletingCustomGift ? 'fw-light' : ''"
+                            :class="
+                              deletingCustomGift?.user_id === user.id
+                                ? 'fw-light'
+                                : ''
+                            "
                           >
                             Something
                             <strong>not</strong> on {{ user.name }}'s list
@@ -111,7 +122,7 @@
                             data-bs-target="#customGiftModal"
                             @click="editCustomGift(user)"
                             v-if="findCustomGift(user)"
-                            :disabled="deletingCustomGift"
+                            :disabled="deletingCustomGift?.user_id === user.id"
                           >
                             <i class="bi bi-tools"></i>
                           </button>
@@ -298,7 +309,7 @@ export default {
       christmasLists: {},
       indexview: false,
       lowPresentCount: false,
-      deletingCustomGift: false,
+      deletingCustomGift: null,
       editingCustomGift: {},
       editingCustomGiftUser: {},
       loadingCustomGiftModal: false,
@@ -338,18 +349,22 @@ export default {
         });
     },
     deleteCustomGift(user) {
-      this.deletingCustomGift = true;
-      let gift = this.findCustomGift(user);
+      this.deletingCustomGift = this.findCustomGift(user);
       axios
-        .delete(`/customgifts/${gift.id}`)
+        .delete(`/customgifts/${this.deletingCustomGift.id}`)
         .then(() => {
-          gift.customgift_purchaser_id = null;
-          this.deletingCustomGift = false;
+          for (var key in this.deletingCustomGift) {
+            delete this.deletingCustomGift[key];
+          }
+          this.deletingCustomGift = null;
         })
         .catch((error) => {
-          this.deletingCustomGift = false;
+          this.deletingCustomGift = null;
+          document.getElementById(
+            `customGiftCheckbox-${user.id}`
+          ).checked = true;
           error.function = "toggleCustomGiftCheckBox";
-          this.$emit("Error", error);
+          this.$emit("onError", error);
         });
     },
     editCustomGift(user) {
@@ -483,7 +498,7 @@ export default {
             item.purchaser_id = errorData.purchaser_id;
           } else {
             error.function = "toggleCheckBox";
-            this.$emit("Error", error);
+            this.$emit("onError", error);
           }
         });
     },
@@ -498,7 +513,7 @@ export default {
         .catch((error) => {
           this.loadingCustomGiftModal = false;
           error.function = "updateCustomGift";
-          this.$emit("Error", error);
+          this.$emit("onError", error);
         });
     },
   },
