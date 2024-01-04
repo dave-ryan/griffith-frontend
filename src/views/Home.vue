@@ -61,7 +61,7 @@
                         aria-expanded="false"
                         :id="`christmas-list-${user.id}`"
                       >
-                        <span v-if="user.wishedgifts.length < 1"
+                        <span v-if="user.wishedgifts?.length < 1"
                           >{{ user.name }} hasn't made a christmas list yet!
                           Remind them! &#128578;</span
                         >
@@ -178,7 +178,7 @@
                   aria-expanded="false"
                   id="christmas-list-ss"
                 >
-                  <span v-if="secretSanta.wishedgifts.length === 0"
+                  <span v-if="secretSanta?.wishedgifts?.length === 0"
                     >{{ secretSanta.name }} hasn't made their christmas list
                     yet! Remind them! &#128578;</span
                   >
