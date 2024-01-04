@@ -1,13 +1,6 @@
 <template>
   <div>
-    <transition mode="out-in">
-      <span class="spinner-container" v-if="item.loading">
-        <span
-          class="spinner-border spinner-border-sm me-2"
-          role="status"
-        ></span>
-      </span>
-    </transition>
+    <Spinner size="small" :visible="item.loading" />
     <div class="form-check form-check-inline me-0">
       <input
         class="form-check-input"
@@ -57,7 +50,9 @@
 </style>
 
 <script>
+import Spinner from "../components/Spinner.vue";
 export default {
+  components: { Spinner },
   props: ["item", "me"],
   emits: ["toggleCheckBox"],
 };

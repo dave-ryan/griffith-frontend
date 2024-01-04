@@ -103,9 +103,7 @@
                   What Do You Want For Christmas?
                 </div>
               </div>
-              <transition mode="out-in">
-                <Spinner v-if="newItemLoading" position="absolute" />
-              </transition>
+              <Spinner :visible="newItemLoading" position="absolute" />
               <div class="form-floating mb-2">
                 <input
                   v-model="newItem.link"
@@ -339,13 +337,11 @@
                       </textarea>
                     </div>
                   </div>
-                  <transition mode="out-in">
-                    <Spinner
-                      v-if="batchItemsLoading"
-                      position="absolute"
-                      top="50%"
-                    />
-                  </transition>
+                  <Spinner
+                    :visible="batchItemsLoading"
+                    position="absolute"
+                    top="50%"
+                  />
                   <div class="col-6">
                     <div class="input">
                       <h4>

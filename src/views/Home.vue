@@ -13,14 +13,12 @@
       />
     </transition>
 
-    <transition mode="out-in">
-      <Spinner
-        v-if="pageLoaded && !contentLoaded"
-        top="75%"
-        position="absolute"
-        size="large"
-      />
-    </transition>
+    <Spinner
+      :visible="pageLoaded && !contentLoaded"
+      top="75%"
+      position="absolute"
+      size="large"
+    />
 
     <transition name="content" mode="out-in">
       <div
@@ -80,9 +78,8 @@
                           <div class="col-5"></div>
                         </div>
 
-                        <transition mode="out-in">
-                          <Spinner size="small" v-if="deletingCustomGift" />
-                        </transition>
+                        <Spinner size="small" :visible="deletingCustomGift" />
+
                         <div class="form-check form-check-inline me-0">
                           <input
                             :id="user.id"
@@ -227,13 +224,11 @@
             </div>
 
             <div class="modal-body">
-              <transition mode="out-in">
-                <Spinner
-                  v-if="loadingCustomGiftModal"
-                  top="50%"
-                  position="fixed"
-                />
-              </transition>
+              <Spinner
+                :visible="loadingCustomGiftModal"
+                top="50%"
+                position="fixed"
+              />
 
               <div class="form-floating" :disabled="loadingCustomGiftModal">
                 <input

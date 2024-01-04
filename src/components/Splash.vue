@@ -3,7 +3,7 @@
     <div class="col">
       <transition-group mode="out-in">
         <Spinner
-          v-if="!(contentLoaded && imgLoaded && pageLoaded)"
+          :visible="!(contentLoaded && imgLoaded && pageLoaded)"
           key="1"
           top="25%"
           position="absolute"
