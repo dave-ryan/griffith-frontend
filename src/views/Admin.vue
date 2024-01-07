@@ -837,7 +837,7 @@ export default {
         this.contentLoaded = false;
 
         axios
-          .put("users/wipe", this.me)
+          .put("admins/reboot")
           .then(() => {
             this.$emit("logOut");
           })
