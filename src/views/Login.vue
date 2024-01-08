@@ -131,11 +131,8 @@ export default {
           .post("/sessions", this.inputParams)
           .then((response) => {
             if (response.data && response.status === 201) {
-              axios.defaults.headers.common["Authorization"] =
-                "Bearer " + response.data.jwt;
               this.$emit("onLogin", response.data);
               window.removeEventListener("keypress", this.enterPress);
-              this.$router.push("/home");
             } else {
               console.log(response);
               this.error = "Unknown Error, please tell David!";

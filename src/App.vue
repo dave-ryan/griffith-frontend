@@ -1,7 +1,7 @@
 <template>
   <nav
     class="navbar navbar-expand-md navbar-dark bg-dark text-center"
-    v-if="userName && jwt"
+    v-if="currentUser && jwt"
     id="navbar"
   >
     <div class="container-fluid">
@@ -26,7 +26,7 @@
           <li>
             <router-link class="nav-link" to="/my-list">My List</router-link>
           </li>
-          <li v-if="isAdmin">
+          <li v-if="currentUser?.is_admin">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <transition mode="out-in">
@@ -48,7 +48,7 @@
         </ul>
 
         <div class="nav-link disabled align-middle">
-          Logged in as {{ userName }}
+          Logged in as {{ currentUser.name }}
         </div>
         <button class="btn btn-danger" @click="logOut()">Log Out</button>
       </div>
@@ -99,6 +99,7 @@
     @onHomePageLoaded="onHomePageLoaded"
     @clearError="clearError"
     @onError="onError"
+    :currentUser="currentUser"
   >
   </router-view>
 
@@ -185,9 +186,8 @@ export default {
   components: { ErrorSplash },
   data() {
     return {
-      userName: null,
+      currentUser: null,
       jwt: null,
-      isAdmin: false,
       homePageLoaded: false,
       scrollLimit: 150,
       showScrollToTopButton: false,
@@ -197,12 +197,11 @@ export default {
     };
   },
   created() {
-    if (localStorage.jwt && localStorage.user_name) {
-      this.userName = localStorage.user_name;
+    if (localStorage.jwt && localStorage.currentUser) {
+      this.currentUser = JSON.parse(localStorage.currentUser);
       this.jwt = localStorage.jwt;
-      this.isAdmin = localStorage.is_admin;
     } else if (window.location.pathname !== "/fly") {
-      this.$router.push("/login");
+      this.logOut();
     }
   },
   mounted() {
@@ -243,13 +242,15 @@ export default {
         lists[i].classList.add("show");
       }
     },
-    onLogin(data) {
-      this.userName = data.user_name;
-      this.jwt = data.jwt;
-      this.isAdmin = data.is_admin;
-      localStorage.setItem("user_name", data.user_name);
-      localStorage.setItem("jwt", data.jwt);
-      localStorage.setItem("is_admin", data.is_admin);
+    onLogin(responseData) {
+      localStorage.clear();
+      this.currentUser = responseData.user;
+      this.jwt = responseData.jwt;
+      localStorage.setItem("currentUser", JSON.stringify(responseData.user));
+      localStorage.setItem("jwt", responseData.jwt);
+      axios.defaults.headers.common["Authorization"] =
+        "Bearer " + responseData.jwt;
+      this.$router.push("/home");
     },
     logError(error) {
       console.log("Error!", error);
@@ -272,13 +273,12 @@ export default {
       }
     },
     logOut() {
-      localStorage.clear();
-      delete axios.defaults.headers.common["Authorization"];
-      this.userName = null;
-      this.jwt = null;
-      this.isAdmin = null;
-      this.error = null;
       this.$router.push("/login");
+      localStorage.clear();
+      delete axios.defaults?.headers?.common["Authorization"];
+      this.currwentUser = null;
+      this.jwt = null;
+      this.error = null;
     },
     handleScroll() {
       if (window.scrollY > this.scrollLimit) {

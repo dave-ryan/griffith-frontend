@@ -49,7 +49,7 @@
                           class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
                           v-if="
                             user.wishedgifts?.some(
-                              (item) => item.purchaser_id === me.id
+                              (item) => item.purchaser_id === currentUser.id
                             ) || findCustomGift(user)
                           "
                         ></i>
@@ -67,7 +67,7 @@
                           v-for="item in user.wishedgifts"
                           :key="item.id"
                           :item="item"
-                          :me="me"
+                          :currentUser="currentUser"
                           @toggleCheckBox="toggleCheckBox(item)"
                         />
                         <div class="row">
@@ -176,7 +176,7 @@
                     v-if="
                       secretSanta.wishedgifts &&
                       secretSanta.wishedgifts.some(
-                        (item) => item.purchaser_id === me.id
+                        (item) => item.purchaser_id === currentUser.id
                       )
                     "
                   ></i>
@@ -194,7 +194,7 @@
                     v-for="item in secretSanta.wishedgifts"
                     :key="item.id"
                     :item="item"
-                    :me="me"
+                    :currentUser="currentUser"
                     @toggleCheckBox="toggleCheckBox(item)"
                   />
                 </div>
@@ -299,14 +299,13 @@ import Spinner from "../components/Spinner.vue";
 
 export default {
   components: { WishlistItem, Splash, LowPresentWarning, Spinner },
+  props: ["currentUser"],
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
   data() {
     return {
-      me: {},
       family: [],
       everyone: [],
-      secretSanta: {},
-      christmasLists: {},
+      secretSanta: null,
       indexview: false,
       lowPresentCount: false,
       deletingCustomGift: null,
@@ -321,7 +320,8 @@ export default {
   },
   created() {
     this.$emit("clearError");
-    this.getMe();
+    this.getFamily();
+    this.getSecretSanta();
   },
   methods: {
     createOrUpdateCustomGift() {
@@ -333,7 +333,7 @@ export default {
       this.loadingCustomGiftModal = true;
       let params = {
         user_id: this.editingCustomGiftUser.id,
-        customgift_purchaser_id: this.me.id,
+        customgift_purchaser_id: this.currentUser.id,
         note: this.editingCustomGift.note || "",
       };
       axios
@@ -374,7 +374,7 @@ export default {
     },
     findCustomGift(user) {
       return user?.customgifts?.find(
-        (item) => item.customgift_purchaser_id === this.me.id
+        (item) => item.customgift_purchaser_id === this.currentUser.id
       );
     },
     getEveryone() {
@@ -385,9 +385,9 @@ export default {
         .get("/users")
         .then((response) => {
           this.contentLoaded = true;
-          var my_id = this.me.id;
+          let currentUser = this.currentUser;
           this.everyone = response.data.filter(function (user) {
-            return user.id != my_id;
+            return user.id != currentUser.id;
           });
         })
         .catch((error) => {
@@ -401,15 +401,15 @@ export default {
       this.contentLoaded = false;
       this.indexview = false;
       axios
-        .get(`/families/${this.me.family.id}`)
+        .get("/families")
         .then((response) => {
           this.$emit("onHomePageLoaded");
           this.pageLoaded = true;
           this.contentLoaded = true;
-          var my_id = this.me.id;
+          let currentUser = this.currentUser;
           this.family = response.data.users
             .filter(function (user) {
-              return user.id != my_id;
+              return user.id != currentUser.id;
             })
             .sort((a, b) => a.name.localeCompare(b.name));
         })
@@ -418,35 +418,10 @@ export default {
           error.function = "getFamily";
           this.$emit("onError", error);
         });
-      this.me.mystery_santa ? this.getSecretSanta() : "";
-    },
-    getMe() {
-      axios
-        .get("/users/me")
-        .then((response) => {
-          this.me = response.data;
-          if (
-            this.me.wishedgifts.reduce((total, currentgift) => {
-              return currentgift.purchaser ? total : (total += 1);
-            }, 0) < 4
-          ) {
-            this.lowPresentCount = true;
-          }
-          this.getFamily();
-        })
-        .catch((error) => {
-          if (error.response?.status === 401) {
-            this.$emit("logOut");
-          } else {
-            error.critical = true;
-            error.function = "getMe";
-            this.$emit("onError", error);
-          }
-        });
     },
     getSecretSanta() {
       axios
-        .get(`/users/${this.me.mystery_santa.id}`)
+        .get("/mystery_santa")
         .then((response) => {
           this.secretSanta = response.data;
         })
@@ -480,7 +455,7 @@ export default {
       let purchasing = !item.purchaser_id ? true : false;
       axios
         .patch(`/wishedgifts/${item.id}`, {
-          purchaser_id: this.me.id,
+          purchaser_id: this.currentUser.id,
           purchasing: purchasing,
         })
         .then((response) => {

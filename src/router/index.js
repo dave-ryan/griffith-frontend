@@ -11,11 +11,13 @@ const routes = [
     path: "/home",
     name: "Home",
     component: Home,
+    props: { default: true },
   },
   {
     path: "/my-list",
     name: "My List",
     component: MyList,
+    props: { default: true },
   },
   {
     path: "/login",
@@ -26,6 +28,7 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: Admin,
+    props: { default: true },
   },
   {
     path: "/fly",

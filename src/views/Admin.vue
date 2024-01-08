@@ -660,10 +660,9 @@ import splashImage from "../assets/images/snowman.jpg";
 export default {
   components: { Splash },
   emits: ["logOut", "onError", "clearError"],
-
+  props: ["currentUser"],
   data() {
     return {
-      me: null,
       visible: false,
       users: [],
       editingUser: {},
@@ -679,7 +678,11 @@ export default {
     };
   },
   created() {
-    this.getMe();
+    if (this.currentUser?.is_admin) {
+      this.getUsers();
+    } else {
+      this.$router.push("/home");
+    }
   },
   computed: {
     men() {
@@ -696,7 +699,7 @@ export default {
   methods: {
     cleanupGifts() {
       axios
-        .put("/wishedgifts/cleanup")
+        .put("/admin/wishedgifts-cleanup")
         .then((response) => {
           console.log(response.data);
         })
@@ -794,30 +797,11 @@ export default {
     flipAdmin(user) {
       user.is_admin = !user.is_admin;
     },
-    getMe() {
-      axios
-        .get("/users/me")
-        .then((response) => {
-          if (!response.data?.is_admin) {
-            this.$emit("logOut");
-          } else {
-            console.log(response.data);
-            this.me = response.data;
-            this.getUsers();
-          }
-        })
-        .catch((error) => {
-          error.critical = true;
-          error.function = "getMe";
-          this.$emit("onError", error);
-        });
-    },
     getUsers() {
       axios
-        .get("/families")
+        .get("/admin/families")
         .then((response) => {
           console.log(response.data);
-
           this.families = response.data;
           this.users = response.data
             .map((family) => family.users)
@@ -837,7 +821,7 @@ export default {
         this.contentLoaded = false;
 
         axios
-          .put("admins/reboot")
+          .put("admin/reboot")
           .then(() => {
             this.$emit("logOut");
           })
@@ -853,7 +837,7 @@ export default {
         confirm("ARE YOU SURE YOU WANT TO SHUFFLE EVERYONE'S SECRET SANTA?")
       ) {
         axios
-          .post("/secret-santa-shuffle", this.me)
+          .put("/admin/secret-santa-shuffle")
           .then((response) => {
             console.log(response.data);
             this.visible = true;

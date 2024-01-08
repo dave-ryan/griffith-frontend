@@ -9,13 +9,15 @@
         :id="`checkbox-` + item.id"
         :checked="item.purchaser_id"
         :disabled="
-          (item.purchaser_id && item.purchaser_id !== me.id) || item.loading
+          (item.purchaser_id && item.purchaser_id !== currentUser.id) ||
+          item.loading
         "
         @change="$emit('toggleCheckBox')"
       />
       <span
         :class="
-          (item.purchaser_id && item.purchaser_id !== me.id) || item.loading
+          (item.purchaser_id && item.purchaser_id !== currentUser.id) ||
+          item.loading
             ? 'fw-light'
             : 'form-check-label'
         "
@@ -32,11 +34,13 @@
       </span>
       <span
         v-if="item.purchaser && item.purchaser_id"
-        :class="item.purchaser_id === me.id ? 'text-success' : 'text-danger'"
+        :class="
+          item.purchaser_id === currentUser.id ? 'text-success' : 'text-danger'
+        "
       >
         - Purchased By
-        {{ item.purchaser_id === me.id ? "You!" : "Someone Else" }}
-        {{ me.is_admin ? " - " + item.purchaser.name : "" }}
+        {{ item.purchaser_id === currentUser.id ? "You!" : "Someone Else" }}
+        {{ currentUser.is_admin ? " - " + item.purchaser.name : "" }}
       </span>
     </div>
   </div>
@@ -53,7 +57,7 @@
 import Spinner from "../components/Spinner.vue";
 export default {
   components: { Spinner },
-  props: ["item", "me"],
+  props: ["item", "currentUser"],
   emits: ["toggleCheckBox"],
 };
 </script>
