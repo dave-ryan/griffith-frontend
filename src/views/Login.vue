@@ -84,7 +84,10 @@ input:not(.is-valid) {
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
+
 export default {
+  emits: ["onReroute"],
   data() {
     return {
       inputParams: {},
@@ -93,11 +96,6 @@ export default {
       loading: false,
     };
   },
-  mounted() {
-    if (localStorage.jwt && localStorage.user_name) {
-      this.$router.push("/home");
-    }
-  },
   computed: {
     buttonName() {
       return this.loading ? "Loading..." : "Log In";
@@ -105,6 +103,10 @@ export default {
   },
   created() {
     window.addEventListener("keypress", this.enterPress);
+    if (VueCookies.get("jwt")) {
+      this.$emit("onReroute");
+      this.$router.push("/home");
+    }
   },
   methods: {
     checkForms() {

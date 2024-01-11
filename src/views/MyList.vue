@@ -406,7 +406,7 @@ import { nextTick } from "vue";
 
 export default {
   components: { Splash, Spinner },
-  emits: ["logOut", "onError", "clearError"],
+  emits: ["onError", "clearError"],
   data() {
     return {
       myList: [],
@@ -561,13 +561,9 @@ export default {
           });
         })
         .catch((error) => {
-          if (error.response?.status === 401) {
-            this.$emit("logOut");
-          } else {
-            error.function = "getMyList";
-            error.critical = true;
-            this.$emit("onError", error);
-          }
+          error.function = "getMyList";
+          error.critical = true;
+          this.$emit("onError", error);
         });
     },
     async hideBatchModal() {

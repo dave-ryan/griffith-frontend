@@ -1,7 +1,7 @@
 <template>
   <nav
     class="navbar navbar-expand-md navbar-dark bg-dark text-center"
-    v-if="currentUser && jwt"
+    v-if="currentUserName"
     id="navbar"
   >
     <div class="container-fluid">
@@ -30,13 +30,7 @@
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
           <transition mode="out-in">
-            <li
-              v-if="
-                this.$router?.currentRoute?.value?.path === '/home' &&
-                !this.error &&
-                homePageLoaded
-              "
-            >
+            <li v-if="$route.name === 'Home' && !error && homePageLoaded">
               <button
                 class="btn btn-success align-middle ms-2 mt-2 pt-0 pb-0 ps-1 pe-1"
                 @click="expandLists"
@@ -48,7 +42,7 @@
         </ul>
 
         <div class="nav-link disabled align-middle">
-          Logged in as {{ currentUser.name }}
+          Logged in as {{ currentUserName }}
         </div>
         <button class="btn btn-danger" @click="logOut()">Log Out</button>
       </div>
@@ -94,11 +88,13 @@
   <!-- Router View -->
   <router-view
     v-show="!error?.critical"
+    v-if="currentUser || $route.name === 'Login'"
     @onLogin="onLogin"
     @logOut="logOut"
     @onHomePageLoaded="onHomePageLoaded"
     @clearError="clearError"
     @onError="onError"
+    @onReroute="onReroute"
     :currentUser="currentUser"
   >
   </router-view>
@@ -181,13 +177,14 @@ button:active,
 import axios from "axios";
 import { Toast } from "bootstrap";
 import ErrorSplash from "./components/ErrorSplash.vue";
+import VueCookies from "vue-cookies";
 
 export default {
   components: { ErrorSplash },
   data() {
     return {
       currentUser: null,
-      jwt: null,
+      currentUserName: VueCookies.get("userName"),
       homePageLoaded: false,
       scrollLimit: 150,
       showScrollToTopButton: false,
@@ -197,11 +194,8 @@ export default {
     };
   },
   created() {
-    if (localStorage.jwt && localStorage.currentUser) {
-      this.currentUser = JSON.parse(localStorage.currentUser);
-      this.jwt = localStorage.jwt;
-    } else if (window.location.pathname !== "/fly") {
-      this.logOut();
+    if (window.location.pathname !== "/login") {
+      this.getMe();
     }
   },
   mounted() {
@@ -242,15 +236,36 @@ export default {
         lists[i].classList.add("show");
       }
     },
+    getMe() {
+      let jwt = VueCookies.get("jwt");
+      if (jwt) {
+        axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
+      }
+      axios
+        .get("/me")
+        .then((response) => {
+          this.currentUser = response.data;
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            this.logOut();
+          } else {
+            this.onError(error);
+          }
+        });
+    },
     onLogin(responseData) {
-      localStorage.clear();
       this.currentUser = responseData.user;
-      this.jwt = responseData.jwt;
-      localStorage.setItem("currentUser", JSON.stringify(responseData.user));
-      localStorage.setItem("jwt", responseData.jwt);
+      this.currentUserName = responseData.user.name;
+      VueCookies.config("60d", "", "", true);
+      VueCookies.set("jwt", responseData.jwt);
+      VueCookies.set("userName", responseData.user?.name);
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + responseData.jwt;
       this.$router.push("/home");
+    },
+    onReroute() {
+      this.getMe();
     },
     logError(error) {
       console.log("Error!", error);
@@ -274,10 +289,11 @@ export default {
     },
     logOut() {
       this.$router.push("/login");
-      localStorage.clear();
-      delete axios.defaults?.headers?.common["Authorization"];
-      this.currwentUser = null;
-      this.jwt = null;
+      VueCookies.remove("jwt");
+      VueCookies.remove("userName");
+      delete axios.defaults.headers.common["Authorization"];
+      this.currentUser = null;
+      this.currentUserName = null;
       this.error = null;
     },
     handleScroll() {
