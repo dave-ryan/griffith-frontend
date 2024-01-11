@@ -6,8 +6,9 @@
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
+
     <transition name="content" mode="out-in">
-      <div v-if="splashImgLoaded && contentLoaded" class="mt-5">
+      <div v-if="currentUser && splashImgLoaded && contentLoaded" class="mt-5">
         <div class="row mt-5">
           <h2>Admin</h2>
           <!-- Endpoints -->

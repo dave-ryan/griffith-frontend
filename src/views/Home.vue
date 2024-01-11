@@ -22,7 +22,7 @@
 
     <transition name="content" mode="out-in">
       <div
-        v-if="splashImgLoaded && contentLoaded"
+        v-if="currentUser && splashImgLoaded && contentLoaded"
         class="row ps-2 pe-2 text-break"
       >
         <div class="col">

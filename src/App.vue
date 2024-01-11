@@ -88,7 +88,6 @@
   <!-- Router View -->
   <router-view
     v-show="!error?.critical"
-    v-if="currentUser || $route.name === 'Login'"
     @onLogin="onLogin"
     @logOut="logOut"
     @onHomePageLoaded="onHomePageLoaded"
