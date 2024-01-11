@@ -2,13 +2,12 @@
   <div class="container-fluid ps-0 pe-0 text-center">
     <Splash
       :src="splashSrc"
-      :contentLoaded="contentLoaded"
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
 
     <transition name="content" mode="out-in">
-      <div v-if="currentUser && splashImgLoaded && contentLoaded" class="mt-5">
+      <div v-if="currentUser && splashImgLoaded && pageLoaded" class="mt-5">
         <div class="row mt-5">
           <h2>Admin</h2>
           <!-- Endpoints -->
@@ -673,7 +672,6 @@ export default {
       errors: null,
       families: [],
       splashSrc: splashImage,
-      contentLoaded: false,
       pageLoaded: false,
       splashImgLoaded: false,
     };
@@ -808,7 +806,6 @@ export default {
             .map((family) => family.users)
             .flat()
             .sort((a, b) => a.name.localeCompare(b.name));
-          this.contentLoaded = true;
           this.pageLoaded = true;
         })
         .catch((error) => {
@@ -819,8 +816,6 @@ export default {
     },
     resetData() {
       if (confirm("ARE YOU SURE YOU WANT TO RESET EVERYTHING???")) {
-        this.contentLoaded = false;
-
         axios
           .put("admin/reboot")
           .then(() => {
@@ -829,7 +824,6 @@ export default {
           .catch((error) => {
             error.function = "resetData";
             this.$emit("onError", error);
-            this.contentLoaded = true;
           });
       }
     },

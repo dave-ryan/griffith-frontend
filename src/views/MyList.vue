@@ -2,12 +2,11 @@
   <div class="container-fluid ps-0 pe-0 mb-5 text-center">
     <Splash
       :src="splashSrc"
-      :contentLoaded="contentLoaded"
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
     <transition name="content" mode="out-in">
-      <div v-if="contentLoaded && splashImgLoaded" class="ps-3 pe-3 mt-5">
+      <div v-if="pageLoaded && splashImgLoaded" class="ps-3 pe-3 mt-5">
         <div class="row">
           <div class="col"></div>
           <div class="col-lg-10">
@@ -414,7 +413,6 @@ export default {
       newItemLoading: false,
       editingItem: {},
       deletingItem: {},
-      contentLoaded: false,
       batchItems: "",
       batchLinks: "",
       batchItemsLoading: false,
@@ -554,7 +552,6 @@ export default {
       axios
         .get("/wishedgifts")
         .then((response) => {
-          this.contentLoaded = true;
           this.pageLoaded = true;
           this.myList = response.data?.sort(function (a, b) {
             return a.id - b.id;

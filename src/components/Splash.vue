@@ -3,7 +3,7 @@
     <div class="col">
       <transition-group mode="out-in">
         <Spinner
-          :visible="!(contentLoaded && imgLoaded && pageLoaded)"
+          :visible="!(pageLoaded && imgLoaded)"
           key="1"
           top="25%"
           position="absolute"
@@ -13,7 +13,7 @@
           :src="src"
           class="img splash shadow sticky-top"
           v-on:load="loadedImg"
-          v-show="(imgLoaded && pageLoaded) || (imgLoaded && contentLoaded)"
+          v-show="imgLoaded && pageLoaded"
           key="2"
           alt="failed"
         />
@@ -37,7 +37,7 @@ import Spinner from "./Spinner.vue";
 
 export default {
   components: { Spinner },
-  props: ["src", "contentLoaded", "pageLoaded"],
+  props: ["src", "pageLoaded"],
   emits: ["splashImgLoaded"],
   data() {
     return {

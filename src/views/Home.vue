@@ -2,7 +2,6 @@
   <div class="container-fluid mb-5 ps-0 pe-0 text-center">
     <Splash
       :src="splashSrc"
-      :contentLoaded="contentLoaded"
       :pageLoaded="pageLoaded"
       @splashImgLoaded="splashImgLoaded = true"
     />
