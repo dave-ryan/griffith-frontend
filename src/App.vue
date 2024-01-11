@@ -94,7 +94,6 @@
     @onHomePageLoaded="onHomePageLoaded"
     @clearError="clearError"
     @onError="onError"
-    @onReroute="onReroute"
     :currentUser="currentUser"
   >
   </router-view>
@@ -194,8 +193,11 @@ export default {
     };
   },
   created() {
-    if (window.location.pathname !== "/login") {
+    if (VueCookies.get("jwt")) {
       this.getMe();
+    } else {
+      VueCookies.remove("userName");
+      this.$router.push("/login");
     }
   },
   mounted() {
@@ -245,6 +247,7 @@ export default {
         .get("/me")
         .then((response) => {
           this.currentUser = response.data;
+          this.currentUserName = response.data.name;
         })
         .catch((error) => {
           if (error.response.status === 401) {
@@ -263,9 +266,6 @@ export default {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + responseData.jwt;
       this.$router.push("/home");
-    },
-    onReroute() {
-      this.getMe();
     },
     logError(error) {
       console.log("Error!", error);

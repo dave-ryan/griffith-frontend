@@ -87,7 +87,6 @@ import axios from "axios";
 import VueCookies from "vue-cookies";
 
 export default {
-  emits: ["onReroute"],
   data() {
     return {
       inputParams: {},
@@ -104,7 +103,6 @@ export default {
   created() {
     window.addEventListener("keypress", this.enterPress);
     if (VueCookies.get("jwt")) {
-      this.$emit("onReroute");
       this.$router.push("/home");
     }
   },
