@@ -114,6 +114,9 @@
 </template>
 
 <style>
+body {
+  overflow-y: scroll;
+}
 .content-enter-active,
 .content-leave-active {
   transition: all 0.75s ease;
