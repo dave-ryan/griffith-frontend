@@ -30,7 +30,7 @@
         class="btn btn-secondary btn-sm ms-2"
         data-bs-toggle="modal"
         data-bs-target="#customGiftModal"
-        @click="editCustomGift(user)"
+        @click="$emit('editCustomGift', user)"
         v-if="associatedCustomGift"
         :disabled="deletingCustomGift?.user_id === user.id"
       >
@@ -44,10 +44,9 @@
 .truncated {
   max-width: 200px;
   display: inline-block;
-  vertical-align: top;
 }
 .form-check .form-check-input {
-  margin-top: 0.3em;
+  margin-top: 7px;
 }
 </style>
 
@@ -56,6 +55,6 @@ import Spinner from "./Spinner.vue";
 export default {
   components: { Spinner },
   props: ["user", "deletingCustomGift", "associatedCustomGift"],
-  emits: ["toggleCustomGiftCheckBox"],
+  emits: ["toggleCustomGiftCheckBox", "editCustomGift"],
 };
 </script>

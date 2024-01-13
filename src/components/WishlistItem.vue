@@ -48,7 +48,7 @@
 
 <style scoped>
 .form-check .form-check-input {
-  margin-top: 0.3em;
+  margin-top: 5px;
 }
 </style>
 

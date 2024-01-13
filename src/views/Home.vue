@@ -75,10 +75,11 @@
                         </div>
 
                         <CustomGift
-                          :user="secretSanta"
+                          :user="user"
                           :deletingCustomGift="deletingCustomGift"
-                          :associatedCustomGift="findCustomGift(secretSanta)"
+                          :associatedCustomGift="findCustomGift(user)"
                           @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                          @editCustomGift="editCustomGift"
                         />
                       </div>
                     </div>
