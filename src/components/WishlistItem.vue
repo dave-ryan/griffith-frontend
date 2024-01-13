@@ -47,9 +47,8 @@
 </template>
 
 <style scoped>
-.spinner-container {
-  position: absolute;
-  transform: translate(-100%);
+.form-check .form-check-input {
+  margin-top: 0.3em;
 }
 </style>
 

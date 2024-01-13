@@ -240,16 +240,7 @@
   </div>
 </template>
 
-<style scoped>
-.truncated {
-  max-width: 200px;
-  display: inline-block;
-  vertical-align: top;
-}
-.form-check-input {
-  margin-top: 8px;
-}
-</style>
+<style scoped></style>
 
 <script>
 import axios from "axios";

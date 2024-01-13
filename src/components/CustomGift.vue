@@ -40,7 +40,16 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.truncated {
+  max-width: 200px;
+  display: inline-block;
+  vertical-align: top;
+}
+.form-check .form-check-input {
+  margin-top: 0.3em;
+}
+</style>
 
 <script>
 import Spinner from "./Spinner.vue";
