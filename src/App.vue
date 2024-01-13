@@ -88,6 +88,7 @@
   <!-- Router View -->
   <router-view
     v-show="!error?.critical"
+    @onUserLoad="onUserLoad"
     @onLogin="onLogin"
     @logOut="logOut"
     @onHomePageLoaded="onHomePageLoaded"

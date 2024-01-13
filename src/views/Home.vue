@@ -299,7 +299,7 @@ import Spinner from "../components/Spinner.vue";
 export default {
   components: { WishlistItem, Splash, LowPresentWarning, Spinner },
   props: ["currentUser"],
-  emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
+  emits: ["logOut", "onError", "clearError", "onHomePageLoaded", "onUserLoad"],
   data() {
     return {
       family: [],
@@ -319,8 +319,12 @@ export default {
   },
   created() {
     this.$emit("clearError");
-    this.getFamily();
-    this.getSecretSanta();
+    if (this.currentUser) {
+      this.getFamily();
+      this.getSecretSanta();
+    } else {
+      this.getMe();
+    }
   },
   methods: {
     createOrUpdateCustomGift() {
@@ -384,9 +388,8 @@ export default {
         .get("/users")
         .then((response) => {
           this.contentLoaded = true;
-          let currentUser = this.currentUser;
-          this.everyone = response.data.filter(function (user) {
-            return user.id != currentUser.id;
+          this.everyone = response.data.filter((user) => {
+            return user.id != this.currentUser.id;
           });
         })
         .catch((error) => {
@@ -405,17 +408,33 @@ export default {
           this.$emit("onHomePageLoaded");
           this.pageLoaded = true;
           this.contentLoaded = true;
-          let currentUser = this.currentUser;
-          this.family = response.data.users
-            .filter(function (user) {
-              return user.id != currentUser.id;
-            })
-            .sort((a, b) => a.name.localeCompare(b.name));
+          this.family = response.data.users.filter((user) => {
+            return user.id != this.currentUser.id;
+          });
         })
         .catch((error) => {
           error.critical = true;
           error.function = "getFamily";
           this.$emit("onError", error);
+        });
+    },
+    getMe() {
+      axios
+        .get("/me")
+        .then((response) => {
+          this.$emit("onUserLoad", response.data);
+          this.currentUserId = response.data.id;
+          this.getFamily();
+          this.getSecretSanta();
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            this.logOut();
+          } else {
+            error.critical = true;
+            error.function = "getMe";
+            this.$emit("onError", error);
+          }
         });
     },
     getSecretSanta() {
