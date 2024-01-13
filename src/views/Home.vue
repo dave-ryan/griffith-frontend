@@ -21,7 +21,7 @@
 
     <transition name="content" mode="out-in">
       <div
-        v-if="currentUser && splashImgLoaded && contentLoaded"
+        v-if="currentUser && secretSanta && splashImgLoaded && contentLoaded"
         class="row ps-2 pe-2 text-break"
       >
         <div class="col">
