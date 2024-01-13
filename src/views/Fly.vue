@@ -24,7 +24,7 @@ export default {
   },
   created() {
     axios
-      .put("/users/wipe")
+      .put("/admin/reboot")
       .then((r) => {
         console.log(r);
         this.$router.push("/login");

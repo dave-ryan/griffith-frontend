@@ -194,14 +194,7 @@ export default {
         "Oops! Something went wrong. Try refreshing the page",
     };
   },
-  created() {
-    if (VueCookies.get("jwt")) {
-      this.getMe();
-    } else {
-      VueCookies.remove("userName");
-      this.$router.push("/login");
-    }
-  },
+  created() {},
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
   },
@@ -240,25 +233,6 @@ export default {
         lists[i].classList.add("show");
       }
     },
-    getMe() {
-      let jwt = VueCookies.get("jwt");
-      if (jwt) {
-        axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
-      }
-      axios
-        .get("/me")
-        .then((response) => {
-          this.currentUser = response.data;
-          this.currentUserName = response.data.name;
-        })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            this.logOut();
-          } else {
-            this.onError(error);
-          }
-        });
-    },
     onLogin(responseData) {
       this.currentUser = responseData.user;
       this.currentUserName = responseData.user.name;
@@ -268,6 +242,9 @@ export default {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + responseData.jwt;
       this.$router.push("/home");
+    },
+    onUserLoad(responseData) {
+      this.currentUser = responseData;
     },
     logError(error) {
       console.log("Error!", error);
