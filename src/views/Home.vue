@@ -74,55 +74,12 @@
                           <hr class="w-25 fw-light" />
                         </div>
 
-                        <Spinner
-                          size="small"
-                          :visible="deletingCustomGift?.user_id === user.id"
+                        <CustomGift
+                          :user="secretSanta"
+                          :deletingCustomGift="deletingCustomGift"
+                          :associatedCustomGift="findCustomGift(secretSanta)"
+                          @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
                         />
-
-                        <div class="form-check form-check-inline me-0">
-                          <input
-                            :id="'customGiftCheckbox-' + user.id"
-                            class="form-check-input"
-                            type="checkbox"
-                            @change="toggleCustomGiftCheckBox($event, user)"
-                            :checked="findCustomGift(user)"
-                            :disabled="deletingCustomGift?.user_id === user.id"
-                          />
-                          <span
-                            class="text-truncate truncated align-middle"
-                            :class="
-                              deletingCustomGift?.user_id === user.id
-                                ? 'fw-light'
-                                : ''
-                            "
-                            v-if="findCustomGift(user)?.note"
-                          >
-                            {{ findCustomGift(user).note }}
-                          </span>
-                          <span
-                            v-else
-                            class="align-middle"
-                            :class="
-                              deletingCustomGift?.user_id === user.id
-                                ? 'fw-light'
-                                : ''
-                            "
-                          >
-                            Something
-                            <strong>not</strong> on {{ user.name }}'s list
-                          </span>
-                          <button
-                            type="button"
-                            class="btn btn-secondary btn-sm ms-2"
-                            data-bs-toggle="modal"
-                            data-bs-target="#customGiftModal"
-                            @click="editCustomGift(user)"
-                            v-if="findCustomGift(user)"
-                            :disabled="deletingCustomGift?.user_id === user.id"
-                          >
-                            <i class="bi bi-tools"></i>
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -192,6 +149,17 @@
                     :item="item"
                     :currentUser="currentUser"
                     @toggleCheckBox="toggleCheckBox(item)"
+                  />
+
+                  <div class="d-flex justify-content-center">
+                    <hr class="w-25 fw-light" />
+                  </div>
+
+                  <CustomGift
+                    :user="secretSanta"
+                    :deletingCustomGift="deletingCustomGift"
+                    :associatedCustomGift="findCustomGift(secretSanta)"
+                    @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
                   />
                 </div>
               </div>
@@ -292,9 +260,10 @@ import WishlistItem from "../components/WishlistItem.vue";
 import Splash from "../components/Splash.vue";
 import LowPresentWarning from "../components/LowPresentWarning.vue";
 import Spinner from "../components/Spinner.vue";
+import CustomGift from "../components/CustomGift.vue";
 
 export default {
-  components: { WishlistItem, Splash, LowPresentWarning, Spinner },
+  components: { WishlistItem, Splash, LowPresentWarning, Spinner, CustomGift },
   props: ["currentUser"],
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded", "onUserLoad"],
   data() {
@@ -344,7 +313,7 @@ export default {
         })
         .catch((error) => {
           this.loadingCustomGiftModal = false;
-          error.function = "toggleCustomGiftCheckBox, post /customgifts";
+          error.function = "createCustomGiftCheckBox, post /customgifts";
           this.$emit("onError", error);
         });
     },
@@ -363,7 +332,7 @@ export default {
           document.getElementById(
             `customGiftCheckbox-${user.id}`
           ).checked = true;
-          error.function = "toggleCustomGiftCheckBox";
+          error.function = "deleteCustomGiftCheckBox";
           this.$emit("onError", error);
         });
     },
