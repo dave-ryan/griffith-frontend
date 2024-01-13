@@ -161,6 +161,7 @@
                     :deletingCustomGift="deletingCustomGift"
                     :associatedCustomGift="findCustomGift(secretSanta)"
                     @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                    @editCustomGift="editCustomGift"
                   />
                 </div>
               </div>
