@@ -654,7 +654,7 @@
 
 <script>
 import axios from "axios";
-import Splash from "../components/Splash.vue";
+import Splash from "../components/Splash";
 import splashImage from "../assets/images/snowman.jpg";
 
 export default {

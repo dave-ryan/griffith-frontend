@@ -256,11 +256,11 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 import { nextTick } from "vue";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
-import WishlistItem from "../components/WishlistItem.vue";
-import Splash from "../components/Splash.vue";
-import LowPresentWarning from "../components/LowPresentWarning.vue";
-import Spinner from "../components/Spinner.vue";
-import CustomGift from "../components/CustomGift.vue";
+import WishlistItem from "../components/WishlistItem";
+import Splash from "../components/Splash";
+import LowPresentWarning from "../components/LowPresentWarning";
+import Spinner from "../components/Spinner";
+import CustomGift from "../components/CustomGift";
 
 export default {
   components: { WishlistItem, Splash, LowPresentWarning, Spinner, CustomGift },

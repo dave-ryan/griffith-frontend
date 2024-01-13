@@ -398,8 +398,8 @@ textarea {
 
 <script>
 import axios from "axios";
-import Splash from "../components/Splash.vue";
-import Spinner from "../components/Spinner.vue";
+import Splash from "../components/Splash";
+import Spinner from "../components/Spinner";
 import splashImage from "../assets/images/presents-cropped-compressed.jpg";
 import { nextTick } from "vue";
 
