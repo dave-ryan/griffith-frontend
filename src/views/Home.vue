@@ -62,6 +62,7 @@
                           >{{ user.name }} hasn't made a christmas list yet!
                           Remind them! &#128578;</span
                         >
+
                         <WishlistItem
                           v-for="item in user.wishedgifts"
                           :key="item.id"
@@ -69,12 +70,8 @@
                           :currentUser="currentUser"
                           @toggleCheckBox="toggleCheckBox(item)"
                         />
-                        <div class="row">
-                          <div class="col-5"></div>
-                          <div class="col-2">
-                            <hr class="fw-light" />
-                          </div>
-                          <div class="col-5"></div>
+                        <div class="d-flex justify-content-center">
+                          <hr class="w-25 fw-light" />
                         </div>
 
                         <Spinner
