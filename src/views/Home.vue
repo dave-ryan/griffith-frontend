@@ -306,7 +306,7 @@ export default {
         })
         .catch((error) => {
           this.loadingCustomGiftModal = false;
-          error.function = "createCustomGiftCheckBox, post /customgifts";
+          error.function = "createCustomGiftCheckBox";
           this.$emit("onError", error);
         });
     },
@@ -416,8 +416,13 @@ export default {
       this.$refs.Close.click();
     },
     toggleCustomGiftCheckBox(event, user) {
-      if (event?.target?.checked) {
+      if (event.target?.checked) {
         this.editingCustomGiftUser = user;
+        setTimeout(() => {
+          document.getElementById(
+            `customGiftCheckbox-${this.editingCustomGiftUser.id}`
+          ).checked = false;
+        }, 0);
         new Modal(document.getElementById("customGiftModal"), {}).show();
       } else {
         this.deleteCustomGift(user);
@@ -427,7 +432,7 @@ export default {
       var el = document.getElementById(`checkbox-${item.id}`);
       setTimeout(() => {
         el.checked = !el.checked;
-      }, 10);
+      }, 0);
       item.loading = true;
       let purchasing = !item.purchaser_id ? true : false;
       axios
