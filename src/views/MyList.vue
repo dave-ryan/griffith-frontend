@@ -97,7 +97,7 @@
                   autocomplete="off"
                   :disabled="newItemLoading"
                 />
-                <label class="pt-2" for="newItemName">Name/Description</label>
+                <label class="pt-1" for="newItemName">Name/Description</label>
                 <div class="invalid-feedback">
                   What Do You Want For Christmas?
                 </div>
@@ -112,9 +112,10 @@
                   autocomplete="off"
                   :disabled="newItemLoading"
                 />
-                <label class="pt-2" for="newItemLink">
-                  Online Shopping Link
-                  <span class="fw-light ms-1">optional</span>
+                <label class="pt-1" for="newItemLink">
+                  Online Shopping Link<span class="fw-light ms-1"
+                    >(optional)</span
+                  >
                 </label>
               </div>
               <div class="d-grid ms-5 me-5">
@@ -182,7 +183,7 @@
                       placeholder="books"
                       autocomplete="off"
                     />
-                    <label class="pt-2" for="editItemName"
+                    <label class="pt-1" for="editItemName"
                       >Name/Description</label
                     >
 
@@ -199,9 +200,10 @@
                       placeholder="example.com"
                       autocomplete="off"
                     />
-                    <label class="pt-2" for="editItemLink">
-                      Online Shopping Link
-                      <span class="fw-light ms-1">optional</span>
+                    <label class="pt-1" for="editItemLink">
+                      Online Shopping Link<span class="fw-light ms-1"
+                        >(optional)</span
+                      >
                     </label>
                   </div>
                 </div>
