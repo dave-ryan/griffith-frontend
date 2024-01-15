@@ -47,8 +47,8 @@
                         <i
                           class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
                           v-if="
-                            user.wishedgifts?.some(
-                              (item) => item.purchaser_id === currentUser.id
+                            user.gifts?.some(
+                              (gift) => gift.purchaser_id === currentUser.id
                             ) || findCustomGift(user)
                           "
                         ></i>
@@ -58,17 +58,17 @@
                         aria-expanded="false"
                         :id="`christmas-list-${user.id}`"
                       >
-                        <span v-if="user.wishedgifts?.length < 1"
+                        <span v-if="user.gifts?.length < 1"
                           >{{ user.name }} hasn't made a christmas list yet!
                           Remind them! &#128578;</span
                         >
 
-                        <WishlistItem
-                          v-for="item in user.wishedgifts"
-                          :key="item.id"
-                          :item="item"
+                        <Gift
+                          v-for="gift in user.gifts"
+                          :key="gift.id"
+                          :gift="gift"
                           :currentUser="currentUser"
-                          @toggleCheckBox="toggleCheckBox(item)"
+                          @toggleCheckBox="toggleCheckBox(gift)"
                         />
                         <div class="d-flex justify-content-center">
                           <hr class="w-25 fw-light" />
@@ -128,9 +128,9 @@
                   <i
                     class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
                     v-if="
-                      secretSanta.wishedgifts &&
-                      secretSanta.wishedgifts.some(
-                        (item) => item.purchaser_id === currentUser.id
+                      secretSanta.gifts &&
+                      secretSanta.gifts.some(
+                        (gift) => gift.purchaser_id === currentUser.id
                       )
                     "
                   ></i>
@@ -140,16 +140,16 @@
                   aria-expanded="false"
                   id="christmas-list-ss"
                 >
-                  <span v-if="secretSanta?.wishedgifts?.length === 0"
+                  <span v-if="secretSanta?.gifts?.length === 0"
                     >{{ secretSanta.name }} hasn't made their christmas list
                     yet! Remind them! &#128578;</span
                   >
-                  <WishlistItem
-                    v-for="item in secretSanta.wishedgifts"
-                    :key="item.id"
-                    :item="item"
+                  <Gift
+                    v-for="gift in secretSanta.gifts"
+                    :key="gift.id"
+                    :gift="gift"
                     :currentUser="currentUser"
-                    @toggleCheckBox="toggleCheckBox(item)"
+                    @toggleCheckBox="toggleCheckBox(gift)"
                   />
 
                   <div class="d-flex justify-content-center">
@@ -182,7 +182,7 @@
         <div class="modal-content">
           <form
             @submit.prevent="createOrUpdateCustomGift()"
-            id="editingItemForm"
+            id="editinggiftForm"
             novalidate
           >
             <div class="modal-header">
@@ -249,14 +249,14 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 import { nextTick } from "vue";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
-import WishlistItem from "../components/WishlistItem";
+import Gift from "../components/Gift";
 import Splash from "../components/Splash";
 import LowPresentWarning from "../components/LowPresentWarning";
 import Spinner from "../components/Spinner";
 import CustomGift from "../components/CustomGift";
 
 export default {
-  components: { WishlistItem, Splash, LowPresentWarning, Spinner, CustomGift },
+  components: { Gift, Splash, LowPresentWarning, Spinner, CustomGift },
   props: ["currentUser"],
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded", "onUserLoad"],
   data() {
@@ -336,7 +336,7 @@ export default {
     },
     findCustomGift(user) {
       return user?.customgifts?.find(
-        (item) => item.customgift_purchaser_id === this.currentUser.id
+        (gift) => gift.customgift_purchaser_id === this.currentUser.id
       );
     },
     getEveryone() {
@@ -428,31 +428,31 @@ export default {
         this.deleteCustomGift(user);
       }
     },
-    toggleCheckBox(item) {
-      var el = document.getElementById(`checkbox-${item.id}`);
+    toggleCheckBox(gift) {
+      var el = document.getElementById(`checkbox-${gift.id}`);
       setTimeout(() => {
         el.checked = !el.checked;
       }, 0);
-      item.loading = true;
-      let purchasing = !item.purchaser_id ? true : false;
+      gift.loading = true;
+      let purchasing = !gift.purchaser_id ? true : false;
       axios
-        .patch(`/wishedgifts/${item.id}`, {
+        .patch(`/gifts/${gift.id}`, {
           purchaser_id: this.currentUser.id,
           purchasing: purchasing,
         })
         .then((response) => {
-          item.purchaser_id = response.data.purchaser_id;
-          item.purchaser = response.data.purchaser;
-          item.loading = false;
+          gift.purchaser_id = response.data.purchaser_id;
+          gift.purchaser = response.data.purchaser;
+          gift.loading = false;
           el.checked = !el.checked;
         })
         .catch((error) => {
-          item.loading = false;
+          gift.loading = false;
           let errorData = error.response?.data;
           if (errorData?.purchaser) {
             this.$emit("launchErrorToast", "Someone Else Purchased This!");
-            item.purchaser = errorData.purchaser;
-            item.purchaser_id = errorData.purchaser_id;
+            gift.purchaser = errorData.purchaser;
+            gift.purchaser_id = errorData.purchaser_id;
           } else {
             error.function = "toggleCheckBox";
             this.$emit("onError", error);

@@ -24,8 +24,8 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(item, index) in myList"
-                    :key="item.id"
+                    v-for="(gift, index) in myList"
+                    :key="gift.id"
                     class="align-middle"
                   >
                     <td scope="row" style="width: 1%">
@@ -35,18 +35,18 @@
                       class="text-truncate"
                       style="max-width: 150px; min-width: 200px"
                     >
-                      {{ item.name }}
+                      {{ gift.name }}
                     </td>
                     <td
                       class="text-truncate"
                       style="max-width: 150px; min-width: 200px"
                     >
                       <a
-                        v-if="item.link"
-                        :href="`//` + item.link.replace(/^https?:\/\//, '')"
+                        v-if="gift.link"
+                        :href="`//` + gift.link.replace(/^https?:\/\//, '')"
                         alt=""
                         target="_blank"
-                        >{{ item.link }}</a
+                        >{{ gift.link }}</a
                       >
                     </td>
                     <td style="width: 1%" class="pe-0">
@@ -55,7 +55,7 @@
                         class="btn btn-outline-success"
                         data-bs-toggle="modal"
                         data-bs-target="#editModal"
-                        @click="editItem(item)"
+                        @click="editGift(gift)"
                       >
                         Edit
                       </button>
@@ -65,7 +65,7 @@
                         class="btn btn-outline-danger ms-2"
                         data-bs-toggle="modal"
                         data-bs-target="#deleteModal"
-                        @click="deletingItem = item"
+                        @click="deletingGift = gift"
                       >
                         Delete
                       </button>
@@ -81,38 +81,38 @@
           <div class="col"></div>
           <div class="col-12 col-sm-8 col-md-6 col-lg-4">
             <form
-              @submit.prevent="createItem"
-              id="newItemForm"
+              @submit.prevent="createGift"
+              id="newGiftForm"
               class="mt-4 mb-4"
               novalidate
             >
               <h5 class="mb-2">Add To Your Christmas List</h5>
               <div class="form-floating mb-2">
                 <input
-                  v-model="newItem.name"
+                  v-model="newGift.name"
                   class="form-control"
                   required
-                  id="newItemName"
+                  id="newGiftName"
                   placeholder="books"
                   autocomplete="off"
-                  :disabled="newItemLoading"
+                  :disabled="newGiftLoading"
                 />
-                <label class="pt-1" for="newItemName">Name/Description</label>
+                <label class="pt-1" for="newGiftName">Name/Description</label>
                 <div class="invalid-feedback">
                   What Do You Want For Christmas?
                 </div>
               </div>
-              <Spinner :visible="newItemLoading" position="absolute" />
+              <Spinner :visible="newGiftLoading" position="absolute" />
               <div class="form-floating mb-2">
                 <input
-                  v-model="newItem.link"
+                  v-model="newGift.link"
                   class="form-control"
-                  id="newItemLink"
+                  id="newGiftLink"
                   placeholder="example.com"
                   autocomplete="off"
-                  :disabled="newItemLoading"
+                  :disabled="newGiftLoading"
                 />
-                <label class="pt-1" for="newItemLink">
+                <label class="pt-1" for="newGiftLink">
                   Online Shopping Link<span class="fw-light ms-1"
                     >(optional)</span
                   >
@@ -120,7 +120,7 @@
               </div>
               <div class="d-grid ms-5 me-5">
                 <button class="btn btn-success" type="submit">
-                  {{ newItemLoading ? "Loading..." : "Add It!" }}
+                  {{ newGiftLoading ? "Loading..." : "Add It!" }}
                 </button>
               </div>
             </form>
@@ -153,8 +153,8 @@
           <div class="modal-dialog modal-dialog-centered" id="editingModal">
             <div class="modal-content">
               <form
-                @submit.prevent="updateItem"
-                id="editingItemForm"
+                @submit.prevent="updateGift"
+                id="editingGiftForm"
                 novalidate
               >
                 <div class="modal-header">
@@ -163,7 +163,7 @@
                     id="editModalLabel"
                     style="max-width: 400px"
                   >
-                    {{ editingItem.name }}
+                    {{ editingGift.name }}
                   </h3>
                   <button
                     type="button"
@@ -176,14 +176,14 @@
                 <div class="modal-body">
                   <div class="form-floating mb-2">
                     <input
-                      v-model="editingItem.name"
+                      v-model="editingGift.name"
                       class="form-control"
                       required
-                      id="editItemName"
+                      id="editGiftName"
                       placeholder="books"
                       autocomplete="off"
                     />
-                    <label class="pt-1" for="editItemName"
+                    <label class="pt-1" for="editGiftName"
                       >Name/Description</label
                     >
 
@@ -194,13 +194,13 @@
 
                   <div class="form-floating mb-2">
                     <input
-                      v-model="editingItem.link"
+                      v-model="editingGift.link"
                       class="form-control"
-                      id="editItemLink"
+                      id="editGiftLink"
                       placeholder="example.com"
                       autocomplete="off"
                     />
-                    <label class="pt-1" for="editItemLink">
+                    <label class="pt-1" for="editGiftLink">
                       Online Shopping Link<span class="fw-light ms-1"
                         >(optional)</span
                       >
@@ -220,7 +220,7 @@
                     type="submit"
                     class="btn btn-success disabled"
                     data-bs-dismiss="modal"
-                    v-if="!editingItem.name"
+                    v-if="!editingGift.name"
                   >
                     Save Changes
                   </button>
@@ -228,7 +228,7 @@
                     type="submit"
                     class="btn btn-success"
                     data-bs-dismiss="modal"
-                    v-if="editingItem.name"
+                    v-if="editingGift.name"
                   >
                     Save Changes
                   </button>
@@ -260,7 +260,7 @@
               <div class="modal-body">
                 <div class="fw-bold">Are you sure you want to delete</div>
                 <div class="text-truncate" style="max-width: 450px">
-                  {{ deletingItem.name }}
+                  {{ deletingGift.name }}
                 </div>
                 <div class="fw-bold">from your wishlist?</div>
               </div>
@@ -277,9 +277,9 @@
                   type="submit"
                   class="btn btn-danger"
                   data-bs-dismiss="modal"
-                  @click="deleteItem(deletingItem)"
+                  @click="deleteGift(deletingGift)"
                 >
-                  Delete The Item
+                  Delete The gift
                 </button>
               </div>
             </div>
@@ -298,7 +298,7 @@
               <div class="modal-header">
                 <div class="container-fluid">
                   <h4 class="fw-bold text-center mt-2">
-                    Add Items One Line At A Time
+                    Add Gifts One Line At A Time
                   </h4>
                 </div>
                 <button
@@ -307,7 +307,7 @@
                   class="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
-                  :disabled="batchItemsLoading"
+                  :disabled="batchGiftsLoading"
                 ></button>
               </div>
               <div class="modal-body">
@@ -329,17 +329,17 @@
                       </h4>
                       <textarea
                         class="form-control batch"
-                        :class="isWrappingTextItems"
+                        :class="isWrappingTextGifts"
                         placeholder="Socks&#10;Throw pillows&#10;Marvel Blurays"
                         id="floatingTextarea-Gift"
-                        v-model="batchItems"
-                        :disabled="batchItemsLoading"
+                        v-model="batchGifts"
+                        :disabled="batchGiftsLoading"
                       >
                       </textarea>
                     </div>
                   </div>
                   <Spinner
-                    :visible="batchItemsLoading"
+                    :visible="batchGiftsLoading"
                     position="absolute"
                     top="50%"
                   />
@@ -356,7 +356,7 @@
                         placeholder="socks.com&#10;&#10;g.com/blurays"
                         id="floatingTextarea-Link"
                         v-model="batchLinks"
-                        :disabled="batchItemsLoading"
+                        :disabled="batchGiftsLoading"
                       ></textarea>
                     </div>
                   </div>
@@ -367,7 +367,7 @@
                   type="button"
                   class="btn btn-secondary"
                   data-bs-dismiss="modal"
-                  :disabled="batchItemsLoading"
+                  :disabled="batchGiftsLoading"
                 >
                   Cancel
                 </button>
@@ -376,9 +376,9 @@
                   type="submit"
                   class="btn btn-success"
                   @click="batchCreate"
-                  :disabled="batchItemsLoading"
+                  :disabled="batchGiftsLoading"
                 >
-                  {{ batchItemsLoading ? "Loading..." : "Add All Items!" }}
+                  {{ batchGiftsLoading ? "Loading..." : "Add All Gifts!" }}
                 </button>
               </div>
             </div>
@@ -411,13 +411,13 @@ export default {
   data() {
     return {
       myList: [],
-      newItem: {},
-      newItemLoading: false,
-      editingItem: {},
-      deletingItem: {},
-      batchItems: "",
+      newGift: {},
+      newGiftLoading: false,
+      editingGift: {},
+      deletingGift: {},
+      batchGifts: "",
       batchLinks: "",
-      batchItemsLoading: false,
+      batchGiftsLoading: false,
       maxBatch: 25,
       splashImgLoaded: false,
       splashSrc: splashImage,
@@ -426,21 +426,21 @@ export default {
   },
   computed: {
     isDisabled() {
-      if (!this.newItem.name || this.newItem.name === "") {
+      if (!this.newGift.name || this.newGift.name === "") {
         return true;
       } else {
         return false;
       }
     },
-    isWrappingTextItems() {
-      if (this.batchItems === "" || this.batchItemsLoading) {
+    isWrappingTextGifts() {
+      if (this.batchGifts === "" || this.batchGiftsLoading) {
         return "";
       } else {
         return "text-prewrap";
       }
     },
     isWrappingTextLinks() {
-      if (this.batchLinks === "" || this.batchItemsLoading) {
+      if (this.batchLinks === "" || this.batchGiftsLoading) {
         return "";
       } else {
         return "text-prewrap";
@@ -453,22 +453,22 @@ export default {
   },
   methods: {
     batchCreate() {
-      this.batchItemsLoading = true;
-      var items = this.batchItems.split("\n");
-      if (items.length > this.maxBatch) {
+      this.batchGiftsLoading = true;
+      var gift = this.batchGifts.split("\n");
+      if (gift.length > this.maxBatch) {
         var error = {
           message: `Don't be greedy!! Maximum ${this.maxBatch} at a time`,
         };
         this.$emit("onError", error);
-        this.batchItemsLoading = false;
+        this.batchGiftsLoading = false;
         return false;
       }
       var links = this.batchLinks.split("\n");
       var giftObjects = [];
-      for (let i = 0; i < items.length; i++) {
-        if (items[i] !== "") {
+      for (let i = 0; i < gift.length; i++) {
+        if (gift[i] !== "") {
           giftObjects.push({
-            name: items[i],
+            name: gift[i],
             link: links[i],
             loaded: false,
           });
@@ -477,7 +477,7 @@ export default {
 
       for (let i = 0; i < giftObjects.length; i++) {
         axios
-          .post("/wishedgifts", giftObjects[i])
+          .post("/gifts", giftObjects[i])
           .then((response) => {
             giftObjects[i].id = response.data?.id;
             giftObjects[i].created = true;
@@ -494,8 +494,8 @@ export default {
         setTimeout(() => {}, 50);
       }
     },
-    checkCreated(wishedGIft) {
-      return wishedGIft.created;
+    checkCreated(gift) {
+      return gift.created;
     },
     checkForms(input) {
       if (input["name"] && input["name"].length > 0) {
@@ -504,23 +504,23 @@ export default {
         return false;
       }
     },
-    createItem() {
-      document.getElementById("newItemForm").classList.add("was-validated");
-      if (this.checkForms(this.newItem)) {
-        this.newItemLoading = true;
+    createGift() {
+      document.getElementById("newGiftForm").classList.add("was-validated");
+      if (this.checkForms(this.newGift)) {
+        this.newGiftLoading = true;
         axios
-          .post("/wishedgifts", this.newItem)
+          .post("/gifts", this.newGift)
           .then((response) => {
             this.myList.push(response.data);
-            this.newItem = {};
-            this.newItemLoading = false;
+            this.newGift = {};
+            this.newGiftLoading = false;
             document
-              .getElementById("newItemForm")
+              .getElementById("newGiftForm")
               .classList.remove("was-validated");
           })
           .catch((error) => {
-            this.newItemLoading = false;
-            error.function = "createItem";
+            this.newGiftLoading = false;
+            error.function = "createGift";
             this.$emit("onError", error);
           });
 
@@ -532,25 +532,25 @@ export default {
         }, 400);
       }
     },
-    deleteItem(item) {
+    deleteGift(gift) {
       axios
-        .delete(`/wishedgifts/${item.id}`)
+        .delete(`/gifts/${gift.id}`)
         .then(() => {
-          this.myList.splice(this.myList.indexOf(item), 1);
+          this.myList.splice(this.myList.indexOf(gift), 1);
         })
         .catch((error) => {
-          error.function = "deleteItem";
+          error.function = "deleteGift";
           this.$emit("onError", error);
         });
     },
-    editItem(item) {
-      this.editingItem.name = item.name;
-      this.editingItem.link = item.link;
-      this.editingItem.id = item.id;
+    editGift(gift) {
+      this.editingGift.name = gift.name;
+      this.editingGift.link = gift.link;
+      this.editingGift.id = gift.id;
     },
     getMyList() {
       axios
-        .get("/wishedgifts")
+        .get("/gifts")
         .then((response) => {
           this.pageLoaded = true;
           this.myList = response.data?.sort(function (a, b) {
@@ -568,30 +568,30 @@ export default {
         });
     },
     async hideBatchModal() {
-      this.batchItemsLoading = false;
-      this.batchItems = "";
+      this.batchGiftsLoading = false;
+      this.batchGifts = "";
       this.batchLinks = "";
       await nextTick();
       this.$refs.Close.click();
     },
-    updateItem() {
-      document.getElementById("editingItemForm").classList.add("was-validated");
-      if (this.checkForms(this.editingItem)) {
+    updateGift() {
+      document.getElementById("editingGiftForm").classList.add("was-validated");
+      if (this.checkForms(this.editingGift)) {
         axios
-          .patch(`/wishedgifts/${this.editingItem.id}`, this.editingItem)
+          .patch(`/gifts/${this.editingGift.id}`, this.editingGift)
           .then(() => {
             document
-              .getElementById("editingItemForm")
+              .getElementById("editingGiftForm")
               .classList.remove("was-validated");
-            var foundItem = this.myList.find(
-              (item) => item.id === this.editingItem.id
+            var foundGift = this.myList.find(
+              (gift) => gift.id === this.editingGift.id
             );
 
-            foundItem.name = this.editingItem.name;
-            foundItem.link = this.editingItem.link;
+            foundGift.name = this.editingGift.name;
+            foundGift.link = this.editingGift.link;
           })
           .catch((error) => {
-            error.function = "updateItem";
+            error.function = "updateGift";
             this.$emit("onError", error);
           });
       }

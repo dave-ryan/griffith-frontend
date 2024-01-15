@@ -698,7 +698,7 @@ export default {
   methods: {
     cleanupGifts() {
       axios
-        .put("/admin/wishedgifts-cleanup")
+        .put("/admin/gifts-cleanup")
         .then((response) => {
           console.log(response.data);
         })
