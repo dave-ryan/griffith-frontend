@@ -438,7 +438,7 @@ export default {
         el.checked = !el.checked;
       }, 0);
       gift.loading = true;
-      let purchasing = !gift.purchaser_id ? true : false;
+      let purchasing = !gift.purchaser_id ? "purchasing" : "unpurchasing";
       axios
         .patch(`/gifts/${gift.id}`, {
           purchaser_id: this.currentUser.id,
@@ -446,7 +446,6 @@ export default {
         })
         .then((response) => {
           gift.purchaser_id = response.data.purchaser_id;
-          gift.purchaser = response.data.purchaser;
           gift.loading = false;
           el.checked = !el.checked;
         })
