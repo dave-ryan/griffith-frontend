@@ -142,7 +142,7 @@
                 <tr v-for="user in men" :key="user.id">
                   <th scope="row">{{ user.id }}</th>
                   <td>{{ user.name }}</td>
-                  <td>{{ user.mystery_santa?.name }}</td>
+                  <td>{{ user.secret_santa?.name }}</td>
                 </tr>
               </tbody>
             </table>
@@ -161,7 +161,7 @@
                 <tr v-for="user in women" :key="user.id">
                   <th scope="row">{{ user.id }}</th>
                   <td>{{ user.name }}</td>
-                  <td>{{ user.mystery_santa?.name }}</td>
+                  <td>{{ user.secret_santa?.name }}</td>
                 </tr>
               </tbody>
             </table>
@@ -731,7 +731,7 @@ export default {
       }
       this.users.forEach((user) => {
         if (user.name === userParams.secretSantaName) {
-          userParams.mystery_santa_id = user.id;
+          userParams.secret_santa_id = user.id;
         }
       });
       console.log("user params: ", userParams);
@@ -789,8 +789,8 @@ export default {
     editUser(user) {
       this.editingUser = user;
       this.editingUser.familyName = user.family.name;
-      this.editingUser.secretSantaName = user.mystery_santa
-        ? user.mystery_santa.name
+      this.editingUser.secretSantaName = user.secret_santa
+        ? user.secret_santa.name
         : null;
     },
     flipAdmin(user) {
@@ -911,12 +911,12 @@ export default {
         if (user.secretSantaName === loopUser.name) {
           console.log(user.secretSantaName);
           console.log(loopUser);
-          userParams.mystery_santa_id = loopUser.id;
+          userParams.secret_santa_id = loopUser.id;
         }
       });
 
       if (!userParams.santa_group) {
-        userParams.mystery_santa_id = null;
+        userParams.secret_santa_id = null;
       }
 
       this.families.forEach((family) => {
