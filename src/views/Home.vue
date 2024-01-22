@@ -402,7 +402,7 @@ export default {
     },
     getSecretSanta() {
       axios
-        .get("/secret_santa")
+        .get("/secret-santa")
         .then((response) => {
           this.secretSanta = response.data;
         })
