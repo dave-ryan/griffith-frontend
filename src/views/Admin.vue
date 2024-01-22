@@ -52,13 +52,15 @@
         </div>
         <div class="row">
           <div class="col">
-            <button class="btn btn-warning m-2" @click="testGetUsers">
+            <button class="btn btn-warning m-2" @click="testGetUsers()">
               GET /users
             </button>
-            <button class="btn btn-warning m-2" @click="testGetMe">
-              GET /me
+            <button class="btn btn-warning m-2" @click="testGetMe()">
+              GET /me</button
+            ><button class="btn btn-warning m-2" @click="testGetSecretSanta()">
+              GET /secret-santa
             </button>
-            <button class="btn btn-warning m-2" @click="testGetFamilies">
+            <button class="btn btn-warning m-2" @click="testGetFamilies()">
               GET /families
             </button>
           </div>
@@ -877,6 +879,18 @@ export default {
         })
         .catch((error) => {
           error.function = "testGetFamilies";
+          this.$emit("onError", error);
+        });
+    },
+    testGetSecretSanta() {
+      this.$emit("clearError");
+      axios
+        .get("/secret-santa")
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          error.function = "testGetSecretSanta";
           this.$emit("onError", error);
         });
     },
