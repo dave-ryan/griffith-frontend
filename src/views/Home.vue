@@ -28,13 +28,9 @@
           <div class="row mb-5 mt-5">
             <div class="col">
               <h2>
-                {{ indexview ? "Everyone" : "Your Family" }}
+                {{ displayingEveryone ? "Everyone" : "Your Family" }}
               </h2>
-              <div
-                class="row mt-3"
-                v-for="user in indexview ? everyone : family"
-                :key="user.id"
-              >
+              <div class="row mt-3" v-for="user in users" :key="user.id">
                 <div class="col">
                   <button
                     class="btn btn-outline-success mb-1"
@@ -91,24 +87,17 @@
           <div class="row mb-3">
             <div class="col">
               <button
-                @click="getEveryone"
+                @click="displayingEveryone ? getFamily() : getEveryone()"
                 class="btn btn-outline-primary"
-                v-if="!indexview"
               >
-                Load Everyone's Lists
-              </button>
-              <button
-                @click="getFamily"
-                class="btn btn-outline-primary"
-                v-if="indexview"
-              >
-                Load Your Family's List
+                Load {{ displayingEveryone ? "Your Family" : "Everyone" }}'s
+                Lists
               </button>
             </div>
           </div>
 
           <!-- Secret Santa Section -->
-          <div class="row" v-if="secretSanta && !indexview">
+          <div class="row" v-if="secretSanta && !displayingEveryone">
             <div class="row">
               <div class="col-2 col-sm-3 col-md-4"></div>
               <div class="col-8 col-sm-6 col-md-4"><hr /></div>
@@ -261,10 +250,9 @@ export default {
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded", "onUserLoad"],
   data() {
     return {
-      family: [],
-      everyone: [],
+      users: [],
       secretSanta: null,
-      indexview: false,
+      displayingEveryone: false,
       lowPresentCount: false,
       deletingCustomGift: null,
       editingCustomGift: {},
@@ -341,13 +329,13 @@ export default {
     },
     getEveryone() {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      this.indexview = true;
+      this.displayingEveryone = true;
       this.contentLoaded = false;
       axios
         .get("/users")
         .then((response) => {
           this.contentLoaded = true;
-          this.everyone = response.data.filter((user) => {
+          this.users = response.data.filter((user) => {
             return user.id != this.currentUser.id;
           });
         })
@@ -360,14 +348,14 @@ export default {
     getFamily() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       this.contentLoaded = false;
-      this.indexview = false;
+      this.displayingEveryone = false;
       axios
         .get("/families")
         .then((response) => {
           this.$emit("onHomePageLoaded");
           this.pageLoaded = true;
           this.contentLoaded = true;
-          this.family = response.data.users.filter((user) => {
+          this.users = response.data.users.filter((user) => {
             return user.id != this.currentUser.id;
           });
         })
