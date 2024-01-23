@@ -21,7 +21,7 @@
 
     <transition name="content" mode="out-in">
       <div
-        v-if="currentUser && secretSanta && splashImgLoaded && contentLoaded"
+        v-if="currentUser && splashImgLoaded && contentLoaded"
         class="row ps-2 pe-2 text-break"
       >
         <div class="col">
@@ -448,7 +448,9 @@ export default {
       axios
         .get("/secret-santa")
         .then((response) => {
-          this.secretSanta = response.data;
+          if (response.data?.id) {
+            this.secretSanta = response.data;
+          }
         })
         .catch((error) => {
           error.critical = true;
