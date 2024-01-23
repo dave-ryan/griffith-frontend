@@ -30,61 +30,57 @@
               <h2>
                 {{ indexview ? "Everyone" : "Your Family" }}
               </h2>
-              <div class="row">
+              <div
+                class="row mt-3"
+                v-for="user in indexview ? everyone : family"
+                :key="user.id"
+              >
                 <div class="col">
-                  <div
-                    class="row mt-3"
-                    v-for="user in indexview ? everyone : family"
-                    :key="user.id"
+                  <button
+                    class="btn btn-outline-success mb-1"
+                    data-bs-toggle="collapse"
+                    :data-bs-target="`#christmas-list-${user.id}`"
                   >
-                    <div class="col">
-                      <button
-                        class="btn btn-outline-success mb-1"
-                        data-bs-toggle="collapse"
-                        :data-bs-target="`#christmas-list-${user.id}`"
-                      >
-                        {{ user.name }}
-                        <transition mode="out-in">
-                          <i
-                            class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
-                            v-if="
-                              user.gifts?.some(
-                                (gift) => gift.purchaser_id === currentUser.id
-                              ) || findCustomGift(user)
-                            "
-                          ></i>
-                        </transition>
-                      </button>
-                      <div
-                        class="collapse list-collapse"
-                        aria-expanded="false"
-                        :id="`christmas-list-${user.id}`"
-                      >
-                        <span v-if="user.gifts?.length < 1"
-                          >{{ user.name }} hasn't made a christmas list yet!
-                          Remind them! &#128578;</span
-                        >
+                    {{ user.name }}
+                    <transition mode="out-in">
+                      <i
+                        class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
+                        v-if="
+                          user.gifts?.some(
+                            (gift) => gift.purchaser_id === currentUser.id
+                          ) || findCustomGift(user)
+                        "
+                      ></i>
+                    </transition>
+                  </button>
+                  <div
+                    class="collapse list-collapse"
+                    aria-expanded="false"
+                    :id="`christmas-list-${user.id}`"
+                  >
+                    <span v-if="user.gifts?.length < 1"
+                      >{{ user.name }} hasn't made a christmas list yet! Remind
+                      them! &#128578;</span
+                    >
 
-                        <Gift
-                          v-for="gift in user.gifts"
-                          :key="gift.id"
-                          :gift="gift"
-                          :currentUser="currentUser"
-                          @toggleCheckBox="toggleCheckBox(gift)"
-                        />
-                        <div class="d-flex justify-content-center">
-                          <hr class="w-25 fw-light" />
-                        </div>
-
-                        <CustomGift
-                          :user="user"
-                          :deletingCustomGift="deletingCustomGift"
-                          :associatedCustomGift="findCustomGift(user)"
-                          @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                          @editCustomGift="editCustomGift"
-                        />
-                      </div>
+                    <Gift
+                      v-for="gift in user.gifts"
+                      :key="gift.id"
+                      :gift="gift"
+                      :currentUser="currentUser"
+                      @toggleCheckBox="toggleCheckBox(gift)"
+                    />
+                    <div class="d-flex justify-content-center">
+                      <hr class="w-25 fw-light" />
                     </div>
+
+                    <CustomGift
+                      :user="user"
+                      :deletingCustomGift="deletingCustomGift"
+                      :associatedCustomGift="findCustomGift(user)"
+                      @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                      @editCustomGift="editCustomGift"
+                    />
                   </div>
                 </div>
               </div>
