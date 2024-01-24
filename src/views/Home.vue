@@ -38,7 +38,12 @@
                   <div class="row mt-3" v-for="user in users" :key="user.id">
                     <div class="col">
                       <button
-                        class="btn btn-outline-success mb-1"
+                        class="btn mb-1"
+                        :class="
+                          user.id === secretSanta?.id
+                            ? 'btn-outline-failure'
+                            : 'btn-outline-success'
+                        "
                         data-bs-toggle="collapse"
                         :data-bs-target="`#christmas-list-${user.id}`"
                       >
@@ -94,7 +99,12 @@
                   >
                     <div class="col">
                       <button
-                        class="btn btn-outline-success mb-1"
+                        class="btn mb-1"
+                        :class="
+                          user.id === secretSanta?.id
+                            ? 'btn-outline-danger'
+                            : 'btn-outline-success'
+                        "
                         data-bs-toggle="collapse"
                         :data-bs-target="`#christmas-list-${user.id}`"
                       >
@@ -170,7 +180,7 @@
               <div class="col">
                 <h2 class="mb-3">Your Secret Santa</h2>
                 <button
-                  class="btn btn-outline-success mb-1"
+                  class="btn btn-outline-danger mb-1"
                   data-bs-toggle="collapse"
                   data-bs-target="#christmas-list-ss"
                 >
