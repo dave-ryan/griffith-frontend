@@ -7,15 +7,15 @@
         class="form-check-input"
         type="checkbox"
         @change="$emit('toggleCustomGiftCheckBox', $event, user)"
-        :checked="associatedCustomGift"
+        :checked="customGift"
         :disabled="deletingCustomGift?.user_id === user.id"
       />
       <span
         class="text-truncate truncated align-middle"
         :class="deletingCustomGift?.user_id === user.id ? 'fw-light' : ''"
-        v-if="associatedCustomGift?.note"
+        v-if="customGift?.note"
       >
-        {{ associatedCustomGift.note }}
+        {{ customGift.note }}
       </span>
       <span
         v-else
@@ -31,7 +31,7 @@
         data-bs-toggle="modal"
         data-bs-target="#customGiftModal"
         @click="$emit('editCustomGift', user)"
-        v-if="associatedCustomGift"
+        v-if="customGift"
         :disabled="deletingCustomGift?.user_id === user.id"
       >
         <i class="bi bi-tools"></i>
@@ -54,7 +54,7 @@
 import Spinner from "./Spinner.vue";
 export default {
   components: { Spinner },
-  props: ["user", "deletingCustomGift", "associatedCustomGift"],
+  props: ["user", "deletingCustomGift", "customGift"],
   emits: ["toggleCustomGiftCheckBox", "editCustomGift"],
 };
 </script>

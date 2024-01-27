@@ -35,122 +35,33 @@
 
               <div class="row">
                 <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
-                  <div class="row mt-3" v-for="user in users" :key="user.id">
-                    <div class="col">
-                      <button
-                        class="btn mb-1"
-                        :class="
-                          user.id === secretSanta?.id
-                            ? 'btn-outline-failure'
-                            : 'btn-outline-success'
-                        "
-                        data-bs-toggle="collapse"
-                        :data-bs-target="`#christmas-list-${user.id}`"
-                      >
-                        {{ user.name }}
-                        <transition mode="out-in">
-                          <i
-                            class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
-                            v-if="
-                              user.gifts?.some(
-                                (gift) => gift.purchaser_id === currentUser.id
-                              ) || findCustomGift(user)
-                            "
-                          ></i>
-                        </transition>
-                      </button>
-                      <div
-                        class="collapse list-collapse"
-                        aria-expanded="false"
-                        :id="`christmas-list-${user.id}`"
-                      >
-                        <span v-if="user.gifts?.length < 1"
-                          >{{ user.name }} hasn't made a christmas list yet!
-                          Remind them! &#128578;</span
-                        >
-
-                        <Gift
-                          v-for="gift in user.gifts"
-                          :key="gift.id"
-                          :gift="gift"
-                          :currentUser="currentUser"
-                          @toggleCheckBox="toggleCheckBox(gift)"
-                        />
-                        <div class="d-flex justify-content-center">
-                          <hr class="w-25 fw-light" />
-                        </div>
-
-                        <CustomGift
-                          :user="user"
-                          :deletingCustomGift="deletingCustomGift"
-                          :associatedCustomGift="findCustomGift(user)"
-                          @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                          @editCustomGift="editCustomGift"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <GiftList
+                    v-for="user in users"
+                    :key="user.id"
+                    :user="user"
+                    :secretSanta="secretSanta"
+                    :currentUser="currentUser"
+                    :deletingCustomGift="deletingCustomGift"
+                    :customGift="findCustomGift(user)"
+                    @toggleCheckBox="toggleCheckBox"
+                    @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                    @editCustomGift="editCustomGift"
+                  />
                 </div>
+
                 <div class="col-md-6" v-if="usersOverflow.length > 0">
-                  <div
-                    class="row mt-3"
+                  <GiftList
                     v-for="user in usersOverflow"
                     :key="user.id"
-                  >
-                    <div class="col">
-                      <button
-                        class="btn mb-1"
-                        :class="
-                          user.id === secretSanta?.id
-                            ? 'btn-outline-danger'
-                            : 'btn-outline-success'
-                        "
-                        data-bs-toggle="collapse"
-                        :data-bs-target="`#christmas-list-${user.id}`"
-                      >
-                        {{ user.name }}
-                        <transition mode="out-in">
-                          <i
-                            class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
-                            v-if="
-                              user.gifts?.some(
-                                (gift) => gift.purchaser_id === currentUser.id
-                              ) || findCustomGift(user)
-                            "
-                          ></i>
-                        </transition>
-                      </button>
-                      <div
-                        class="collapse list-collapse"
-                        aria-expanded="false"
-                        :id="`christmas-list-${user.id}`"
-                      >
-                        <span v-if="user.gifts?.length < 1"
-                          >{{ user.name }} hasn't made a christmas list yet!
-                          Remind them! &#128578;</span
-                        >
-
-                        <Gift
-                          v-for="gift in user.gifts"
-                          :key="gift.id"
-                          :gift="gift"
-                          :currentUser="currentUser"
-                          @toggleCheckBox="toggleCheckBox(gift)"
-                        />
-                        <div class="d-flex justify-content-center">
-                          <hr class="w-25 fw-light" />
-                        </div>
-
-                        <CustomGift
-                          :user="user"
-                          :deletingCustomGift="deletingCustomGift"
-                          :associatedCustomGift="findCustomGift(user)"
-                          @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                          @editCustomGift="editCustomGift"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                    :user="user"
+                    :secretSanta="secretSanta"
+                    :currentUser="currentUser"
+                    :deletingCustomGift="deletingCustomGift"
+                    :customGift="findCustomGift(user)"
+                    @toggleCheckBox="toggleCheckBox"
+                    @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                    @editCustomGift="editCustomGift"
+                  />
                 </div>
               </div>
             </div>
@@ -169,7 +80,6 @@
             </div>
           </div>
 
-          <!-- Secret Santa Section -->
           <div class="row" v-if="secretSanta && !displayingEveryone">
             <div class="row">
               <div class="col-2 col-sm-3 col-md-4"></div>
@@ -179,53 +89,16 @@
             <div class="row mt-2">
               <div class="col">
                 <h2 class="mb-3">Your Secret Santa</h2>
-                <button
-                  class="btn btn-outline-danger mb-1"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#christmas-list-ss"
-                >
-                  {{ secretSanta.name }}
-                  <transition mode="out-in">
-                    <i
-                      class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
-                      v-if="
-                        secretSanta.gifts &&
-                        secretSanta.gifts.some(
-                          (gift) => gift.purchaser_id === currentUser.id
-                        )
-                      "
-                    ></i>
-                  </transition>
-                </button>
-                <div
-                  class="collapse list-collapse"
-                  aria-expanded="false"
-                  id="christmas-list-ss"
-                >
-                  <span v-if="secretSanta?.gifts?.length === 0"
-                    >{{ secretSanta.name }} hasn't made their christmas list
-                    yet! Remind them! &#128578;</span
-                  >
-                  <Gift
-                    v-for="gift in secretSanta.gifts"
-                    :key="gift.id"
-                    :gift="gift"
-                    :currentUser="currentUser"
-                    @toggleCheckBox="toggleCheckBox(gift)"
-                  />
-
-                  <div class="d-flex justify-content-center">
-                    <hr class="w-25 fw-light" />
-                  </div>
-
-                  <CustomGift
-                    :user="secretSanta"
-                    :deletingCustomGift="deletingCustomGift"
-                    :associatedCustomGift="findCustomGift(secretSanta)"
-                    @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                    @editCustomGift="editCustomGift"
-                  />
-                </div>
+                <GiftList
+                  :user="secretSanta"
+                  :secretSanta="secretSanta"
+                  :currentUser="currentUser"
+                  :deletingCustomGift="deletingCustomGift"
+                  :customGift="findCustomGift(secretSanta)"
+                  @toggleCheckBox="toggleCheckBox"
+                  @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                  @editCustomGift="editCustomGift"
+                />
               </div>
             </div>
           </div>
@@ -311,14 +184,18 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 import { nextTick } from "vue";
 import splashImage from "../assets/images/tree-cropped-compressed.jpg";
-import Gift from "../components/Gift";
 import Splash from "../components/Splash";
 import LowPresentWarning from "../components/LowPresentWarning";
 import Spinner from "../components/Spinner";
-import CustomGift from "../components/CustomGift";
+import GiftList from "../components/GiftList";
 
 export default {
-  components: { Gift, Splash, LowPresentWarning, Spinner, CustomGift },
+  components: {
+    Splash,
+    LowPresentWarning,
+    Spinner,
+    GiftList,
+  },
   props: ["currentUser"],
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded", "onUserLoad"],
   data() {
