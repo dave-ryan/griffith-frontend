@@ -127,10 +127,8 @@
           </div>
           <div class="col"></div>
         </div>
-        <div class="row">
-          <div class="col"></div>
-          <div class="col-10 col-sm-8 col-md-6"><hr /></div>
-          <div class="col"></div>
+        <div class="d-flex justify-content-center">
+          <hr class="w-75 fw-light" />
         </div>
         <button
           type="button"

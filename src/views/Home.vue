@@ -80,13 +80,11 @@
             </div>
           </div>
 
-          <div class="row" v-if="secretSanta && !displayingEveryone">
-            <div class="row">
-              <div class="col-2 col-sm-3 col-md-4"></div>
-              <div class="col-8 col-sm-6 col-md-4"><hr /></div>
-              <div class="col-2 col-sm-3 col-md-4"></div>
+          <div class="row mt-2" v-if="secretSanta && !displayingEveryone">
+            <div class="d-flex justify-content-center">
+              <hr class="w-50 fw-light" />
             </div>
-            <div class="row mt-2">
+            <div class="row">
               <div class="col">
                 <h2 class="mb-3">Your Secret Santa</h2>
                 <GiftList
