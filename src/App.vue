@@ -220,7 +220,7 @@ export default {
       this.logError(error);
       this.error = error;
       this.error.report =
-        error.response?.data?.error ||
+        error.response?.data?.errors?.[0] ||
         error.message ||
         this.defaultErrorMessage;
       this.launchErrorToast(this.error.report);
