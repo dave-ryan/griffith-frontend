@@ -29,6 +29,7 @@
           <li v-if="currentUser?.is_admin">
             <router-link class="nav-link" to="/admin">Admin</router-link>
           </li>
+
           <transition mode="out-in">
             <li v-if="$route.name === 'Home' && !error && homePageLoaded">
               <button

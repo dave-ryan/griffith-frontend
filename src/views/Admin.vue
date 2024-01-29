@@ -56,7 +56,7 @@
               GET /users
             </button>
             <button class="btn btn-warning m-2" @click="testGetMe()">
-              GET /me</button
+              GET /current-user</button
             ><button class="btn btn-warning m-2" @click="testGetSecretSanta()">
               GET /secret-santa
             </button>
@@ -861,7 +861,7 @@ export default {
     testGetMe() {
       this.$emit("clearError");
       axios
-        .get("/users/me")
+        .get("/users/current-user")
         .then((response) => {
           console.log(response.data);
         })
