@@ -714,7 +714,7 @@ export default {
         .post("/families", familyParams)
         .then((response) => {
           console.log(response.data);
-          this.families.push(familyParams);
+          this.families.push(response.data);
         })
         .catch((error) => {
           error.function = "createFamily";
