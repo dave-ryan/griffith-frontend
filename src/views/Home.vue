@@ -232,7 +232,6 @@ export default {
       this.loadingCustomGiftModal = true;
       let params = {
         user_id: this.editingCustomGiftUser.id,
-        customgift_purchaser_id: this.currentUser.id,
         note: this.editingCustomGift.note || "",
       };
       axios
