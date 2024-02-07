@@ -70,8 +70,9 @@
         <div class="col-1"></div>
 
         <div class="col-10">
-          {{ error?.report }}!
-          <br />
+          <div v-for="message in error?.toastMessages" :key="message">
+            {{ message }}
+          </div>
           Try Refreshing The Page
         </div>
         <div class="col-1">
@@ -220,11 +221,11 @@ export default {
     onError(error) {
       this.logError(error);
       this.error = error;
-      this.error.report =
-        error.response?.data?.errors?.[0] ||
+      this.error.toastMessages =
+        error.response?.data?.errors ||
         error.message ||
         this.defaultErrorMessage;
-      this.launchErrorToast(this.error.report);
+      this.launchErrorToast();
     },
     onHomePageLoaded() {
       this.homePageLoaded = true;
