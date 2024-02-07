@@ -723,19 +723,14 @@ export default {
     },
     createUser(userParams) {
       userParams.santa_group = parseInt(userParams.santa_group.charAt());
-      this.families.forEach((family) => {
-        if (family.name === userParams.familyName) {
-          userParams.family_id = family.id;
-        }
-      });
-      if (userParams.is_admin === "true") {
-        userParams.is_admin = true;
-      }
-      this.users.forEach((user) => {
-        if (user.name === userParams.secretSantaName) {
-          userParams.secret_santa_id = user.id;
-        }
-      });
+      userParams.is_admin = userParams.is_admin === "true";
+      userParams.family_id = this.families.find((family) => {
+        return family.name === userParams.familyName;
+      }).id;
+      userParams.secret_santa_id = this.users.find((user) => {
+        return user.name === userParams.secretSantaName;
+      }).id;
+
       console.log("user params: ", userParams);
       axios
         .post("/users", userParams)
