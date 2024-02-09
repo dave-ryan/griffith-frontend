@@ -45,7 +45,7 @@
           </div>
           <div class="col-2"></div>
         </div>
-        <div class="row" v-if="visible">
+        <div class="row m-3" v-if="visible">
           <div class="alert alert-success" role="alert">
             Secret Santas have been shuffled!
           </div>
