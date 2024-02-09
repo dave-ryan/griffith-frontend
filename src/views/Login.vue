@@ -55,9 +55,6 @@
                   {{ buttonName }}
                 </button>
               </div>
-              <div class="text-danger mt-3">
-                {{ error }}
-              </div>
             </fieldset>
           </form>
         </div>
@@ -87,10 +84,10 @@ import axios from "axios";
 import VueCookies from "vue-cookies";
 
 export default {
+  emits: ["onError", "clearError", "onLogin"],
   data() {
     return {
       inputParams: {},
-      error: null,
       imgLoaded: false,
       loading: false,
     };
@@ -125,7 +122,7 @@ export default {
     logIn() {
       document.getElementById("loginForm")?.classList?.add("was-validated");
       if (this.checkForms()) {
-        this.error = null;
+        this.$emit("clearError");
         this.toggleLoading();
         axios
           .post("/sessions", this.inputParams)
@@ -135,17 +132,14 @@ export default {
               window.removeEventListener("keypress", this.enterPress);
             } else {
               console.log(response);
-              this.error = "Unknown Error, please tell David!";
               this.toggleLoading();
+              throw new Error("Error");
             }
           })
           .catch((error) => {
             this.toggleLoading();
-            error.toString() === "Error: Network Error"
-              ? (this.error = "Server Error!! :( Please tell David!")
-              : (this.error = error.response?.data?.errors);
-            console.log(error);
-            console.log("response: ", error.response);
+            error.function = "logIn";
+            this.$emit("onError", error);
           });
       }
     },
