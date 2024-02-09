@@ -319,7 +319,7 @@ export default {
           this.getSecretSanta();
         })
         .catch((error) => {
-          if (error.response.status === 401) {
+          if (error.response?.status === 401) {
             this.$emit("logOut");
           } else {
             error.critical = true;

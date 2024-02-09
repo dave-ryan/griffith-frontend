@@ -221,10 +221,9 @@ export default {
     onError(error) {
       this.logError(error);
       this.error = error;
-      this.error.toastMessages =
-        error.response?.data?.errors ||
-        error.message ||
-        this.defaultErrorMessage;
+      this.error.toastMessages = error.response?.data?.errors || [
+          error.message,
+        ] || [this.defaultErrorMessage];
       this.launchErrorToast();
     },
     onHomePageLoaded() {
