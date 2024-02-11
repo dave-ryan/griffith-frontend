@@ -542,6 +542,17 @@
                       class="form-control"
                     />
                   </div>
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" for="birthday"
+                      >Birthday: {{ computedBirthday }}</label
+                    >
+                    <input
+                      id="birthday"
+                      v-model="editingUser.birthday"
+                      class="form-control"
+                      type="date"
+                    />
+                  </div>
                   <div class="input-group mb-3" v-if="editingUser.santa_group">
                     <div class="input-group-prepend">
                       <label class="input-group-text" for="secretSantaSelector"
@@ -661,7 +672,7 @@ import splashImage from "../assets/images/snowman.jpg";
 
 export default {
   components: { Splash },
-  emits: ["logOut", "onError", "clearError"],
+  emits: ["logOut", "onError", "clearError", "onUserLoad"],
   props: ["currentUser"],
   data() {
     return {
@@ -682,7 +693,7 @@ export default {
     if (this.currentUser?.is_admin) {
       this.getUsers();
     } else {
-      this.$router.push("/home");
+      this.getMe();
     }
   },
   computed: {
@@ -695,6 +706,17 @@ export default {
       return this.users.filter((user) => {
         return user.santa_group === 2;
       });
+    },
+    computedBirthday() {
+      if (this.editingUser.birthday) {
+        return new Date(this.editingUser.birthday).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          timeZone: "UTC",
+        });
+      } else {
+        return null;
+      }
     },
   },
   methods: {
@@ -793,21 +815,53 @@ export default {
     flipAdmin(user) {
       user.is_admin = !user.is_admin;
     },
+    getMe() {
+      axios
+        .get("/current-user")
+        .then((response) => {
+          this.$emit("onUserLoad", response.data);
+          this.currentUserId = response.data.id;
+          if (response.data.is_admin) {
+            this.getUsers();
+            this.getFamilies();
+          } else {
+            this.$router.push("/home");
+          }
+        })
+        .catch((error) => {
+          if (error.response?.status === 401) {
+            this.$emit("logOut");
+          } else {
+            error.critical = true;
+            error.function = "getMe";
+            this.$emit("onError", error);
+          }
+        });
+    },
     getUsers() {
       axios
-        .get("/admin/families")
+        .get("/users")
         .then((response) => {
           console.log(response.data);
-          this.families = response.data;
-          this.users = response.data
-            .map((family) => family.users)
-            .flat()
-            .sort((a, b) => a.name.localeCompare(b.name));
+          this.users = response.data;
           this.pageLoaded = true;
         })
         .catch((error) => {
           error.critical = true;
           error.function = "getUsers";
+          this.$emit("onError", error);
+        });
+    },
+    getFamilies() {
+      axios
+        .get("/admin/families")
+        .then((response) => {
+          console.log(response.data);
+          this.families = response.data;
+        })
+        .catch((error) => {
+          error.critical = true;
+          error.function = "getFamilies";
           this.$emit("onError", error);
         });
     },
@@ -904,6 +958,7 @@ export default {
       var userParams = {
         id: user.id,
         name: user.name,
+        birthday: user.birthday,
         is_admin: user.is_admin ? true : false,
         santa_group: user.santa_group,
       };
