@@ -692,6 +692,7 @@ export default {
   created() {
     if (this.currentUser?.is_admin) {
       this.getUsers();
+      this.getFamilies();
     } else {
       this.getMe();
     }
