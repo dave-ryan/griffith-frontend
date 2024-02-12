@@ -323,14 +323,30 @@
                     See the example below..
                   </div>
                 </div>
+                <Spinner
+                  :visible="batchGiftsLoading"
+                  position="absolute"
+                  top="50%"
+                />
+                <div class="row">
+                  <div class="col-6">
+                    <h4>
+                      <label for="floatingTextarea-Gift" class="fw-bold"
+                        >What You Wish For</label
+                      >
+                    </h4>
+                  </div>
+                  <div class="col-6">
+                    <h4>
+                      <label for="floatingTextarea-Link" class="fw-bold"
+                        >Online Shopping Links</label
+                      >
+                    </h4>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-6 pe-1">
                     <div class="input">
-                      <h4>
-                        <label for="floatingTextarea-Gift" class="fw-bold"
-                          >What You Wish For</label
-                        >
-                      </h4>
                       <textarea
                         class="form-control batch"
                         :class="isWrappingTextGifts"
@@ -342,18 +358,8 @@
                       </textarea>
                     </div>
                   </div>
-                  <Spinner
-                    :visible="batchGiftsLoading"
-                    position="absolute"
-                    top="50%"
-                  />
                   <div class="col-6">
                     <div class="input">
-                      <h4>
-                        <label for="floatingTextarea-Link" class="fw-bold"
-                          >Online Shopping Links</label
-                        >
-                      </h4>
                       <textarea
                         class="form-control batch"
                         :class="isWrappingTextLinks"
