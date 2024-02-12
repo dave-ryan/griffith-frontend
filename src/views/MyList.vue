@@ -11,7 +11,9 @@
           <div class="col"></div>
           <div class="col-lg-10">
             <div class="table-responsive">
-              <h2 class="mt-2 mb-5">Your Christmas List</h2>
+              <h2 class="mt-2 mb-5">
+                Your {{ christmasTime ? "Christmas" : "Birthday" }} List
+              </h2>
               <table class="table table-striped">
                 <thead class="table-light">
                   <tr>
@@ -86,7 +88,9 @@
               class="mt-4 mb-4"
               novalidate
             >
-              <h5 class="mb-2">Add To Your Christmas List</h5>
+              <h5 class="mb-2">
+                Add To Your {{ christmasTime ? "Christmas" : "Birthday" }} List
+              </h5>
               <div class="form-floating mb-2">
                 <input
                   v-model="newGift.name"
@@ -99,7 +103,8 @@
                 />
                 <label class="pt-1" for="newGiftName">Name/Description</label>
                 <div class="invalid-feedback">
-                  What Do You Want For Christmas?
+                  What Do You Want For
+                  {{ christmasTime ? "Christmas" : "Your Birthday" }}?
                 </div>
               </div>
               <Spinner :visible="newGiftLoading" position="absolute" />
@@ -186,7 +191,8 @@
                     >
 
                     <div class="invalid-feedback">
-                      What Do You Want For Christmas?
+                      What Do You Want For
+                      {{ christmasTime ? "Christmas" : "Your Birthday" }}?
                     </div>
                   </div>
 
@@ -400,11 +406,13 @@ textarea {
 import axios from "axios";
 import Splash from "../components/Splash";
 import Spinner from "../components/Spinner";
-import splashImage from "../assets/images/presents-cropped-compressed.jpg";
+import christmasPresents from "../assets/images/presents-cropped-compressed.jpg";
+import birthdayPresents from "../assets/images/birthday-presents.jpg";
 import { nextTick } from "vue";
 
 export default {
   components: { Splash, Spinner },
+  props: ["christmasTime"],
   emits: ["onError", "clearError", "logOut"],
   data() {
     return {
@@ -418,7 +426,7 @@ export default {
       batchGiftsLoading: false,
       maxBatch: 25,
       splashImgLoaded: false,
-      splashSrc: splashImage,
+      splashSrc: this.christmasTime ? christmasPresents : birthdayPresents,
       pageLoaded: false,
     };
   },
