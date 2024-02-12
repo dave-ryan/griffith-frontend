@@ -327,6 +327,14 @@ export default {
           var userBirthday = new Date(user.birthday).setFullYear(
             new Date(future).getUTCFullYear()
           );
+          user.birthdayString = new Date(userBirthday).toLocaleDateString(
+            "en-US",
+            {
+              month: "long",
+              day: "numeric",
+              timeZone: "UTC",
+            }
+          );
           return userBirthday >= today && userBirthday <= future;
         }
       });

@@ -23,6 +23,7 @@
           ></i>
         </transition>
       </button>
+      <span v-if="user.birthdayString"> - {{ user.birthdayString }}</span>
       <div
         class="collapse list-collapse"
         aria-expanded="false"
