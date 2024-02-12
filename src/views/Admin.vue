@@ -74,6 +74,16 @@
             <div v-for="user in users" :key="user.id" class="row mb-3">
               <div class="col-6">
                 {{ user.name }} - id:<strong>{{ user.id }}</strong>
+                <span v-if="user.birthday">
+                  - Birthday:
+                  {{
+                    new Date(user.birthday).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      timeZone: "UTC",
+                    })
+                  }}
+                </span>
                 <i class="font-monospace">{{
                   user.is_admin ? " Admin" : ""
                 }}</i>
