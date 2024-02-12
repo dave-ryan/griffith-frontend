@@ -29,7 +29,7 @@
             <div class="col">
               <div class="row">
                 <h2>
-                  {{ displayingEveryone ? "Everyone" : "Your Family" }}
+                  {{ displayingHeader }}
                 </h2>
               </div>
 
@@ -71,16 +71,49 @@
           <div class="row mb-3">
             <div class="col">
               <button
-                @click="displayingEveryone ? getFamily() : getEveryone()"
-                class="btn btn-outline-primary"
+                @click="getBirthdays()"
+                class="btn"
+                :class="
+                  currentDisplayMode === displayMode.Birthdays
+                    ? 'btn-primary disabled'
+                    : 'btn-outline-primary'
+                "
               >
-                Load {{ displayingEveryone ? "Your Family" : "Everyone" }}'s
-                Lists
+                Upcoming Birthday Lists
+              </button>
+            </div>
+            <div class="col">
+              <button
+                @click="getFamily()"
+                class="btn"
+                :class="
+                  currentDisplayMode === displayMode.Family
+                    ? 'btn-primary disabled'
+                    : 'btn-outline-primary'
+                "
+              >
+                Your Family's Lists
+              </button>
+            </div>
+            <div class="col">
+              <button
+                @click="getEveryone()"
+                class="btn"
+                :class="
+                  currentDisplayMode === displayMode.Everyone
+                    ? 'btn-primary disabled'
+                    : 'btn-outline-primary'
+                "
+              >
+                Everyone's Lists
               </button>
             </div>
           </div>
 
-          <div class="row mt-2" v-if="secretSanta && !displayingEveryone">
+          <div
+            class="row mt-2"
+            v-if="secretSanta && this.currentDisplayMode === displayMode.Family"
+          >
             <div class="d-flex justify-content-center">
               <hr class="w-50 fw-light" />
             </div>
@@ -181,7 +214,8 @@
 import axios from "axios";
 import { Modal } from "bootstrap";
 import { nextTick } from "vue";
-import splashImage from "../assets/images/tree-cropped-compressed.jpg";
+import christmasTree from "../assets/images/tree-cropped-compressed.jpg";
+import birthdayBaloons from "../assets/images/birthday-baloons.jpg";
 import Splash from "../components/Splash";
 import LowPresentWarning from "../components/LowPresentWarning";
 import Spinner from "../components/Spinner";
@@ -194,21 +228,26 @@ export default {
     Spinner,
     GiftList,
   },
-  props: ["currentUser"],
+  props: ["currentUser", "christmasTime"],
   emits: ["logOut", "onError", "clearError", "onHomePageLoaded", "onUserLoad"],
   data() {
     return {
       users: [],
       usersOverflow: [],
       secretSanta: null,
-      displayingEveryone: false,
+      currentDisplayMode: this.displayMode?.Birthdays,
+      displayMode: {
+        Birthdays: 0,
+        Family: 1,
+        Everyone: 2,
+      },
       lowPresentCount: false,
       deletingCustomGift: null,
       editingCustomGift: {},
       editingCustomGiftUser: {},
       loadingCustomGiftModal: false,
       splashImgLoaded: false,
-      splashSrc: splashImage,
+      splashSrc: this.christmasTime ? christmasTree : birthdayBaloons,
       contentLoaded: false,
       pageLoaded: false,
     };
@@ -275,9 +314,40 @@ export default {
         (gift) => gift.customgift_purchaser_id === this.currentUser.id
       );
     },
+    filterUpcomingBirthdays(users) {
+      var today = new Date();
+      var future = new Date().setMonth(today.getMonth() + 2);
+
+      return users?.filter((user) => {
+        if (user.birthday) {
+          var userBirthday = new Date(user.birthday).setFullYear(
+            new Date(future).getUTCFullYear()
+          );
+          return userBirthday >= today && userBirthday <= future;
+        }
+      });
+    },
+    getBirthdays() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      this.displayingHeader = "Upcoming Birthdays";
+      this.currentDisplayMode = this.displayMode.Birthdays;
+      this.contentLoaded = false;
+      axios
+        .get("/users")
+        .then((response) => {
+          this.contentLoaded = true;
+          this.processUserData(this.filterUpcomingBirthdays(response.data));
+        })
+        .catch((error) => {
+          error.critical = true;
+          error.function = "getEveryone";
+          this.$emit("onError", error);
+        });
+    },
     getEveryone() {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      this.displayingEveryone = true;
+      this.displayingHeader = "Everyone";
+      this.currentDisplayMode = this.displayMode.Everyone;
       this.contentLoaded = false;
       axios
         .get("/users")
@@ -293,8 +363,9 @@ export default {
     },
     getFamily() {
       window.scrollTo({ top: 0, behavior: "smooth" });
+      this.displayingHeader = "Your Family";
       this.contentLoaded = false;
-      this.displayingEveryone = false;
+      this.currentDisplayMode = this.displayMode.Family;
       axios
         .get("/families")
         .then((response) => {
