@@ -255,8 +255,12 @@ export default {
   created() {
     this.$emit("clearError");
     if (this.currentUser) {
-      this.getFamily();
-      this.getSecretSanta();
+      if (this.christmasTime) {
+        this.getFamily();
+        this.getSecretSanta();
+      } else {
+        this.getBirthdays();
+      }
     } else {
       this.getMe();
     }
@@ -336,6 +340,7 @@ export default {
         .get("/users")
         .then((response) => {
           this.contentLoaded = true;
+          this.pageLoaded = true;
           this.processUserData(this.filterUpcomingBirthdays(response.data));
         })
         .catch((error) => {
@@ -386,8 +391,12 @@ export default {
         .then((response) => {
           this.$emit("onUserLoad", response.data);
           this.currentUserId = response.data.id;
-          this.getFamily();
-          this.getSecretSanta();
+          if (this.christmasTime) {
+            this.getFamily();
+            this.getSecretSanta();
+          } else {
+            this.getBirthdays();
+          }
         })
         .catch((error) => {
           if (error.response?.status === 401) {
