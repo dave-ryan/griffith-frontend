@@ -97,6 +97,7 @@
     @clearError="clearError"
     @onError="onError"
     :currentUser="currentUser"
+    :christmasTime="christmasTime"
   >
   </router-view>
 
@@ -187,6 +188,7 @@ export default {
   components: { ErrorSplash },
   data() {
     return {
+      christmasTime: false,
       currentUser: null,
       currentUserName: VueCookies.get("userName"),
       homePageLoaded: false,
@@ -197,7 +199,11 @@ export default {
         "Oops! Something went wrong. Try refreshing the page",
     };
   },
-  created() {},
+  created() {
+    if (new Date().getMonth() >= 10) {
+      this.christmasTime = false;
+    }
+  },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
   },
