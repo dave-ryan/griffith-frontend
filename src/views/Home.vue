@@ -349,6 +349,7 @@ export default {
         .then((response) => {
           this.contentLoaded = true;
           this.pageLoaded = true;
+          this.$emit("onHomePageLoaded");
           this.processUserData(this.filterUpcomingBirthdays(response.data));
         })
         .catch((error) => {
