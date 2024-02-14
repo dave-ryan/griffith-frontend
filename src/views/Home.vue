@@ -148,7 +148,7 @@
         <div class="modal-content">
           <form
             @submit.prevent="createOrUpdateCustomGift()"
-            id="editinggiftForm"
+            id="customGiftForm"
             novalidate
           >
             <div class="modal-header">
@@ -186,9 +186,7 @@
                 <label class="pt-2" for="customGiftInput"
                   >What are you geting {{ editingCustomGiftUser?.name }}?</label
                 >
-                <div class="invalid-feedback">
-                  A note of what you are getting them might be helpful!
-                </div>
+                <div class="invalid-feedback">What are you getting them?</div>
               </div>
             </div>
 
@@ -266,16 +264,27 @@ export default {
     }
   },
   methods: {
+    checkCustomGiftForm() {
+      return this.editingCustomGift?.note?.length > 0;
+    },
     createOrUpdateCustomGift() {
-      this.editingCustomGift.id
-        ? this.updateCustomGift()
-        : this.createCustomGift();
+      document
+        .getElementById("customGiftForm")
+        ?.classList?.add("was-validated");
+      if (this.checkCustomGiftForm()) {
+        document
+          .getElementById("customGiftForm")
+          .classList.remove("was-validated");
+        this.editingCustomGift.id
+          ? this.updateCustomGift()
+          : this.createCustomGift();
+      }
     },
     createCustomGift() {
       this.loadingCustomGiftModal = true;
       let params = {
         user_id: this.editingCustomGiftUser.id,
-        note: this.editingCustomGift.note || "",
+        note: this.editingCustomGift.note,
       };
       axios
         .post("/customgifts", params)
