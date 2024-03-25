@@ -1,28 +1,26 @@
 <template>
-  <span>
-    <transition mode="out-in" name="spinner">
-      <span class="spinner-container align-middle" v-if="visible">
-        <span
-          class="spinner-border text-secondary"
-          :class="{
-            large: size === 'large',
-            'spinner-border-sm': size === 'small',
-            'me-2': size === 'small',
-          }"
-          role="status"
-        >
-          <span class="visually-hidden">Loading...</span>
-        </span>
+  <transition mode="out-in" name="spinner">
+    <span class="spinner-container align-middle" v-if="visible">
+      <span
+        class="spinner-border text-secondary"
+        :class="{
+          large: size === 'large',
+          'spinner-border-sm': size === 'small',
+          'me-2': size === 'small',
+        }"
+        role="status"
+      >
+        <span class="visually-hidden">Loading...</span>
       </span>
-    </transition>
-  </span>
+    </span>
+  </transition>
 </template>
 
 <style scoped>
 .spinner-container {
-  position: v-bind("position");
-  top: v-bind("top");
-  left: 50%;
+  position: v-bind("position ? position : ''");
+  top: v-bind("top ? top : ''");
+  left: v-bind("left ? left : '50%'");
   transform: translate(-50%, -50%);
   z-index: 1100;
 }
@@ -44,6 +42,6 @@
 
 <script>
 export default {
-  props: ["top", "position", "size", "visible"],
+  props: ["top", "position", "size", "visible", "left"],
 };
 </script>

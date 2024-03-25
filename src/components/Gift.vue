@@ -1,7 +1,13 @@
 <template>
   <div>
-    <Spinner size="small" :visible="gift.loading" />
     <div class="form-check form-check-inline me-0">
+      <Spinner
+        size="small"
+        position="absolute"
+        top="50%"
+        left="-10px"
+        :visible="gift.loading"
+      />
       <input
         class="form-check-input"
         type="checkbox"
@@ -47,6 +53,9 @@
 </template>
 
 <style scoped>
+.form-check {
+  position: relative;
+}
 .form-check .form-check-input {
   margin-top: 5px;
 }
