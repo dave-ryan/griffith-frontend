@@ -22,115 +22,115 @@
     <transition name="content" mode="out-in">
       <div
         v-if="currentUser && splashImgLoaded && contentLoaded"
-        class="row ps-2 pe-2 text-break"
+        class="ps-2 pe-2 text-break"
       >
-        <div class="col">
-          <div class="row mb-5 mt-5">
-            <div class="col">
-              <div class="row">
-                <h2>
-                  {{ displayingHeader }}
-                </h2>
-              </div>
-
-              <div class="row">
-                <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
-                  <GiftList
-                    v-for="user in users"
-                    :key="user.id"
-                    :user="user"
-                    :secretSanta="secretSanta"
-                    :currentUser="currentUser"
-                    :deletingCustomGift="deletingCustomGift"
-                    :customGift="findCustomGift(user)"
-                    @toggleCheckBox="toggleCheckBox"
-                    @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                    @editCustomGift="editCustomGift"
-                  />
-                </div>
-
-                <div class="col-md-6" v-if="usersOverflow.length > 0">
-                  <GiftList
-                    v-for="user in usersOverflow"
-                    :key="user.id"
-                    :user="user"
-                    :secretSanta="secretSanta"
-                    :currentUser="currentUser"
-                    :deletingCustomGift="deletingCustomGift"
-                    :customGift="findCustomGift(user)"
-                    @toggleCheckBox="toggleCheckBox"
-                    @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                    @editCustomGift="editCustomGift"
-                  />
-                </div>
-              </div>
-            </div>
+        <!-- View Change Buttons -->
+        <div class="row mt-5 mb-5">
+          <div class="col">
+            <button
+              @click="getBirthdays()"
+              class="btn"
+              :class="
+                currentDisplayMode === displayMode.Birthdays
+                  ? 'btn-primary disabled'
+                  : 'btn-outline-primary'
+              "
+            >
+              Upcoming Birthday Lists
+            </button>
           </div>
-
-          <!-- View Change Buttons -->
-          <div class="row mb-3">
-            <div class="col">
-              <button
-                @click="getBirthdays()"
-                class="btn"
-                :class="
-                  currentDisplayMode === displayMode.Birthdays
-                    ? 'btn-primary disabled'
-                    : 'btn-outline-primary'
-                "
-              >
-                Upcoming Birthday Lists
-              </button>
-            </div>
-            <div class="col">
-              <button
-                @click="getFamily()"
-                class="btn"
-                :class="
-                  currentDisplayMode === displayMode.Family
-                    ? 'btn-primary disabled'
-                    : 'btn-outline-primary'
-                "
-              >
-                Your Family's Lists
-              </button>
-            </div>
-            <div class="col">
-              <button
-                @click="getEveryone()"
-                class="btn"
-                :class="
-                  currentDisplayMode === displayMode.Everyone
-                    ? 'btn-primary disabled'
-                    : 'btn-outline-primary'
-                "
-              >
-                Everyone's Lists
-              </button>
-            </div>
+          <div class="col">
+            <button
+              @click="getFamily()"
+              class="btn"
+              :class="
+                currentDisplayMode === displayMode.Family
+                  ? 'btn-primary disabled'
+                  : 'btn-outline-primary'
+              "
+            >
+              Your Family's Lists
+            </button>
           </div>
+          <div class="col">
+            <button
+              @click="getEveryone()"
+              class="btn"
+              :class="
+                currentDisplayMode === displayMode.Everyone
+                  ? 'btn-primary disabled'
+                  : 'btn-outline-primary'
+              "
+            >
+              Everyone's Lists
+            </button>
+          </div>
+        </div>
 
-          <div
-            class="row mt-2"
-            v-if="secretSanta && this.currentDisplayMode === displayMode.Family"
-          >
-            <div class="d-flex justify-content-center">
-              <hr class="w-50 fw-light" />
-            </div>
+        <!-- Lists -->
+        <div class="row mb-5 mt-5">
+          <div class="col">
             <div class="row">
-              <div class="col">
-                <h2 class="mb-3">Your Secret Santa</h2>
+              <h2>
+                {{ displayingHeader }}
+              </h2>
+            </div>
+
+            <div class="row">
+              <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
                 <GiftList
-                  :user="secretSanta"
+                  v-for="user in users"
+                  :key="user.id"
+                  :user="user"
                   :secretSanta="secretSanta"
                   :currentUser="currentUser"
                   :deletingCustomGift="deletingCustomGift"
-                  :customGift="findCustomGift(secretSanta)"
+                  :customGift="findCustomGift(user)"
                   @toggleCheckBox="toggleCheckBox"
                   @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
                   @editCustomGift="editCustomGift"
                 />
               </div>
+
+              <div class="col-md-6" v-if="usersOverflow.length > 0">
+                <GiftList
+                  v-for="user in usersOverflow"
+                  :key="user.id"
+                  :user="user"
+                  :secretSanta="secretSanta"
+                  :currentUser="currentUser"
+                  :deletingCustomGift="deletingCustomGift"
+                  :customGift="findCustomGift(user)"
+                  @toggleCheckBox="toggleCheckBox"
+                  @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                  @editCustomGift="editCustomGift"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secret Santa List -->
+        <div
+          class="row mt-2"
+          v-if="secretSanta && this.currentDisplayMode === displayMode.Family"
+        >
+          <div class="d-flex justify-content-center">
+            <hr class="w-50 fw-light" />
+          </div>
+          <div class="row">
+            <div class="col">
+              <h2 class="mb-3">Your Secret Santa</h2>
+              <GiftList
+                :user="secretSanta"
+                :secretSanta="secretSanta"
+                :currentUser="currentUser"
+                :deletingCustomGift="deletingCustomGift"
+                :customGift="findCustomGift(secretSanta)"
+                @toggleCheckBox="toggleCheckBox"
+                @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+                @editCustomGift="editCustomGift"
+              />
             </div>
           </div>
         </div>
