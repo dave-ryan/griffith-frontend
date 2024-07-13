@@ -71,7 +71,15 @@
         <div class="row mb-5 mt-5">
           <div class="col">
             <div class="row">
-              <h2>
+              <h2
+                v-if="
+                  users.length === 0 &&
+                  currentDisplayMode === this.displayMode?.Birthdays
+                "
+              >
+                No Upcoming Birthdays :(
+              </h2>
+              <h2 v-if="users.length > 0">
                 {{ displayingHeader }}
               </h2>
             </div>
@@ -213,7 +221,7 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 import { nextTick } from "vue";
 import christmasTree from "../assets/images/tree-cropped-compressed.jpg";
-import birthdayBaloons from "../assets/images/birthday-baloons.jpg";
+import birthdayBaloons from "../assets/images/singlebaloon.jpg";
 import Splash from "../components/Splash";
 import LowPresentWarning from "../components/LowPresentWarning";
 import Spinner from "../components/Spinner";
