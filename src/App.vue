@@ -151,11 +151,11 @@ body {
     transform: scale(1.275);
   }
 }
-button,
+button:not(.nopulse),
 .nav-link {
   transform: perspective(1px) translateZ(0);
 }
-button:active,
+button:active:not(.nopulse),
 .nav-link:active {
   animation-name: pulse;
   animation-duration: 0.15s;

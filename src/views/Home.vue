@@ -19,109 +19,96 @@
       size="large"
     />
 
+    <!-- View Change Buttons -->
+    <transition name="content" mode="out-in">
+      <div v-if="currentUser && splashImgLoaded" class="row mt-5 mb-5">
+        <div class="d-grid gap-2 d-md-block">
+          <button
+            @click="getBirthdays()"
+            class="btn nopulse col-md-2 ms-4 me-4"
+            :class="
+              currentDisplayMode === displayMode.Birthdays
+                ? 'btn-primary disabled btn-lg'
+                : 'btn-outline-primary'
+            "
+          >
+            Upcoming Birthdays
+          </button>
+          <button
+            @click="getFamily()"
+            class="btn nopulse col-md-2 ms-4 me-4 ms-md-4 me-md-4"
+            :class="
+              currentDisplayMode === displayMode.Family
+                ? 'btn-primary disabled btn-lg'
+                : 'btn-outline-primary'
+            "
+          >
+            Your Family
+          </button>
+          <button
+            @click="getEveryone()"
+            class="btn nopulse col-md-2 ms-4 me-4"
+            :class="
+              currentDisplayMode === displayMode.Everyone
+                ? 'btn-primary disabled btn-lg'
+                : 'btn-outline-primary'
+            "
+          >
+            Everyone
+          </button>
+        </div>
+      </div>
+    </transition>
+
     <transition name="content" mode="out-in">
       <div
         v-if="currentUser && splashImgLoaded && contentLoaded"
         class="ps-2 pe-2 text-break"
       >
-        <!-- View Change Buttons -->
-        <div class="row mt-5 mb-5">
-          <div class="col">
-            <button
-              @click="getBirthdays()"
-              class="btn"
-              :class="
-                currentDisplayMode === displayMode.Birthdays
-                  ? 'btn-primary disabled'
-                  : 'btn-outline-primary'
-              "
-            >
-              Upcoming Birthday Lists
-            </button>
-          </div>
-          <div class="col">
-            <button
-              @click="getFamily()"
-              class="btn"
-              :class="
-                currentDisplayMode === displayMode.Family
-                  ? 'btn-primary disabled'
-                  : 'btn-outline-primary'
-              "
-            >
-              Your Family's Lists
-            </button>
-          </div>
-          <div class="col">
-            <button
-              @click="getEveryone()"
-              class="btn"
-              :class="
-                currentDisplayMode === displayMode.Everyone
-                  ? 'btn-primary disabled'
-                  : 'btn-outline-primary'
-              "
-            >
-              Everyone's Lists
-            </button>
-          </div>
-        </div>
-
+        <h2
+          v-if="
+            users.length === 0 && currentDisplayMode === displayMode.Birthdays
+          "
+        >
+          No Upcoming Birthdays :(
+        </h2>
         <!-- Lists -->
         <div class="row mb-5 mt-5">
-          <div class="col">
-            <div class="row">
-              <h2
-                v-if="
-                  users.length === 0 &&
-                  currentDisplayMode === this.displayMode?.Birthdays
-                "
-              >
-                No Upcoming Birthdays :(
-              </h2>
-              <h2 v-if="users.length > 0">
-                {{ displayingHeader }}
-              </h2>
-            </div>
+          <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
+            <GiftList
+              v-for="user in users"
+              :key="user.id"
+              :user="user"
+              :secretSanta="secretSanta"
+              :currentUser="currentUser"
+              :deletingCustomGift="deletingCustomGift"
+              :customGift="findCustomGift(user)"
+              @toggleCheckBox="toggleCheckBox"
+              @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+              @editCustomGift="editCustomGift"
+            />
+          </div>
 
-            <div class="row">
-              <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
-                <GiftList
-                  v-for="user in users"
-                  :key="user.id"
-                  :user="user"
-                  :secretSanta="secretSanta"
-                  :currentUser="currentUser"
-                  :deletingCustomGift="deletingCustomGift"
-                  :customGift="findCustomGift(user)"
-                  @toggleCheckBox="toggleCheckBox"
-                  @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                  @editCustomGift="editCustomGift"
-                />
-              </div>
-
-              <div class="col-md-6" v-if="usersOverflow.length > 0">
-                <GiftList
-                  v-for="user in usersOverflow"
-                  :key="user.id"
-                  :user="user"
-                  :secretSanta="secretSanta"
-                  :currentUser="currentUser"
-                  :deletingCustomGift="deletingCustomGift"
-                  :customGift="findCustomGift(user)"
-                  @toggleCheckBox="toggleCheckBox"
-                  @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-                  @editCustomGift="editCustomGift"
-                />
-              </div>
-            </div>
+          <div class="col-md-6" v-if="usersOverflow.length > 0">
+            <GiftList
+              v-for="user in usersOverflow"
+              :key="user.id"
+              :user="user"
+              :secretSanta="secretSanta"
+              :currentUser="currentUser"
+              :deletingCustomGift="deletingCustomGift"
+              :customGift="findCustomGift(user)"
+              @toggleCheckBox="toggleCheckBox"
+              @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+              @editCustomGift="editCustomGift"
+            />
           </div>
         </div>
 
         <!-- Secret Santa List -->
         <div
           class="row mt-2"
-          v-if="secretSanta && this.currentDisplayMode === displayMode.Family"
+          v-if="secretSanta && currentDisplayMode === displayMode.Family"
         >
           <div class="d-flex justify-content-center">
             <hr class="w-50 fw-light" />
@@ -214,7 +201,14 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+button {
+  transition: all 0.25s ease;
+}
+.nopulse {
+  /* min-width: 170px; */
+}
+</style>
 
 <script>
 import axios from "axios";
