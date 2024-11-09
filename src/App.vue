@@ -201,7 +201,7 @@ export default {
   },
   created() {
     if (new Date().getMonth() >= 10) {
-      this.christmasTime = false;
+      this.christmasTime = true;
     }
   },
   mounted() {

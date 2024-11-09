@@ -205,9 +205,6 @@
 button {
   transition: all 0.25s ease;
 }
-.nopulse {
-  /* min-width: 170px; */
-}
 </style>
 
 <script>
