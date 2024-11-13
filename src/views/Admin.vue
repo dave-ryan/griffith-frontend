@@ -60,8 +60,11 @@
             ><button class="btn btn-warning m-2" @click="testGetSecretSanta()">
               GET /secret-santa
             </button>
-            <button class="btn btn-warning m-2" @click="testGetFamilies()">
+            <button class="btn btn-warning m-2" @click="testGetFamily()">
               GET /families
+            </button>
+            <button class="btn btn-warning m-2" @click="testGetFamilies()">
+              GET /admin/families
             </button>
           </div>
         </div>
@@ -828,7 +831,7 @@ export default {
     },
     getMe() {
       axios
-        .get("/current-user")
+        .get("current-user")
         .then((response) => {
           this.$emit("onUserLoad", response.data);
           this.currentUserId = response.data.id;
@@ -851,7 +854,7 @@ export default {
     },
     getUsers() {
       axios
-        .get("/users")
+        .get("users")
         .then((response) => {
           console.log(response.data);
           this.users = response.data;
@@ -865,7 +868,7 @@ export default {
     },
     getFamilies() {
       axios
-        .get("/admin/families")
+        .get("admin/families")
         .then((response) => {
           console.log(response.data);
           this.families = response.data;
@@ -909,7 +912,7 @@ export default {
     testGetUsers() {
       this.$emit("clearError");
       axios
-        .get("/users")
+        .get("users")
         .then((response) => {
           console.log(response.data);
         })
@@ -921,7 +924,7 @@ export default {
     testGetMe() {
       this.$emit("clearError");
       axios
-        .get("/users/current-user")
+        .get("users/current-user")
         .then((response) => {
           console.log(response.data);
         })
@@ -930,10 +933,22 @@ export default {
           this.$emit("onError", error);
         });
     },
+    testGetFamily() {
+      this.$emit("clearError");
+      axios
+        .get("families")
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          error.function = "testGetFamily";
+          this.$emit("onError", error);
+        });
+    },
     testGetFamilies() {
       this.$emit("clearError");
       axios
-        .get("/families")
+        .get("admin/families")
         .then((response) => {
           console.log(response.data);
         })
@@ -945,9 +960,15 @@ export default {
     testGetSecretSanta() {
       this.$emit("clearError");
       axios
-        .get("/secret-santa")
+        .get("secret-santa")
         .then((response) => {
           console.log(response.data);
+          console.log("gift", response.data.gifts[1]);
+          console.log(
+            "purchaser",
+            response.data.gifts[1]?.purchaser_id,
+            response.data.gifts[1]?.purchaser
+          );
         })
         .catch((error) => {
           error.function = "testGetSecretSanta";
