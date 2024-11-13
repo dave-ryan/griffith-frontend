@@ -485,6 +485,7 @@ export default {
         })
         .then((response) => {
           gift.purchaser_id = response.data.purchaser_id;
+          gift.purchaser = this.currentUser;
           gift.loading = false;
           el.checked = !el.checked;
         })
