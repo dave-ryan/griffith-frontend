@@ -43,10 +43,14 @@
         :class="
           gift.purchaser_id === currentUser.id ? 'text-success' : 'text-danger'
         "
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        :title="gift.purchaser_id === currentUser.id ? '' : gift.purchaser.name"
       >
         - Purchased By
-        {{ gift.purchaser_id === currentUser.id ? "You!" : "Someone Else" }}
-        {{ currentUser.is_admin ? " - " + gift.purchaser.name : "" }}
+        <span>
+          {{ gift.purchaser_id === currentUser.id ? "You!" : "Someone Else" }}
+        </span>
       </span>
     </div>
   </div>
