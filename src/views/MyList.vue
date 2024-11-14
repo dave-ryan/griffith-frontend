@@ -526,6 +526,9 @@ export default {
             this.myList.push(response.data);
             this.newGift = {};
             this.newGiftLoading = false;
+            this.$nextTick(() =>
+              document.getElementById("newGiftName").focus()
+            );
             document
               .getElementById("newGiftForm")
               .classList.remove("was-validated");
