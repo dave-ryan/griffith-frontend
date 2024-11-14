@@ -21,7 +21,7 @@
 
     <!-- View Change Buttons -->
     <transition name="content" mode="out-in">
-      <div v-if="currentUser && splashImgLoaded" class="row mt-5 mb-5">
+      <div v-if="splashImgLoaded && pageLoaded" class="row mt-5 mb-5">
         <div class="d-grid gap-2 d-md-block">
           <button
             @click="getBirthdays()"
@@ -61,10 +61,7 @@
     </transition>
 
     <transition name="content" mode="out-in">
-      <div
-        v-if="currentUser && splashImgLoaded && contentLoaded"
-        class="ps-2 pe-2 text-break"
-      >
+      <div v-if="splashImgLoaded && contentLoaded" class="ps-2 pe-2 text-break">
         <h2
           v-if="
             users.length === 0 && currentDisplayMode === displayMode.Birthdays

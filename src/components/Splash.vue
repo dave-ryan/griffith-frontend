@@ -1,23 +1,25 @@
 <template>
   <div class="row">
     <div class="col">
-      <transition-group mode="out-in">
-        <Spinner
-          :visible="!(pageLoaded && imgLoaded)"
-          key="1"
-          top="25%"
-          position="absolute"
-          size="large"
-        />
-        <img
-          :src="src"
-          class="img splash shadow sticky-top"
-          v-on:load="loadedImg"
-          v-show="imgLoaded && pageLoaded"
-          key="2"
-          alt="failed"
-        />
-      </transition-group>
+      <div class="splash-container">
+        <transition-group mode="out-in">
+          <Spinner
+            :visible="!(pageLoaded && imgLoaded)"
+            key="1"
+            top="25%"
+            position="absolute"
+            size="large"
+          />
+          <img
+            :src="src"
+            class="img splash shadow"
+            v-on:load="loadedImg"
+            v-show="imgLoaded && pageLoaded"
+            key="2"
+            alt="failed"
+          />
+        </transition-group>
+      </div>
     </div>
   </div>
 </template>
@@ -27,8 +29,10 @@
   object-fit: cover;
   object-position: center;
   width: 100%;
-  max-height: 17em;
-  min-height: 10em;
+  height: 13.5rem;
+}
+.splash-container {
+  height: 13.5rem;
 }
 </style>
 
