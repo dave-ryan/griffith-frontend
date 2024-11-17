@@ -10,72 +10,77 @@
         <div class="row">
           <div class="col"></div>
           <div class="col-lg-10">
-            <div class="table-responsive">
-              <h2 class="mt-2 mb-5">
-                Your {{ christmasTime ? "Christmas" : "Birthday" }} List
+            <transition-group name="content" mode="out-in">
+              <h2 v-if="!myList.length" class="mb-5">
+                Nothing on your list yet!
               </h2>
-              <table class="table table-striped">
-                <thead class="table-light">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">What You Wish For</th>
-                    <th scope="col">Link</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(gift, index) in myList"
-                    :key="gift.id"
-                    class="align-middle"
-                  >
-                    <td scope="row" style="width: 1%">
-                      {{ index + 1 }}
-                    </td>
-                    <td
-                      class="text-truncate"
-                      style="max-width: 150px; min-width: 200px"
+              <div v-if="myList.length" class="table-responsive">
+                <h2 class="mt-2 mb-5">
+                  Your {{ christmasTime ? "Christmas" : "Birthday" }} List
+                </h2>
+                <table class="table table-striped">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">What You Wish For</th>
+                      <th scope="col">Link</th>
+                      <th scope="col"></th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(gift, index) in myList"
+                      :key="gift.id"
+                      class="align-middle"
                     >
-                      {{ gift.name }}
-                    </td>
-                    <td
-                      class="text-truncate"
-                      style="max-width: 150px; min-width: 200px"
-                    >
-                      <a
-                        v-if="gift.link"
-                        :href="`//` + gift.link.replace(/^https?:\/\//, '')"
-                        alt=""
-                        target="_blank"
-                        >{{ gift.link }}</a
+                      <td scope="row" style="width: 1%">
+                        {{ index + 1 }}
+                      </td>
+                      <td
+                        class="text-truncate"
+                        style="max-width: 150px; min-width: 200px"
                       >
-                    </td>
-                    <td style="width: 1%" class="pe-0">
-                      <button
-                        type="button"
-                        class="btn btn-outline-success"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editModal"
-                        @click="editGift(gift)"
+                        {{ gift.name }}
+                      </td>
+                      <td
+                        class="text-truncate"
+                        style="max-width: 150px; min-width: 200px"
                       >
-                        Edit
-                      </button>
-                    </td>
-                    <td style="width: 1%" class="ps-0">
-                      <button
-                        class="btn btn-outline-danger ms-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deleteModal"
-                        @click="deletingGift = gift"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                        <a
+                          v-if="gift.link"
+                          :href="`//` + gift.link.replace(/^https?:\/\//, '')"
+                          alt=""
+                          target="_blank"
+                          >{{ gift.link }}</a
+                        >
+                      </td>
+                      <td style="width: 1%" class="pe-0">
+                        <button
+                          type="button"
+                          class="btn btn-outline-success"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editModal"
+                          @click="editGift(gift)"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                      <td style="width: 1%" class="ps-0">
+                        <button
+                          class="btn btn-outline-danger ms-2"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteModal"
+                          @click="deletingGift = gift"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </transition-group>
           </div>
           <div class="col"></div>
         </div>
