@@ -3,9 +3,7 @@
     <div class="col"></div>
     <div class="col">
       <img src="../assets/images/errorcat.jpg" class="error-img" alt="error" />
-      <h2 class="mb-3">
-        {{ error.report }}
-      </h2>
+      <h2 class="mb-3">Something went wrong! ☹️</h2>
       <button class="btn btn-outline-success" @click="refresh()">
         Refresh The Page
       </button>
