@@ -834,7 +834,6 @@ export default {
         .get("current-user")
         .then((response) => {
           this.$emit("onUserLoad", response.data);
-          this.currentUserId = response.data.id;
           if (response.data.is_admin) {
             this.getUsers();
             this.getFamilies();

@@ -404,7 +404,6 @@ export default {
         .get("/current-user")
         .then((response) => {
           this.$emit("onUserLoad", response.data);
-          this.currentUserId = response.data.id;
           if (this.christmasTime) {
             this.getFamily();
             this.getSecretSanta();

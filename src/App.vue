@@ -1,11 +1,14 @@
 <template>
   <nav
     class="navbar navbar-expand-md navbar-dark bg-dark text-center"
-    v-if="currentUserName"
     id="navbar"
+    v-if="currentRouteName !== 'Login'"
   >
     <div class="container-fluid">
-      <a href="#" class="navbar-brand">Griffith</a>
+      <a href="#" class="navbar-brand" v-if="currentUserName">Griffith</a>
+      <router-link to="/login" class="navbar-brand" v-if="!currentUserName"
+        >Griffith</router-link
+      >
       <button
         class="navbar-toggler"
         type="button"
@@ -18,7 +21,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div
+        class="collapse navbar-collapse"
+        id="navbarSupportedContent"
+        v-if="currentUserName"
+      >
         <ul class="navbar-nav me-auto text-center" @click="collapseBurger">
           <li>
             <router-link class="nav-link" to="/home">Home</router-link>
@@ -42,10 +49,12 @@
           </transition>
         </ul>
 
-        <div class="nav-link disabled align-middle">
+        <div class="nav-link disabled align-middle" v-if="currentUserName">
           Logged in as {{ currentUserName }}
         </div>
-        <button class="btn btn-danger" @click="logOut()">Log Out</button>
+        <button class="btn btn-danger" @click="logOut()" v-if="currentUserName">
+          Log Out
+        </button>
       </div>
     </div>
   </nav>
@@ -186,6 +195,11 @@ import VueCookies from "vue-cookies";
 
 export default {
   components: { ErrorSplash },
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
+    },
+  },
   data() {
     return {
       christmasTime: false,

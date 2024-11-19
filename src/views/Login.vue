@@ -131,7 +131,6 @@ export default {
               this.$emit("onLogin", response.data);
               window.removeEventListener("keypress", this.enterPress);
             } else {
-              console.log(response);
               this.toggleLoading();
               throw new Error("Error");
             }

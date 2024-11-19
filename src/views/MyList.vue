@@ -10,6 +10,13 @@
         <div class="row">
           <div class="col"></div>
           <div class="col-lg-10">
+            <div>
+              Share your list with a friend!
+              {{ this.currentUser?.share_code }}
+              <div class="btn btn-warning" @click="generateShareLink">
+                Generate New Link
+              </div>
+            </div>
             <transition-group name="content" mode="out-in">
               <h2 v-if="!myList.length" class="mb-5">
                 Nothing on your list yet!
@@ -423,8 +430,8 @@ import { nextTick } from "vue";
 
 export default {
   components: { Splash, Spinner },
-  props: ["christmasTime"],
-  emits: ["onError", "clearError", "logOut"],
+  props: ["christmasTime", "currentUser"],
+  emits: ["onError", "clearError", "logOut", "onUserLoad"],
   data() {
     return {
       myList: [],
@@ -466,7 +473,7 @@ export default {
   },
   created() {
     this.$emit("clearError");
-    this.getMyList();
+    this.getMe();
   },
   methods: {
     batchCreate() {
@@ -568,6 +575,23 @@ export default {
       this.editingGift.link = gift.link;
       this.editingGift.id = gift.id;
     },
+    getMe() {
+      axios
+        .get("/current-user")
+        .then((response) => {
+          this.$emit("onUserLoad", response.data);
+          this.getMyList();
+        })
+        .catch((error) => {
+          if (error.response?.status === 401) {
+            this.$emit("logOut");
+          } else {
+            error.critical = true;
+            error.function = "getMe";
+            this.$emit("onError", error);
+          }
+        });
+    },
     getMyList() {
       axios
         .get("/gifts")
@@ -583,6 +607,22 @@ export default {
           } else {
             error.function = "getMyList";
             error.critical = true;
+            this.$emit("onError", error);
+          }
+        });
+    },
+    generateShareLink() {
+      axios
+        .put("/generate-share-code")
+        .then((response) => {
+          this.$emit("onUserLoad", response.data);
+        })
+        .catch((error) => {
+          if (error.response?.status === 401) {
+            this.$emit("logOut");
+          } else {
+            error.critical = true;
+            error.function = "getMe";
             this.$emit("onError", error);
           }
         });

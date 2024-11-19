@@ -10,6 +10,7 @@
         "
         data-bs-toggle="collapse"
         :data-bs-target="`#christmas-list-${user.id}`"
+        v-if="currentUser"
       >
         {{ user.name }}
         <transition mode="out-in">
@@ -17,7 +18,7 @@
             class="position-absolute top-0 start-100 translate-middle bi bi-check-lg text-success ps-1 pe-1 rounded-circle bg-white border border-success"
             v-if="
               user.gifts?.some(
-                (gift) => gift.purchaser_id === currentUser.id
+                (gift) => gift.purchaser_id === currentUser?.id
               ) || findCustomGift(user)
             "
           ></i>
@@ -26,8 +27,9 @@
       <span v-if="user.birthdayString"> - {{ user.birthdayString }}</span>
       <div
         class="collapse list-collapse"
-        aria-expanded="false"
+        :aria-expanded="currentUser ? false : true"
         :id="`christmas-list-${user.id}`"
+        :class="currentUser ? '' : 'show'"
       >
         <span v-if="user.gifts?.length < 1"
           >{{ user.name }} hasn't made a christmas list yet! Remind them!
@@ -41,7 +43,7 @@
           :currentUser="currentUser"
           @toggleCheckBox="toggleCheckBox(gift)"
         />
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center" v-if="currentUser">
           <hr class="w-25 fw-light" />
         </div>
 
@@ -51,6 +53,7 @@
           :customGift="customGift"
           @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
           @editCustomGift="editCustomGift"
+          v-if="currentUser"
         />
       </div>
     </div>
@@ -76,7 +79,7 @@ export default {
   methods: {
     findCustomGift(user) {
       return user?.customgifts?.find(
-        (gift) => gift.customgift_purchaser_id === this.currentUser.id
+        (gift) => gift.customgift_purchaser_id === this.currentUser?.id
       );
     },
     toggleCheckBox(gift) {

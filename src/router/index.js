@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
-import MyList from "../views/MyList.vue";
-import Login from "../views/Login.vue";
-import Admin from "../views/Admin.vue";
 import Fly from "../views/Fly.vue";
+import Home from "../views/Home.vue";
+import Login from "../views/Login.vue";
+import MyList from "../views/MyList.vue";
+import ShareList from "../views/ShareList.vue";
+import Admin from "../views/Admin.vue";
 import PathNotFound from "../components/PathNotFound.vue";
 
 const routes = [
@@ -17,6 +18,12 @@ const routes = [
     path: "/my-list",
     name: "My List",
     component: MyList,
+    props: { default: true },
+  },
+  {
+    path: "/share-list",
+    name: "Share List",
+    component: ShareList,
     props: { default: true },
   },
   {

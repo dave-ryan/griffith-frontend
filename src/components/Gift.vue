@@ -15,17 +15,20 @@
         :id="`checkbox-` + gift.id"
         :checked="gift.purchaser_id"
         :disabled="
-          (gift.purchaser_id && gift.purchaser_id !== currentUser.id) ||
+          !currentUser ||
+          (gift.purchaser_id && gift.purchaser_id !== currentUser?.id) ||
           gift.loading
         "
         @change="$emit('toggleCheckBox')"
       />
       <span
         :class="
-          (gift.purchaser_id && gift.purchaser_id !== currentUser.id) ||
+          (gift.purchaser_id && gift.purchaser_id !== currentUser?.id) ||
           gift.loading
             ? 'fw-light'
-            : 'form-check-label'
+            : 'form-check-label' && currentUser
+            ? ''
+            : 'sharing'
         "
       >
         {{ gift.name }}
@@ -41,15 +44,17 @@
       <span
         v-if="gift.purchaser && gift.purchaser_id"
         :class="
-          gift.purchaser_id === currentUser.id ? 'text-success' : 'text-danger'
+          gift.purchaser_id === currentUser?.id ? 'text-success' : 'text-danger'
         "
         data-bs-toggle="tooltip"
         data-bs-placement="top"
-        :title="gift.purchaser_id === currentUser.id ? '' : gift.purchaser.name"
+        :title="
+          gift.purchaser_id === currentUser?.id ? '' : gift.purchaser.name
+        "
       >
         - Purchased By
         <span>
-          {{ gift.purchaser_id === currentUser.id ? "You!" : "Someone Else" }}
+          {{ gift.purchaser_id === currentUser?.id ? "You!" : "Someone Else" }}
         </span>
       </span>
     </div>
@@ -62,6 +67,9 @@
 }
 .form-check .form-check-input {
   margin-top: 5px;
+}
+.sharing {
+  opacity: 1 !important;
 }
 </style>
 
