@@ -10,13 +10,6 @@
         <div class="row">
           <div class="col"></div>
           <div class="col-lg-10">
-            <div>
-              Share your list with a friend!
-              {{ this.currentUser?.share_code }}
-              <div class="btn btn-warning" @click="generateShareLink">
-                Generate New Link
-              </div>
-            </div>
             <transition-group name="content" mode="out-in">
               <h2 v-if="!myList.length" class="mb-5">
                 Nothing on your list yet!
@@ -86,6 +79,15 @@
                     </tr>
                   </tbody>
                 </table>
+                <div class="mt-3">
+                  <div class="btn btn-warning" @click="generateShareLink">
+                    <span v-if="!sharing && !shared"> Share My List </span>
+                    <span v-if="sharing" class="ps-4 pe-4"> ... </span>
+                    <span v-if="!sharing && shared">
+                      Copied to Clipboard!
+                    </span>
+                  </div>
+                </div>
               </div>
             </transition-group>
           </div>
@@ -443,6 +445,8 @@ export default {
       batchLinks: "",
       batchGiftsLoading: false,
       maxBatch: 25,
+      sharing: false,
+      shared: false,
       splashImgLoaded: false,
       splashSrc: this.christmasTime ? christmasPresents : birthdayPresents,
       pageLoaded: false,
@@ -611,21 +615,34 @@ export default {
           }
         });
     },
+    formLink(user) {
+      let link = `${window.location.origin}/share-list?userId=${user.id}&shareCode=${user.share_code}`;
+      navigator.clipboard.writeText(link);
+      this.shared = true;
+      this.sharing = false;
+    },
     generateShareLink() {
-      axios
-        .put("/generate-share-code")
-        .then((response) => {
-          this.$emit("onUserLoad", response.data);
-        })
-        .catch((error) => {
-          if (error.response?.status === 401) {
-            this.$emit("logOut");
-          } else {
-            error.critical = true;
-            error.function = "getMe";
-            this.$emit("onError", error);
-          }
-        });
+      this.sharing = true;
+      if (this.currentUser.share_code) {
+        this.formLink(this.currentUser);
+      } else {
+        axios
+          .put("/generate-share-code")
+          .then((response) => {
+            this.$emit("onUserLoad", response.data);
+            this.formLink(response.data);
+          })
+          .catch((error) => {
+            if (error.response?.status === 401) {
+              this.$emit("logOut");
+            } else {
+              this.sharing = false;
+              error.critical = true;
+              error.function = "getMe";
+              this.$emit("onError", error);
+            }
+          });
+      }
     },
     async hideBatchModal() {
       this.batchGiftsLoading = false;
