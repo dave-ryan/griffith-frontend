@@ -35,6 +35,7 @@
             Upcoming Birthdays
           </button>
           <button
+            v-if="currentUser.family_id"
             @click="getFamily()"
             class="btn nopulse col-md-2 ms-4 me-4 ms-md-4 me-md-4"
             :class="
@@ -45,7 +46,20 @@
           >
             Your Family
           </button>
+          <!-- v-if="currentUser.friends || !currentUser.family_id" -->
           <button
+            @click="getFriends()"
+            class="btn nopulse col-md-2 ms-4 me-4 ms-md-4 me-md-4"
+            :class="
+              currentDisplayMode === displayMode.Friends
+                ? 'btn-primary disabled btn-lg'
+                : 'btn-outline-primary'
+            "
+          >
+            Friends
+          </button>
+          <button
+            v-if="currentUser.family_id"
             @click="getEveryone()"
             class="btn nopulse col-md-2 ms-4 me-4"
             :class="
@@ -69,6 +83,21 @@
         >
           No Upcoming Birthdays :(
         </h2>
+        <div
+          v-if="
+            users.length === 0 && currentDisplayMode === displayMode.Friends
+          "
+        >
+          <h2>No Friends :(</h2>
+          <div>
+            To add a friend, get their share code, and follow that URL. Then you
+            can add them as friends.
+          </div>
+          <div>
+            Alternatively, you can share your list with them, and they can add
+            you.
+          </div>
+        </div>
         <!-- Lists -->
         <div class="row mb-5 mt-5">
           <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
@@ -227,6 +256,7 @@ export default {
   data() {
     return {
       users: [],
+      friends: false,
       usersOverflow: [],
       secretSanta: null,
       currentDisplayMode: this.displayMode?.Birthdays,
@@ -234,6 +264,7 @@ export default {
         Birthdays: 0,
         Family: 1,
         Everyone: 2,
+        Friends: 3,
       },
       lowPresentCount: false,
       deletingCustomGift: null,
@@ -391,7 +422,22 @@ export default {
           this.$emit("onHomePageLoaded");
           this.pageLoaded = true;
           this.contentLoaded = true;
-          this.processUserData(response.data?.users);
+          if (response.data?.users) {
+            this.processUserData(response.data.users);
+          }
+        })
+        .catch((error) => {
+          error.critical = true;
+          error.function = "getFamily";
+          this.$emit("onError", error);
+        });
+    },
+    getFriends() {
+      this.currentDisplayMode = this.displayMode.Friends;
+      axios
+        .get("/friends")
+        .then((response) => {
+          this.processUserData(response.data);
         })
         .catch((error) => {
           error.critical = true;

@@ -13,17 +13,24 @@
     />
     <transition name="content" mode="out-in">
       <div
-        v-if="pageLoaded && splashImgLoaded && !unauthorized"
+        v-if="pageLoaded && splashImgLoaded && !unauthorized && targetUser"
         class="ps-3 pe-3 mt-5"
       >
         <div class="row">
           <div class="col"></div>
           <div class="col-lg-10">
-            <div v-if="currentUser?.id !== targetUser?.id">
+            <div v-if="currentUser?.id !== targetUser.id">
               <h2>{{ targetUser.name }}'s List</h2>
               <GiftList :user="targetUser" />
+              <button class="btn btn-warning mt-5" @click="addFriend">
+                Add {{ targetUser.name }} as a friend
+              </button>
+              <div>
+                When you add them as friends, they will be able to see your
+                wishlist, and you will be able to see theirs
+              </div>
             </div>
-            <div v-if="currentUser?.id === targetUser?.id">
+            <div v-if="currentUser?.id === targetUser.id">
               <h2>This is your share page</h2>
               <div>
                 Copy this link to share with a friend, and they can see your
@@ -113,6 +120,11 @@ export default {
       });
   },
   methods: {
+    addFriend() {
+      axios.put(`/users/${this.targetUser.id}/friend`).then((response) => {
+        console.log(response);
+      });
+    },
     getUser() {
       const urlParams = new URLSearchParams(window.location.search);
       let userId = urlParams.get("userId");

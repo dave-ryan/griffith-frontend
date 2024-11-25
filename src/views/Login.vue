@@ -21,7 +21,18 @@
           v-if="imgLoaded"
           key="2"
         >
-          <form @submit.prevent="logIn" id="loginForm" novalidate>
+          <CreateAccount
+            v-if="showCreateAccount"
+            @toggleLogIn="toggleLogIn"
+            @emitLogin="emitLogin"
+          />
+          <form
+            v-if="!showCreateAccount"
+            @submit.prevent="logIn"
+            @onLogin="onLogin"
+            id="loginForm"
+            novalidate
+          >
             <fieldset id="loginFieldSet">
               <h2>Griffith</h2>
               <div class="form-row mt-3 mb-3">
@@ -31,9 +42,9 @@
                   id="name-input"
                   v-model="inputParams.name"
                   required
-                  placeholder="First Name"
+                  placeholder="Username"
                 />
-                <div class="invalid-feedback">Please enter your first name</div>
+                <div class="invalid-feedback">Please enter your UserName</div>
               </div>
 
               <div class="form-row mb-3">
@@ -43,14 +54,19 @@
                   id="password-input"
                   v-model="inputParams.password"
                   required
-                  placeholder="Last Name"
+                  placeholder="Password"
                 />
-                <div class="invalid-feedback">
-                  Please enter your password (last name)
-                </div>
+                <div class="invalid-feedback">Please enter your password</div>
               </div>
 
               <div>
+                <button
+                  type="button"
+                  class="btn btn-warning me-4"
+                  @click="toggleLogIn"
+                >
+                  Create Account
+                </button>
                 <button class="btn btn-success" type="submit" id="loginButton">
                   {{ buttonName }}
                 </button>
@@ -82,14 +98,19 @@ input:not(.is-valid) {
 <script>
 import axios from "axios";
 import VueCookies from "vue-cookies";
+import CreateAccount from "../components/CreateAccount.vue";
 
 export default {
+  components: {
+    CreateAccount,
+  },
   emits: ["onError", "clearError", "onLogin"],
   data() {
     return {
       inputParams: {},
       imgLoaded: false,
       loading: false,
+      showCreateAccount: false,
     };
   },
   computed: {
@@ -128,11 +149,11 @@ export default {
           .post("/sessions", this.inputParams)
           .then((response) => {
             if (response.data && response.status === 201) {
-              this.$emit("onLogin", response.data);
+              this.emitLogin(response.data);
               window.removeEventListener("keypress", this.enterPress);
             } else {
               this.toggleLoading();
-              throw new Error("Error");
+              this.$emit("onError not 201", response.data);
             }
           })
           .catch((error) => {
@@ -142,8 +163,14 @@ export default {
           });
       }
     },
+    emitLogin(data) {
+      this.$emit("onLogin", data);
+    },
     loadedImg() {
       this.imgLoaded = true;
+    },
+    toggleLogIn() {
+      this.showCreateAccount = !this.showCreateAccount;
     },
     toggleLoading() {
       document.getElementById("loginForm").classList?.remove("was-validated");
