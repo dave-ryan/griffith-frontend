@@ -46,8 +46,8 @@
           >
             Your Family
           </button>
-          <!-- v-if="currentUser.friends || !currentUser.family_id" -->
           <button
+            v-if="displayFriendsButton"
             @click="getFriends()"
             class="btn nopulse col-md-2 ms-4 me-4 ms-md-4 me-md-4"
             :class="
@@ -256,9 +256,9 @@ export default {
   data() {
     return {
       users: [],
-      friends: false,
       usersOverflow: [],
       secretSanta: null,
+      displayFriendsButton: false,
       currentDisplayMode: this.displayMode?.Birthdays,
       displayMode: {
         Birthdays: 0,
@@ -437,6 +437,7 @@ export default {
       axios
         .get("/friends")
         .then((response) => {
+          this.displayFriendsButton = true;
           this.processUserData(response.data);
         })
         .catch((error) => {
