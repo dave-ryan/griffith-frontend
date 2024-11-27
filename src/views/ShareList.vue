@@ -22,8 +22,18 @@
             <div v-if="currentUser?.id !== targetUser.id">
               <h2>{{ targetUser.name }}'s List</h2>
               <GiftList :user="targetUser" />
-              <button class="btn btn-warning mt-5" @click="addFriend">
-                Add {{ targetUser.name }} as a friend
+              <button
+                class="btn btn-warning mt-5"
+                @click="addFriend"
+                :class="alreadyFriends || friendAdded ? 'disabled' : ''"
+              >
+                <span v-if="!friendAdded && !alreadyFriends">
+                  Add {{ targetUser.name }} as a Friend
+                </span>
+                <span v-if="alreadyFriends"
+                  >Already Friends with {{ targetUser.name }} 😊
+                </span>
+                <span v-if="friendAdded"> Added! </span>
               </button>
               <div>
                 When you add them as friends, they will be able to see your
@@ -85,10 +95,12 @@ import GiftList from "../components/GiftList";
 import christmasTree from "../assets/images/tree-cropped-compressed.jpg";
 
 export default {
-  emits: ["onError"],
+  emits: ["onError", "logOut"],
   components: { Splash, Spinner, GiftList },
   data() {
     return {
+      alreadyFriends: false,
+      friendAdded: false,
       targetUser: null,
       pageLoaded: false,
       contentLoaded: false,
@@ -121,9 +133,20 @@ export default {
   },
   methods: {
     addFriend() {
-      axios.put(`/users/${this.targetUser.id}/friend`).then((response) => {
-        console.log(response);
-      });
+      axios
+        .put(`/users/${this.targetUser.id}/friend`)
+        .then(() => {
+          this.friendAdded = true;
+        })
+        .catch((error) => {
+          if (error.response?.status === 401) {
+            this.$emit("logOut");
+          } else {
+            error.critical = true;
+            error.function = "addFriend";
+            this.$emit("onError", error);
+          }
+        });
     },
     getUser() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -137,6 +160,13 @@ export default {
           this.targetUser = response.data;
           this.pageLoaded = true;
           this.contentLoaded = true;
+          if (this.currentUser?.friends?.length) {
+            this.currentUser.friends.forEach((friend) => {
+              if (friend.id === this.targetUser.id) {
+                this.alreadyFriends = true;
+              }
+            });
+          }
         })
         .catch((error) => {
           if (error.response?.status === 401) {

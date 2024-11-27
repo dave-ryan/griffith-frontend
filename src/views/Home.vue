@@ -25,7 +25,14 @@
         v-if="splashImgLoaded && pageLoaded && currentUser"
         class="row mt-5 mb-5"
       >
-        <div class="d-grid gap-2 d-md-block">
+        <div v-if="noFriendsorFamily">
+          <h2>No Friends :(</h2>
+          <div>
+            Share your list with a friend, and have them add you. Alternatively,
+            you can
+          </div>
+        </div>
+        <div v-else class="d-grid gap-2 d-md-block">
           <button
             @click="getBirthdays()"
             class="btn nopulse col-md-2 ms-4 me-4"
@@ -86,14 +93,6 @@
         >
           No Upcoming Birthdays :(
         </h2>
-        <!-- If we always show the "Friends" button, uncomment this -->
-        <!-- <div
-          v-if="
-            users.length === 0 && currentDisplayMode === displayMode.Friends
-          "
-        >
-          <h2>No Friends :(</h2>
-        </div> -->
         <!-- Lists -->
         <div class="row mb-5 mt-5">
           <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
@@ -254,7 +253,7 @@ export default {
       users: [],
       usersOverflow: [],
       secretSanta: null,
-      displayFriendsButton: false,
+      noFriendsorFamily: false,
       currentDisplayMode: this.displayMode?.Birthdays,
       displayMode: {
         Birthdays: 0,
@@ -436,6 +435,9 @@ export default {
         .then((response) => {
           this.processUserData(response.data);
           this.contentLoaded = true;
+          if (!response.data.length) {
+            this.noFriendsorFamily = true;
+          }
         })
         .catch((error) => {
           error.critical = true;
