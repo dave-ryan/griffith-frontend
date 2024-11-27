@@ -21,7 +21,10 @@
 
     <!-- View Change Buttons -->
     <transition name="content" mode="out-in">
-      <div v-if="splashImgLoaded && pageLoaded" class="row mt-5 mb-5">
+      <div
+        v-if="splashImgLoaded && pageLoaded && currentUser"
+        class="row mt-5 mb-5"
+      >
         <div class="d-grid gap-2 d-md-block">
           <button
             @click="getBirthdays()"
@@ -35,7 +38,7 @@
             Upcoming Birthdays
           </button>
           <button
-            v-if="currentUser.family_id"
+            v-if="currentUser.family"
             @click="getFamily()"
             class="btn nopulse col-md-2 ms-4 me-4 ms-md-4 me-md-4"
             :class="
@@ -47,7 +50,7 @@
             Your Family
           </button>
           <button
-            v-if="currentUser.friends"
+            v-if="currentUser.friends.length"
             @click="getFriends()"
             class="btn nopulse col-md-2 ms-4 me-4 ms-md-4 me-md-4"
             :class="
@@ -59,7 +62,7 @@
             Friends
           </button>
           <button
-            v-if="currentUser.family_id"
+            v-if="currentUser.family"
             @click="getEveryone()"
             class="btn nopulse col-md-2 ms-4 me-4"
             :class="
@@ -344,7 +347,7 @@ export default {
     },
     findCustomGift(user) {
       return user?.customgifts?.find(
-        (gift) => gift.customgift_purchaser_id === this.currentUser.id
+        (gift) => gift.customgift_purchaser_id === this.currentUser?.id
       );
     },
     filterUpcomingBirthdays(users) {
@@ -425,6 +428,7 @@ export default {
         });
     },
     getFriends() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       this.contentLoaded = false;
       this.currentDisplayMode = this.displayMode.Friends;
       axios
