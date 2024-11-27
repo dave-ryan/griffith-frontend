@@ -444,8 +444,6 @@ export default {
         .get("/current-user")
         .then((response) => {
           this.$emit("onUserLoad", response.data);
-          console.log(response.data);
-
           if (this.christmasTime) {
             this.getFamily();
             this.getSecretSanta();

@@ -214,6 +214,9 @@ export default {
     };
   },
   created() {
+    if (window.location.hostname === "localhost") {
+      document.title = "Griffith - [Local]";
+    }
     if (new Date().getMonth() >= 10) {
       this.christmasTime = true;
     }
