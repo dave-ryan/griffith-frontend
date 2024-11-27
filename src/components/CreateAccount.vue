@@ -86,7 +86,6 @@ export default {
                 .post("/sessions", this.inputParams)
                 .then((response) => {
                   if (response.data && response.status === 201) {
-                    console.log("logged in!?");
                     this.$emit("emitLogin", response.data);
                     window.removeEventListener("keypress", this.enterPress);
                   } else {

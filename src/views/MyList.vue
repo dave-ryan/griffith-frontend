@@ -79,15 +79,6 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="mt-3">
-                  <div class="btn btn-warning" @click="generateShareLink">
-                    <span v-if="!sharing && !shared"> Share My List </span>
-                    <span v-if="sharing" class="ps-4 pe-4"> ... </span>
-                    <span v-if="!sharing && shared">
-                      Copied to Clipboard!
-                    </span>
-                  </div>
-                </div>
               </div>
             </transition-group>
           </div>
@@ -146,9 +137,7 @@
           </div>
           <div class="col"></div>
         </div>
-        <div class="d-flex justify-content-center">
-          <hr class="w-75 fw-light" />
-        </div>
+
         <button
           type="button"
           class="btn btn-outline-success p-4 mt-4"
@@ -157,6 +146,28 @@
         >
           Add Multiple Things To Your List At Once
         </button>
+
+        <div class="d-flex justify-content-center pt-3">
+          <hr class="w-75 fw-light" />
+        </div>
+
+        <div class="row">
+          <div class="col-4"></div>
+          <div class="col-4">
+            <div class="mt-3">
+              <div class="btn btn-warning" @click="generateShareLink">
+                <span v-if="!sharing && !shared"> Share My List </span>
+                <span v-if="sharing" class="ps-4 pe-4"> ... </span>
+                <span v-if="!sharing && shared"> Copied to Clipboard! </span>
+              </div>
+              <p class="fw-light">
+                When you share your list with someone, they can add you as a
+                friend. Once you are friends, you can see each other's lists.
+              </p>
+            </div>
+          </div>
+          <div class="col-4"></div>
+        </div>
 
         <!-- Edit Modal -->
         <div

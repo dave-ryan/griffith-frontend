@@ -47,7 +47,7 @@
             Your Family
           </button>
           <button
-            v-if="displayFriendsButton"
+            v-if="currentUser.friends"
             @click="getFriends()"
             class="btn nopulse col-md-2 ms-4 me-4 ms-md-4 me-md-4"
             :class="
@@ -83,21 +83,14 @@
         >
           No Upcoming Birthdays :(
         </h2>
-        <div
+        <!-- If we always show the "Friends" button, uncomment this -->
+        <!-- <div
           v-if="
             users.length === 0 && currentDisplayMode === displayMode.Friends
           "
         >
           <h2>No Friends :(</h2>
-          <div>
-            To add a friend, get their share code, and follow that URL. Then you
-            can add them as friends.
-          </div>
-          <div>
-            Alternatively, you can share your list with them, and they can add
-            you.
-          </div>
-        </div>
+        </div> -->
         <!-- Lists -->
         <div class="row mb-5 mt-5">
           <div :class="usersOverflow.length > 0 ? 'col-md-6' : 'col'">
@@ -377,7 +370,6 @@ export default {
     },
     getBirthdays() {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      this.displayingHeader = "Upcoming Birthdays";
       this.currentDisplayMode = this.displayMode.Birthdays;
       this.contentLoaded = false;
       axios
@@ -396,7 +388,6 @@ export default {
     },
     getEveryone() {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      this.displayingHeader = "Everyone";
       this.currentDisplayMode = this.displayMode.Everyone;
       this.contentLoaded = false;
       axios
@@ -413,7 +404,6 @@ export default {
     },
     getFamily() {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      this.displayingHeader = "Your Family";
       this.contentLoaded = false;
       this.currentDisplayMode = this.displayMode.Family;
       axios
@@ -424,6 +414,8 @@ export default {
           this.contentLoaded = true;
           if (response.data?.users) {
             this.processUserData(response.data.users);
+          } else {
+            this.getFriends();
           }
         })
         .catch((error) => {
@@ -433,12 +425,13 @@ export default {
         });
     },
     getFriends() {
+      this.contentLoaded = false;
       this.currentDisplayMode = this.displayMode.Friends;
       axios
         .get("/friends")
         .then((response) => {
-          this.displayFriendsButton = true;
           this.processUserData(response.data);
+          this.contentLoaded = true;
         })
         .catch((error) => {
           error.critical = true;
@@ -451,6 +444,8 @@ export default {
         .get("/current-user")
         .then((response) => {
           this.$emit("onUserLoad", response.data);
+          console.log(response.data);
+
           if (this.christmasTime) {
             this.getFamily();
             this.getSecretSanta();

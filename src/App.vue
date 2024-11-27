@@ -256,7 +256,6 @@ export default {
       }
     },
     onLogin(responseData) {
-      console.log("triggered");
       this.currentUser = responseData.user;
       this.currentUserName = responseData.user.name;
       VueCookies.config("60d", "", "", true);
