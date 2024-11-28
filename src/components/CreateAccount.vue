@@ -3,28 +3,45 @@
     <form @submit.prevent="createAccount" id="createAccountForm" novalidate>
       <fieldset id="createAccountFieldSet">
         <h2>Create Your Account</h2>
-        <div class="form-row mt-3 mb-3">
+        <div class="input-group mt-3 mb-3">
+          <label class="input-group-text" for="create-name">Username</label>
           <input
             type="text"
             class="form-control"
-            id="create-name-input"
-            v-model="inputParams.name"
+            id="create-name"
+            v-model="newUser.name"
             required
             placeholder="Username"
           />
-          <div class="invalid-feedback">Please enter your desired username</div>
+          <div class="invalid-feedback">
+            <span v-if="duplicate"> A User with that name already exists </span>
+            <span v-if="!duplicate"> Please enter your new username </span>
+          </div>
         </div>
 
-        <div class="form-row mb-3">
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="create-password">Password</label>
           <input
             type="text"
             class="form-control"
-            id="create-password-input"
-            v-model="inputParams.password"
+            id="create-password"
+            v-model="newUser.password"
             required
             placeholder="Password"
           />
-          <div class="invalid-feedback">Please enter your desired password</div>
+          <div class="invalid-feedback">Please enter your new password</div>
+        </div>
+
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="birthday">Birthday</label>
+          <input
+            id="create-birthday"
+            v-model="newUser.birthday"
+            class="form-control"
+            type="date"
+            required
+          />
+          <div class="invalid-feedback">Birthday is required</div>
         </div>
 
         <button type="button" class="btn btn-warning me-4" @click="toggleLogIn">
@@ -52,25 +69,18 @@ export default {
   },
   data() {
     return {
-      inputParams: {},
+      newUser: {},
       loading: false,
+      duplicate: false,
     };
   },
   methods: {
     checkForms() {
       return (
-        this.inputParams?.name?.length > 0 &&
-        this.inputParams?.password?.length > 0
+        this.newUser?.name?.length &&
+        this.newUser?.password?.length &&
+        this.newUser?.birthday?.length
       );
-    },
-    enterPress(event) {
-      if (
-        event.key === "Enter" &&
-        document.activeElement?.id !== "create-name-input" &&
-        document.activeElement?.id !== "create-password-input"
-      ) {
-        document.getElementById("createAccountButton")?.click();
-      }
     },
     createAccount() {
       document
@@ -79,15 +89,14 @@ export default {
       if (this.checkForms()) {
         this.toggleLoading();
         axios
-          .post("/users", this.inputParams)
+          .post("/users", this.newUser)
           .then((response) => {
             if (response.data && response.status === 200) {
               axios
-                .post("/sessions", this.inputParams)
+                .post("/sessions", this.newUser)
                 .then((response) => {
                   if (response.data && response.status === 201) {
                     this.$emit("emitLogin", response.data);
-                    window.removeEventListener("keypress", this.enterPress);
                   } else {
                     this.toggleLoading();
                     this.$emit("onError not 201", response.data);
@@ -106,8 +115,13 @@ export default {
           .catch((error) => {
             this.toggleLoading();
             error.function = "createAccount";
-            console.log(error);
             this.$emit("onError", error);
+            if (error.response?.status === 409) {
+              this.duplicate = true;
+              document
+                .getElementById("create-name")
+                .classList.add("is-invalid");
+            }
           });
       }
     },

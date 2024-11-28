@@ -44,7 +44,7 @@
                   required
                   placeholder="Username"
                 />
-                <div class="invalid-feedback">Please enter your UserName</div>
+                <div class="invalid-feedback">Please enter your Username</div>
               </div>
 
               <div class="form-row mb-3">
@@ -56,7 +56,7 @@
                   required
                   placeholder="Password"
                 />
-                <div class="invalid-feedback">Please enter your password</div>
+                <div class="invalid-feedback">Please enter your Password</div>
               </div>
 
               <div>
