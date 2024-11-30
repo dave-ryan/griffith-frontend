@@ -134,7 +134,12 @@ body::-webkit-scrollbar-track {
   background-color: transparent;
 }
 body::-webkit-scrollbar-thumb {
-  background-color: #b8b8b8;
+  background-image: linear-gradient(
+    transparent,
+    rgb(215, 215, 215),
+    transparent
+  );
+
   border-radius: 25px;
 }
 .content-enter-active,
