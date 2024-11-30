@@ -11,7 +11,6 @@
             id="create-name"
             v-model="newUser.name"
             required
-            placeholder="Username"
           />
           <div class="invalid-feedback">
             <span v-if="duplicate"> A User with that name already exists </span>
@@ -27,7 +26,6 @@
             id="create-password"
             v-model="newUser.password"
             required
-            placeholder="Password"
           />
           <div class="invalid-feedback">Please enter your new password</div>
         </div>
