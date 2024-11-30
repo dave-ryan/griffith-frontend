@@ -54,7 +54,7 @@
                 : 'btn-outline-primary'
             "
           >
-            Your Family
+            Family
           </button>
           <button
             v-if="currentUser.friends.length"
