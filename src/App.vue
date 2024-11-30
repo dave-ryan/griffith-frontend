@@ -111,13 +111,10 @@
   </router-view>
 
   <transition mode="out-in">
-    <div
-      v-if="showScrollToTopButton"
-      class="position-fixed scroll-to-top-button"
-    >
+    <div v-if="showScrollToTopButton" class="position-fixed to-top-container">
       <button
         v-if="showScrollToTopButton"
-        class="btn btn-dark"
+        class="btn btn-dark rounded-circle to-top-btn"
         @click="scrollToTop()"
       >
         <i class="bi bi-arrow-up-short"></i>
@@ -129,6 +126,16 @@
 <style>
 body {
   overflow-y: scroll;
+}
+body::-webkit-scrollbar {
+  width: 5px;
+}
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #b8b8b8;
+  border-radius: 25px;
 }
 .content-enter-active,
 .content-leave-active {
@@ -181,9 +188,13 @@ button:active:focus:not(.nopulse),
 .error-img {
   max-width: 20rem;
 }
-.scroll-to-top-button {
+.to-top-container {
   bottom: 2%;
   right: 2%;
+}
+.to-top-btn {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
 }
 </style>
 
