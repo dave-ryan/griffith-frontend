@@ -164,8 +164,8 @@ button:not(.nopulse),
 .nav-link {
   transform: perspective(1px) translateZ(0);
 }
-button:active:not(.nopulse),
-.nav-link:active {
+button:active:focus:not(.nopulse),
+.nav-link:active:focus {
   animation-name: pulse;
   animation-duration: 0.15s;
   animation-timing-function: linear;
