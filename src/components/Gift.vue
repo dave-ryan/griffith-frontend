@@ -41,20 +41,19 @@
           ></span
         >
       </span>
-      <span
-        v-if="gift.purchaser && gift.purchaser_id"
-        :class="
-          gift.purchaser_id === currentUser?.id ? 'text-success' : 'text-danger'
-        "
-        data-bs-toggle="tooltip"
-        data-bs-placement="top"
-        :title="
-          gift.purchaser_id === currentUser?.id ? '' : gift.purchaser.name
-        "
-      >
-        - Purchased By
-        <span>
-          {{ gift.purchaser_id === currentUser?.id ? "You!" : "Someone Else" }}
+      <span v-if="gift.purchaser">
+        <span v-if="gift.purchaser.id === currentUser?.id" class="text-success"
+          >- Purchased By You!</span
+        >
+        <span v-if="gift.purchaser.id !== currentUser?.id" class="text-danger"
+          >- Purchased By
+          <span
+            ref="tooltip"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            :title="gift.purchaser.name"
+            >Someone Else</span
+          >
         </span>
       </span>
     </div>
@@ -75,9 +74,17 @@
 
 <script>
 import Spinner from "../components/Spinner";
+import { Tooltip } from "bootstrap";
 export default {
   components: { Spinner },
   props: ["gift", "currentUser"],
   emits: ["toggleCheckBox"],
+  mounted() {
+    this.$nextTick(() => {
+      if (this.gift.purchaser && this.$refs.tooltip) {
+        new Tooltip(this.$refs.tooltip);
+      }
+    });
+  },
 };
 </script>
