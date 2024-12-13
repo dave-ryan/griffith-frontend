@@ -421,6 +421,41 @@
         </div>
       </div>
     </transition>
+
+    <!-- Created Toasts -->
+    <div
+      class="toast-wrapper position-fixed top-0 start-50 translate-middle-x mt-5"
+    >
+      <div class="toast-container">
+        <div
+          :id="newBatchGift.id"
+          class="toast fade text-white bg-success border-0"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          data-bs-delay="2000"
+          v-for="newBatchGift in newBatchGifts"
+          :key="newBatchGift.id"
+        >
+          <div class="text-center p-2 row">
+            <div class="col-1"></div>
+            <div
+              class="col-10 d-flex justify-content-center align-items-center"
+            >
+              Added {{ newBatchGift.name }} to your List!
+            </div>
+            <div class="col-1">
+              <button
+                type="button"
+                class="btn-close btn-close-white pt-4"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -440,6 +475,7 @@ import Spinner from "../components/Spinner";
 import christmasPresents from "../assets/images/presents-cropped-compressed.jpg";
 import birthdayPresents from "../assets/images/birthday-presents.jpg";
 import { nextTick } from "vue";
+import { Toast } from "bootstrap";
 
 export default {
   components: { Splash, Spinner },
@@ -456,6 +492,7 @@ export default {
       batchLinks: "",
       batchGiftsLoading: false,
       maxBatch: 25,
+      newBatchGifts: [],
       sharing: false,
       shared: false,
       splashImgLoaded: false,
@@ -491,10 +528,12 @@ export default {
     this.getMe();
   },
   methods: {
-    batchCreate() {
+    async batchCreate() {
       this.batchGiftsLoading = true;
-      var gift = this.batchGifts.split("\n");
-      if (gift.length > this.maxBatch) {
+
+      var giftNames = this.batchGifts.split("\n");
+      var giftLinks = this.batchLinks.split("\n");
+      if (giftNames.length > this.maxBatch) {
         var error = {
           message: `Don't be greedy!! Maximum ${this.maxBatch} at a time`,
         };
@@ -502,39 +541,39 @@ export default {
         this.batchGiftsLoading = false;
         return false;
       }
-      var links = this.batchLinks.split("\n");
-      var giftObjects = [];
-      for (let i = 0; i < gift.length; i++) {
-        if (gift[i] !== "") {
-          giftObjects.push({
-            name: gift[i],
-            link: links[i],
-            loaded: false,
-          });
+
+      this.newBatchGifts = [];
+
+      for (let i = 0; i < giftNames.length; i++) {
+        if (giftNames[i] !== "") {
+          let newGift = {
+            id: i,
+            name: giftNames[i],
+            link: giftLinks[i],
+          };
+          this.newBatchGifts.push(newGift);
         }
       }
 
-      for (let i = 0; i < giftObjects.length; i++) {
+      for (let i = 0; i < this.newBatchGifts.length; i++) {
         axios
-          .post("/gifts", giftObjects[i])
+          .post("/gifts", this.newBatchGifts[i])
           .then((response) => {
-            giftObjects[i].id = response.data?.id;
-            giftObjects[i].created = true;
-            this.myList.push(giftObjects[i]);
-            if (giftObjects.every(this.checkCreated)) {
-              this.hideBatchModal();
-            }
+            let newGift = response.data;
+            this.myList.push(newGift);
+            let toast = new Toast(document.getElementById(i));
+            toast.show();
           })
           .catch((error) => {
             error.function = "batchCreate";
             this.$emit("onError", error);
-            this.hideBatchModal();
           });
-        setTimeout(() => {}, 50);
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-    },
-    checkCreated(gift) {
-      return gift.created;
+
+      this.batchGiftsLoading = false;
+      this.hideBatchModal();
     },
     checkForms(input) {
       if (input["name"] && input["name"].length > 0) {
