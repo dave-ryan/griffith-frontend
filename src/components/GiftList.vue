@@ -9,7 +9,7 @@
             : 'btn-outline-success'
         "
         data-bs-toggle="collapse"
-        :data-bs-target="`#christmas-list-${user.id}`"
+        :data-bs-target="`#gift-list-${user.id}`"
         v-if="currentUser"
       >
         {{ user.name }}
@@ -24,11 +24,12 @@
           ></i>
         </transition>
       </button>
+
       <span v-if="user.birthdayString"> - {{ user.birthdayString }}</span>
+
       <div
         class="collapse list-collapse"
-        :aria-expanded="currentUser ? false : true"
-        :id="`christmas-list-${user.id}`"
+        :id="`gift-list-${user.id}`"
         :class="currentUser ? '' : 'show'"
       >
         <span v-if="user.gifts?.length < 1"
@@ -36,14 +37,17 @@
           &#128578;</span
         >
 
-        <Gift
-          v-for="gift in user.gifts"
-          :key="gift.id"
-          :gift="gift"
-          :currentUser="currentUser"
-          @toggleCheckBox="toggleCheckBox(gift)"
-        />
-        <div class="d-flex justify-content-center" v-if="currentUser">
+        <div class="gift-container">
+          <Gift
+            v-for="gift in user.gifts"
+            :key="gift.id"
+            :gift="gift"
+            :currentUser="currentUser"
+            @toggleCheckBox="toggleCheckBox(gift)"
+          />
+        </div>
+
+        <div v-if="currentUser" class="d-flex justify-content-center">
           <hr class="w-25 fw-light" />
         </div>
 
@@ -60,7 +64,22 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.gift-container {
+  display: inline-block;
+  text-align: left;
+}
+@media (min-width: 350px) {
+  .gift-container {
+    width: 350px;
+  }
+}
+@media (max-width: 350px) {
+  .gift-container {
+    width: 100%;
+  }
+}
+</style>
 
 <script>
 import Gift from "./Gift";

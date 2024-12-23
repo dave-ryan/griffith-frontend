@@ -492,13 +492,8 @@ export default {
       users = users.filter((user) => {
         return user.id != this.currentUser.id;
       });
-      if (users.length > 8) {
-        this.users = users.slice(0, users.length / 2);
-        this.usersOverflow = users.slice(users.length / 2, users.length);
-      } else {
-        this.users = users;
-        this.usersOverflow = [];
-      }
+      this.users = users.slice(0, users.length / 2);
+      this.usersOverflow = users.slice(users.length / 2, users.length);
     },
     toggleCustomGiftCheckBox(event, user) {
       if (event.target?.checked) {
@@ -535,7 +530,7 @@ export default {
           gift.loading = false;
           let errorData = error.response?.data;
           if (errorData?.purchaser) {
-            this.$emit("launchErrorToast", "Someone Else Purchased This!");
+            this.$emit("launchErrorToast", "Someone Else Claimed This!");
             gift.purchaser = errorData.purchaser;
             gift.purchaser_id = errorData.purchaser_id;
           } else {

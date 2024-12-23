@@ -1,74 +1,75 @@
 <template>
-  <div>
-    <div class="form-check form-check-inline me-0">
-      <Spinner
-        size="small"
-        position="absolute"
-        top="50%"
-        left="-10px"
-        :visible="gift.loading"
-      />
-      <input
-        class="form-check-input"
-        type="checkbox"
-        :value="gift.id"
-        :id="`checkbox-` + gift.id"
-        :checked="gift.purchaser_id"
-        :disabled="
-          !currentUser ||
-          (gift.purchaser_id && gift.purchaser_id !== currentUser?.id) ||
-          gift.loading
-        "
-        @change="$emit('toggleCheckBox')"
-      />
-      <span
-        :class="
-          (gift.purchaser_id && gift.purchaser_id !== currentUser?.id) ||
-          gift.loading
-            ? 'fw-light'
-            : 'form-check-label' && currentUser
-            ? ''
-            : 'sharing'
-        "
+  <div class="d-flex align-items-center">
+    <Spinner
+      size="small"
+      position="absolute"
+      top="50%"
+      left="-10px"
+      :visible="gift.loading"
+    />
+    <input
+      class="form-check-input me-2"
+      type="checkbox"
+      :value="gift.id"
+      :id="`checkbox-` + gift.id"
+      :checked="gift.purchaser_id"
+      :disabled="
+        !currentUser ||
+        (gift.purchaser_id && gift.purchaser_id !== currentUser?.id) ||
+        gift.loading
+      "
+      @change="$emit('toggleCheckBox')"
+    />
+
+    <span
+      class="text-truncate d-inline-block gift-name"
+      ref="giftName"
+      @click="toggleTruncation()"
+      truncated="true"
+      :class="[
+        (gift.purchaser_id && gift.purchaser_id !== currentUser?.id) ||
+        gift.loading
+          ? 'fw-light'
+          : 'form-check-label' && currentUser
+          ? ''
+          : 'sharing',
+        gift.purchaser?.id === currentUser?.id ? 'fw-bold' : '',
+      ]"
+    >
+      {{ gift.name }}
+    </span>
+
+    <span v-if="gift.link" class="ms-2">
+      <a
+        :href="`//` + gift.link.replace(/^https?:\/\//, '')"
+        target="_blank"
+        class="text-primary"
+        ><i class="bi bi-box-arrow-up-right"></i>
+      </a>
+    </span>
+    <span v-if="gift.purchaser" class="ms-auto">
+      <span v-if="gift.purchaser.id === currentUser?.id" class="text-success">
+        Claimed</span
       >
-        {{ gift.name }}
-        <span v-if="gift.link">
-          -
-          <a
-            :href="`//` + gift.link.replace(/^https?:\/\//, '')"
-            target="_blank"
-            >link</a
-          ></span
+      <span v-if="gift.purchaser.id !== currentUser?.id" class="text-danger">
+        <span
+          ref="tooltip"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          :title="gift.purchaser.name"
+          >Claimed</span
         >
       </span>
-      <span v-if="gift.purchaser">
-        <span v-if="gift.purchaser.id === currentUser?.id" class="text-success"
-          >- Purchased By You!</span
-        >
-        <span v-if="gift.purchaser.id !== currentUser?.id" class="text-danger"
-          >- Purchased By
-          <span
-            ref="tooltip"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            :title="gift.purchaser.name"
-            >Someone Else</span
-          >
-        </span>
-      </span>
-    </div>
+    </span>
   </div>
 </template>
 
 <style scoped>
-.form-check {
-  position: relative;
-}
-.form-check .form-check-input {
-  margin-top: 5px;
-}
 .sharing {
   opacity: 1 !important;
+}
+.gift-name {
+  max-width: 68%;
 }
 </style>
 
@@ -85,6 +86,18 @@ export default {
         new Tooltip(this.$refs.tooltip);
       }
     });
+  },
+  methods: {
+    toggleTruncation() {
+      let el = this.$refs.giftName;
+      if (el.getAttribute("truncated") === "true") {
+        el.setAttribute("truncated", "false");
+        el.classList.remove("text-truncate", "d-inline-block");
+      } else {
+        el.setAttribute("truncated", "true");
+        el.classList.add("text-truncate", "d-inline-block");
+      }
+    },
   },
 };
 </script>
