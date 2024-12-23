@@ -414,8 +414,12 @@ export default {
           this.$emit("onHomePageLoaded");
           this.pageLoaded = true;
           this.contentLoaded = true;
-          if (response.data?.users) {
-            this.processUserData(response.data.users);
+          let users = response.data?.users.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+
+          if (users) {
+            this.processUserData(users);
           } else {
             this.getFriends();
           }
