@@ -130,7 +130,17 @@
               </div>
               <div class="d-grid ms-5 me-5">
                 <button class="btn btn-success" type="submit">
-                  {{ newGiftLoading ? "Loading..." : "Add It!" }}
+                  <div :class="!newGiftLoading ? 'visible' : 'invisible'">
+                    Add It!
+                  </div>
+                  <div
+                    class="position-absolute top-50 start-50 translate-middle"
+                    :class="newGiftLoading ? 'visible' : 'invisible'"
+                  >
+                    <div
+                      class="spinner-border spinner-border-sm text-light"
+                    ></div>
+                  </div>
                 </button>
               </div>
             </form>
@@ -501,13 +511,6 @@ export default {
     };
   },
   computed: {
-    isDisabled() {
-      if (!this.newGift.name || this.newGift.name === "") {
-        return true;
-      } else {
-        return false;
-      }
-    },
     isWrappingTextGifts() {
       if (this.batchGifts === "" || this.batchGiftsLoading) {
         return "";

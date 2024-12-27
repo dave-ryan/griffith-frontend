@@ -68,7 +68,15 @@
                   Create Account
                 </button>
                 <button class="btn btn-success" type="submit" id="loginButton">
-                  {{ buttonName }}
+                  <div :class="!loading ? 'visible' : 'invisible'">Log In</div>
+                  <div
+                    class="position-absolute top-50 start-50 translate-middle"
+                    :class="loading ? 'visible' : 'invisible'"
+                  >
+                    <div
+                      class="spinner-border spinner-border-sm text-light"
+                    ></div>
+                  </div>
                 </button>
               </div>
             </fieldset>
@@ -112,11 +120,6 @@ export default {
       loading: false,
       showCreateAccount: false,
     };
-  },
-  computed: {
-    buttonName() {
-      return this.loading ? "Loading..." : "Log In";
-    },
   },
   created() {
     window.addEventListener("keypress", this.enterPress);

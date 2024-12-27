@@ -45,9 +45,13 @@
         <button type="button" class="btn btn-warning me-4" @click="toggleLogIn">
           Log In
         </button>
-        <button class="btn btn-success" type="submit" id="createAccountButton">
-          {{ buttonName }}
-        </button>
+        <div :class="!loading ? 'visible' : 'invisible'">Add It!</div>
+        <div
+          class="position-absolute top-50 start-50 translate-middle"
+          :class="loading ? 'visible' : 'invisible'"
+        >
+          <div class="spinner-border spinner-border-sm text-light"></div>
+        </div>
       </fieldset>
     </form>
   </div>
@@ -60,11 +64,6 @@ import axios from "axios";
 
 export default {
   emits: ["onError", "clearError", "toggleLogIn", "onLogin"],
-  computed: {
-    buttonName() {
-      return this.loading ? "Loading..." : "Create Account";
-    },
-  },
   data() {
     return {
       newUser: {},
