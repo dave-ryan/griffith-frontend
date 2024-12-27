@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center mb-1">
     <Spinner
       size="small"
       position="absolute"

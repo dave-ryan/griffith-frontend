@@ -1,8 +1,6 @@
 <template>
-  <Spinner size="small" :visible="deletingCustomGift?.user_id === user.id" />
-  <div
-    class="form-check form-check-inline me-0 d-flex flex-wrap justify-content-center align-content-center"
-  >
+  <div class="d-flex align-items-center justify-content-center mb-3">
+    <Spinner size="small" :visible="deletingCustomGift?.user_id === user.id" />
     <input
       :id="'customGiftCheckbox-' + user.id"
       class="form-check-input me-2"
@@ -12,7 +10,10 @@
       :disabled="deletingCustomGift?.user_id === user.id"
     />
     <span
-      class="text-truncate align-middle"
+      class="text-truncate d-inline-block custom-gift-name"
+      ref="customGiftName"
+      @click="toggleTruncation()"
+      truncated="true"
       :class="deletingCustomGift?.user_id === user.id ? 'fw-light' : ''"
       v-if="customGift?.note"
     >
@@ -41,12 +42,8 @@
 </template>
 
 <style scoped>
-.text-truncate {
+.custom-gift-name {
   max-width: 70%;
-  display: inline-block;
-}
-.form-check .form-check-input {
-  margin-top: 7px;
 }
 </style>
 
@@ -56,5 +53,17 @@ export default {
   components: { Spinner },
   props: ["user", "deletingCustomGift", "customGift"],
   emits: ["toggleCustomGiftCheckBox", "editCustomGift"],
+  methods: {
+    toggleTruncation() {
+      let el = this.$refs.customGiftName;
+      if (el.getAttribute("truncated") === "true") {
+        el.setAttribute("truncated", "false");
+        el.classList.remove("text-truncate", "d-inline-block");
+      } else {
+        el.setAttribute("truncated", "true");
+        el.classList.add("text-truncate", "d-inline-block");
+      }
+    },
+  },
 };
 </script>
