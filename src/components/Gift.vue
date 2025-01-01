@@ -30,10 +30,10 @@
         (gift.purchaser_id && gift.purchaser_id !== currentUser?.id) ||
         gift.loading
           ? 'fw-light'
-          : 'form-check-label' && currentUser
-          ? ''
-          : 'sharing',
-        gift.purchaser?.id === currentUser?.id ? 'fw-bold' : '',
+          : '',
+        gift.purchaser && gift.purchaser.id === currentUser?.id
+          ? 'fw-bold'
+          : '',
       ]"
     >
       {{ gift.name }}
@@ -65,9 +65,6 @@
 </template>
 
 <style scoped>
-.sharing {
-  opacity: 1 !important;
-}
 .gift-name {
   max-width: 68%;
 }
