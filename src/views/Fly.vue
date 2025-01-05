@@ -14,25 +14,25 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 
-export default {
-  data() {
-    return {
-      errors: null,
-    };
-  },
-  created() {
-    axios
-      .put("/admin/reboot")
-      .then((r) => {
-        console.log(r);
-        this.$router.push("/login");
-      })
-      .catch((errors) => {
-        console.log("errors", errors.response.data.errors);
-        this.errors = errors.response.data.errors;
-      });
-  },
-};
+// export default {
+//   data() {
+//     return {
+//       errors: null,
+//     };
+//   },
+//   created() {
+//     axios
+//       .put("/admin/reboot")
+//       .then((r) => {
+//         console.log(r);
+//         this.$router.push("/login");
+//       })
+//       .catch((errors) => {
+//         console.log("errors", errors.response.data.errors);
+//         this.errors = errors.response.data.errors;
+//       });
+//   },
+// };
 </script>
