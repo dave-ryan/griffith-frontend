@@ -170,13 +170,20 @@
                 <span v-if="sharing" class="ps-4 pe-4"> ... </span>
                 <span v-if="!sharing && shared"> Copied to Clipboard! </span>
               </div>
-              <p class="fw-light">
-                When you share your list with someone, they can add you as a
-                friend. Once you are friends, you can see each other's lists.
-              </p>
             </div>
           </div>
           <div class="col-4"></div>
+        </div>
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-sm-12 col-md-4">
+            <p class="fw-light">
+              When you share your list with someone, they can add you as a
+              friend.<br />
+              Once you are friends, you can see each other's lists.
+            </p>
+          </div>
+          <div class="col"></div>
         </div>
 
         <!-- Edit Modal -->
@@ -185,7 +192,6 @@
           id="editModal"
           tabindex="-1"
           aria-labelledby="editModalLabel"
-          aria-hidden="true"
           data-bs-backdrop="static"
         >
           <div class="modal-dialog modal-dialog-centered" id="editingModal">
