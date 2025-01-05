@@ -3,7 +3,7 @@
     <Spinner size="small" :visible="deletingCustomGift?.user_id === user.id" />
     <input
       :id="'customGiftCheckbox-' + user.id"
-      class="form-check-input me-2"
+      class="form-check-input me-1 mt-1"
       type="checkbox"
       @change="$emit('toggleCustomGiftCheckBox', $event, user)"
       :checked="customGift"

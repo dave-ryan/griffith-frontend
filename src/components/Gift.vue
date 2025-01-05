@@ -8,7 +8,7 @@
       :visible="gift.loading"
     />
     <input
-      class="form-check-input me-2"
+      class="form-check-input me-1 mt-1"
       type="checkbox"
       :value="gift.id"
       :id="`checkbox-` + gift.id"
