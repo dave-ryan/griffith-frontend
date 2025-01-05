@@ -37,7 +37,7 @@
           &#128578;</span
         >
 
-        <div class="gift-container">
+        <div v-if="user.gifts?.length" class="gift-container d-inline-block">
           <Gift
             v-for="gift in user.gifts"
             :key="gift.id"
@@ -51,24 +51,22 @@
           <hr class="w-25 fw-light" />
         </div>
 
-        <CustomGift
-          :user="user"
-          :deletingCustomGift="deletingCustomGift"
-          :customGift="customGift"
-          @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
-          @editCustomGift="editCustomGift"
-          v-if="currentUser"
-        />
+        <div class="gift-container d-inline-block mb-4">
+          <CustomGift
+            :user="user"
+            :deletingCustomGift="deletingCustomGift"
+            :customGift="customGift"
+            @toggleCustomGiftCheckBox="toggleCustomGiftCheckBox"
+            @editCustomGift="editCustomGift"
+            v-if="currentUser"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.gift-container {
-  display: inline-block;
-  text-align: left;
-}
 @media (min-width: 350px) {
   .gift-container {
     width: 350px;

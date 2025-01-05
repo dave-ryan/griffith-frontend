@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex align-items-center justify-content-center mb-3">
+  <div class="d-flex align-items-center justify-content-center">
     <Spinner size="small" :visible="deletingCustomGift?.user_id === user.id" />
     <input
       :id="'customGiftCheckbox-' + user.id"
-      class="form-check-input me-1 mt-1"
+      class="form-check-input me-1 check-box"
       type="checkbox"
       @change="$emit('toggleCustomGiftCheckBox', $event, user)"
       :checked="customGift"
@@ -21,7 +21,6 @@
     </span>
     <span
       v-else
-      class="align-middle"
       :class="deletingCustomGift?.user_id === user.id ? 'fw-light' : ''"
     >
       Something
@@ -43,7 +42,10 @@
 
 <style scoped>
 .custom-gift-name {
-  max-width: 70%;
+  max-width: 80%;
+}
+.check-box {
+  margin-top: 0.1rem;
 }
 </style>
 

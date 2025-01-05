@@ -8,7 +8,7 @@
       :visible="gift.loading"
     />
     <input
-      class="form-check-input me-1 mt-1"
+      class="form-check-input me-1 check-box"
       type="checkbox"
       :value="gift.id"
       :id="`checkbox-` + gift.id"
@@ -67,6 +67,9 @@
 <style scoped>
 .gift-name {
   max-width: 68%;
+}
+.check-box {
+  margin-top: 0.1rem;
 }
 </style>
 
