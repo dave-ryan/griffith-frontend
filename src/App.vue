@@ -26,7 +26,7 @@
         id="navbarSupportedContent"
         v-if="currentUserName"
       >
-        <ul class="navbar-nav me-auto text-center" @click="collapseBurger">
+        <ul class="navbar-nav me-auto" @click="collapseBurger">
           <li>
             <router-link class="nav-link" to="/home">Home</router-link>
           </li>
@@ -75,14 +75,13 @@
       aria-atomic="true"
       data-bs-delay="4000"
     >
-      <div class="text-center p-2 row">
+      <div class="p-2 row">
         <div class="col-1"></div>
-
         <div class="col-10">
           <div v-for="message in error?.toastMessages" :key="message">
             {{ message }}
           </div>
-          Try Refreshing The Page
+          <div>Try Refreshing The Page</div>
         </div>
         <div class="col-1">
           <button

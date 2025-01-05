@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid ps-0 pe-0 mb-5 text-center">
+  <div class="container-fluid mb-5 ps-0 pe-0 text-center">
     <Splash
       :src="splashSrc"
       :pageLoaded="pageLoaded"
@@ -292,7 +292,7 @@
         >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <div class="modal-header text-center">
+              <div class="modal-header">
                 <div class="text-danger w-100 display-6">WARNING!</div>
                 <button
                   type="button"
@@ -341,10 +341,8 @@
           <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
               <div class="modal-header">
-                <div class="container-fluid">
-                  <h4 class="fw-bold text-center mt-2">
-                    Add Gifts One Line At A Time
-                  </h4>
+                <div class="ms-auto">
+                  <h4 class="fw-bold mt-2">Add Gifts One Line At A Time</h4>
                 </div>
                 <button
                   ref="Close"

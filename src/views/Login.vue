@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid text-center" id="container">
+  <div class="container-fluid text-center">
     <div class="row">
       <transition-group name="login" mode="out-in">
         <img

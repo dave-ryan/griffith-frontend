@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid me-0 text-center">
+  <div class="container-fluid mb-5 ps-0 pe-0 text-center">
     <div v-if="!errors" class="mt-5 pt-5">
       <div
         class="spinner-border text-secondary mt-2 mb-3 pt-5"
