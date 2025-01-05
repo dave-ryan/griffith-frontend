@@ -476,12 +476,18 @@ export default {
       await nextTick();
       this.$refs.Close.click();
     },
-    processUserData(users) {
-      users = users.filter((user) => {
-        return user.id != this.currentUser.id;
+    processUserData(userData) {
+      let users = userData.filter((user) => {
+        return user.id !== this.currentUser.id;
       });
-      this.users = users.slice(0, users.length / 2);
-      this.usersOverflow = users.slice(users.length / 2, users.length);
+
+      if (users.length > 8) {
+        this.users = users.slice(0, users.length / 2);
+        this.usersOverflow = users.slice(users.length / 2, userData.length);
+      } else {
+        this.users = users;
+        this.usersOverflow = [];
+      }
     },
     toggleCustomGiftCheckBox(event, user) {
       if (event.target?.checked) {
