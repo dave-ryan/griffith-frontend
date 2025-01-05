@@ -798,7 +798,7 @@ export default {
             console.log(response.data);
             if (response.status === 200) {
               this.families = this.families.filter((remainingfamily) => {
-                return remainingfamily.id != family.id;
+                return remainingfamily.id !== family.id;
               });
             }
           })
@@ -817,7 +817,7 @@ export default {
 
             if (response.status === 200) {
               this.users = this.users.filter((remainingUser) => {
-                return remainingUser.id != user.id;
+                return remainingUser.id !== user.id;
               });
             }
           })
