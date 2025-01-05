@@ -490,7 +490,7 @@ import { Toast } from "bootstrap";
 export default {
   components: { Splash, Spinner },
   props: ["christmasTime", "currentUser"],
-  emits: ["onError", "clearError", "logOut", "onUserLoad"],
+  emits: ["onError", "clearError", "logOut"],
   data() {
     return {
       myList: [],
@@ -528,9 +528,19 @@ export default {
   },
   created() {
     this.$emit("clearError");
-    this.getMe();
+    this.getInitialData();
+  },
+  watch: {
+    currentUser: function () {
+      this.getInitialData();
+    },
   },
   methods: {
+    getInitialData() {
+      if (this.currentUser) {
+        this.getMyList();
+      }
+    },
     async batchCreate() {
       this.batchGiftsLoading = true;
 
@@ -632,23 +642,6 @@ export default {
       this.editingGift.link = gift.link;
       this.editingGift.id = gift.id;
     },
-    getMe() {
-      axios
-        .get("/current-user")
-        .then((response) => {
-          this.$emit("onUserLoad", response.data);
-          this.getMyList();
-        })
-        .catch((error) => {
-          if (error.response?.status === 401) {
-            this.$emit("logOut");
-          } else {
-            error.critical = true;
-            error.function = "getMe";
-            this.$emit("onError", error);
-          }
-        });
-    },
     getMyList() {
       axios
         .get("/gifts")
@@ -682,7 +675,6 @@ export default {
         axios
           .put("/generate-share-code")
           .then((response) => {
-            this.$emit("onUserLoad", response.data);
             this.formLink(response.data);
           })
           .catch((error) => {
@@ -691,7 +683,7 @@ export default {
             } else {
               this.sharing = false;
               error.critical = true;
-              error.function = "getMe";
+              error.function = "generatesharecode";
               this.$emit("onError", error);
             }
           });

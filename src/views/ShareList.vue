@@ -107,31 +107,22 @@ export default {
       splashSrc: christmasTree,
       unauthorized: false,
       currentUser: null,
-      url: "",
+      url: window.location.href,
       copied: false,
     };
   },
   created() {
-    this.url = window.location.href;
-
-    axios
-      .get("/current-user")
-      .then((response) => {
-        this.currentUser = response.data;
-        this.getUser();
-      })
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          this.currentUser = null;
-          this.getUser();
-        } else {
-          error.critical = true;
-          error.function = "getMe";
-          this.$emit("onError", error);
-        }
-      });
+    this.getInitialData();
+  },
+  watch: {
+    currentUser: function () {
+      this.getInitialData();
+    },
   },
   methods: {
+    getInitialData() {
+      this.getUser();
+    },
     addFriend() {
       axios
         .put(`/users/${this.targetUser.id}/friend`)

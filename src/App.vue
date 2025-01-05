@@ -99,7 +99,6 @@
   <!-- Router View -->
   <router-view
     v-show="!error?.critical"
-    @onUserLoad="onUserLoad"
     @onLogin="onLogin"
     @logOut="logOut"
     @onHomePageLoaded="onHomePageLoaded"
@@ -230,6 +229,8 @@ export default {
     };
   },
   created() {
+    this.getCurrentUser();
+
     if (window.location.hostname === "localhost") {
       document.title = "Griffith - [Local]";
     }
@@ -252,6 +253,26 @@ export default {
       this.error = null;
       let toast = new Toast(document.getElementById("toast"));
       toast.hide();
+    },
+    getCurrentUser() {
+      axios
+        .get("/current-user")
+        .then((response) => {
+          this.currentUser = response.data;
+        })
+        .catch((error) => {
+          if (
+            error.response?.status === 401 &&
+            this.$route.name !== "login" &&
+            this.$route.name !== "share-list"
+          ) {
+            this.$emit("logOut");
+          } else {
+            error.critical = true;
+            error.function = "getMe";
+            this.$emit("onError", error);
+          }
+        });
     },
     launchErrorToast() {
       let toast = new Toast(document.getElementById("toast"));
@@ -283,9 +304,6 @@ export default {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + responseData.jwt;
       this.$router.push("/home");
-    },
-    onUserLoad(responseData) {
-      this.currentUser = responseData;
     },
     logError(error) {
       console.log("Error!", error);

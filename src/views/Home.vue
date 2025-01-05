@@ -247,7 +247,7 @@ export default {
     GiftList,
   },
   props: ["currentUser", "christmasTime"],
-  emits: ["logOut", "onError", "clearError", "onHomePageLoaded", "onUserLoad"],
+  emits: ["logOut", "onError", "clearError", "onHomePageLoaded"],
   data() {
     return {
       users: [],
@@ -274,18 +274,24 @@ export default {
   },
   created() {
     this.$emit("clearError");
-    if (this.currentUser) {
-      if (this.christmasTime) {
-        this.getFamily();
-        this.getSecretSanta();
-      } else {
-        this.getBirthdays();
-      }
-    } else {
-      this.getMe();
-    }
+    this.getInitialData();
+  },
+  watch: {
+    currentUser: function () {
+      this.getInitialData();
+    },
   },
   methods: {
+    getInitialData() {
+      if (this.currentUser) {
+        if (this.christmasTime) {
+          this.getFamily();
+          this.getSecretSanta();
+        } else {
+          this.getBirthdays();
+        }
+      }
+    },
     checkCustomGiftForm() {
       return this.editingCustomGift?.note?.length > 0;
     },
@@ -384,7 +390,7 @@ export default {
         })
         .catch((error) => {
           error.critical = true;
-          error.function = "getEveryone";
+          error.function = "getBirthdays";
           this.$emit("onError", error);
         });
     },
@@ -447,28 +453,6 @@ export default {
           error.critical = true;
           error.function = "getFamily";
           this.$emit("onError", error);
-        });
-    },
-    getMe() {
-      axios
-        .get("/current-user")
-        .then((response) => {
-          this.$emit("onUserLoad", response.data);
-          if (this.christmasTime) {
-            this.getFamily();
-            this.getSecretSanta();
-          } else {
-            this.getBirthdays();
-          }
-        })
-        .catch((error) => {
-          if (error.response?.status === 401) {
-            this.$emit("logOut");
-          } else {
-            error.critical = true;
-            error.function = "getMe";
-            this.$emit("onError", error);
-          }
         });
     },
     getSecretSanta() {

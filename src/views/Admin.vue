@@ -685,7 +685,7 @@ import splashImage from "../assets/images/snowman.jpg";
 
 export default {
   components: { Splash },
-  emits: ["logOut", "onError", "clearError", "onUserLoad"],
+  emits: ["logOut", "onError", "clearError"],
   props: ["currentUser"],
   data() {
     return {
@@ -703,12 +703,13 @@ export default {
     };
   },
   created() {
-    if (this.currentUser?.is_admin) {
-      this.getUsers();
-      this.getFamilies();
-    } else {
-      this.getMe();
-    }
+    this.$emit("clearError");
+    this.getInitialData();
+  },
+  watch: {
+    currentUser: function () {
+      this.getInitialData();
+    },
   },
   computed: {
     men() {
@@ -734,6 +735,16 @@ export default {
     },
   },
   methods: {
+    getInitialData() {
+      if (this.currentUser) {
+        if (this.currentUser.is_admin) {
+          this.getUsers();
+          this.getFamilies();
+        } else {
+          this.$router.push("/home");
+        }
+      }
+    },
     cleanupGifts() {
       axios
         .put("/admin/gifts-cleanup")
@@ -828,28 +839,6 @@ export default {
     },
     flipAdmin(user) {
       user.is_admin = !user.is_admin;
-    },
-    getMe() {
-      axios
-        .get("current-user")
-        .then((response) => {
-          this.$emit("onUserLoad", response.data);
-          if (response.data.is_admin) {
-            this.getUsers();
-            this.getFamilies();
-          } else {
-            this.$router.push("/home");
-          }
-        })
-        .catch((error) => {
-          if (error.response?.status === 401) {
-            this.$emit("logOut");
-          } else {
-            error.critical = true;
-            error.function = "getMe";
-            this.$emit("onError", error);
-          }
-        });
     },
     getUsers() {
       axios
