@@ -524,7 +524,7 @@ export default {
           gift.loading = false;
           let errorData = error.response?.data;
           if (errorData?.purchaser) {
-            this.$emit("launchErrorToast", "Someone Else Claimed This!");
+            this.$emit("onError", { message: "Someone Else Claimed This!" });
             gift.purchaser = errorData.purchaser;
             gift.purchaser_id = errorData.purchaser_id;
           } else {
