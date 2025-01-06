@@ -57,6 +57,7 @@
           data-bs-toggle="tooltip"
           data-bs-placement="top"
           :title="gift.purchaser.name"
+          :id="`tooltip-` + gift.id"
           >Claimed</span
         >
       </span>
@@ -86,6 +87,16 @@ export default {
         new Tooltip(this.$refs.tooltip);
       }
     });
+  },
+  watch: {
+    //when someone else claims a gift during your session, this properly activates the tooltip
+    "gift.purchaser_id": function (newPurchaserId) {
+      this.$nextTick(() => {
+        if (newPurchaserId && this.gift.purchaser_id != this.currentUser.id) {
+          new Tooltip(document.getElementById(`tooltip-` + this.gift.id));
+        }
+      });
+    },
   },
   methods: {
     toggleTruncation() {
