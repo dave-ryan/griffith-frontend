@@ -77,7 +77,7 @@
     >
       <div class="p-2 row">
         <div class="col-1"></div>
-        <div class="col-10">
+        <div class="col-10 text-center">
           <div v-for="message in error?.toastMessages" :key="message">
             {{ message }}
           </div>
@@ -95,7 +95,6 @@
     </div>
   </div>
 
-  <!-- Router View -->
   <router-view
     v-show="!error?.critical"
     @onLogin="onLogin"
