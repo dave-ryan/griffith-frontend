@@ -285,8 +285,12 @@ export default {
     getInitialData() {
       if (this.currentUser) {
         if (this.christmasTime) {
-          this.getFamily();
-          this.getSecretSanta();
+          if (this.currentUser.family) {
+            this.getFamily();
+            this.getSecretSanta();
+          } else {
+            this.getFriends();
+          }
         } else {
           this.getBirthdays();
         }
@@ -383,9 +387,6 @@ export default {
       axios
         .get("/users")
         .then((response) => {
-          this.contentLoaded = true;
-          this.pageLoaded = true;
-          this.$emit("onHomePageLoaded");
           this.processUserData(this.filterUpcomingBirthdays(response.data));
         })
         .catch((error) => {
@@ -417,18 +418,10 @@ export default {
       axios
         .get("/families")
         .then((response) => {
-          this.$emit("onHomePageLoaded");
-          this.pageLoaded = true;
-          this.contentLoaded = true;
           let users = response.data?.users.sort((a, b) =>
             a.name.localeCompare(b.name)
           );
-
-          if (users) {
-            this.processUserData(users);
-          } else {
-            this.getFriends();
-          }
+          this.processUserData(users);
         })
         .catch((error) => {
           error.critical = true;
@@ -444,7 +437,6 @@ export default {
         .get("/friends")
         .then((response) => {
           this.processUserData(response.data);
-          this.contentLoaded = true;
           if (!response.data.length) {
             this.noFriendsorFamily = true;
           }
@@ -480,6 +472,10 @@ export default {
       let users = userData.filter((user) => {
         return user.id !== this.currentUser.id;
       });
+
+      this.contentLoaded = true;
+      this.pageLoaded = true;
+      this.$emit("onHomePageLoaded", users.length);
 
       if (users.length > 8) {
         this.users = users.slice(0, users.length / 2);
