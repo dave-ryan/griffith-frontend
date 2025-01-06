@@ -38,12 +38,12 @@
           </li>
 
           <transition mode="out-in">
-            <li v-if="$route.name === 'Home' && !error && homePageLoaded">
+            <li v-if="$route.name === 'Home' && homePageLoaded && userCount">
               <button
                 class="btn btn-success align-middle ms-2 mt-2 pt-0 pb-0 ps-1 pe-1"
-                @click="expandLists"
+                @click="toggleLists"
               >
-                Expand All Lists
+                {{ listsExpanded ? "Hide" : "Expand" }} All Lists
               </button>
             </li>
           </transition>
@@ -219,6 +219,8 @@ export default {
       currentUser: null,
       currentUserName: VueCookies.get("userName"),
       homePageLoaded: false,
+      listsExpanded: false,
+      userCount: null,
       scrollLimit: 150,
       showScrollToTopButton: false,
       error: null,
@@ -284,14 +286,16 @@ export default {
         ] || [this.defaultErrorMessage];
       this.launchErrorToast();
     },
-    onHomePageLoaded() {
+    onHomePageLoaded(userCount) {
       this.homePageLoaded = true;
+      this.userCount = userCount;
     },
-    expandLists() {
-      var lists = document.getElementsByClassName("list-collapse");
-      for (let i = 0; i < lists.length; i++) {
-        lists[i].classList.add("show");
+    toggleLists() {
+      var buttons = document.getElementsByClassName("list-button");
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].click();
       }
+      this.listsExpanded = !this.listsExpanded;
     },
     onLogin(responseData) {
       this.currentUser = responseData.user;

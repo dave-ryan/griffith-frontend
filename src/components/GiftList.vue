@@ -2,7 +2,7 @@
   <div class="row mt-3">
     <div class="col">
       <button
-        class="btn mb-1"
+        class="btn mb-1 list-button"
         :class="
           user.id === secretSanta?.id
             ? 'btn-outline-danger'
