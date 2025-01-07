@@ -266,7 +266,7 @@ export default {
             this.$route.name !== "login" &&
             this.$route.name !== "share-list"
           ) {
-            this.$emit("logOut");
+            this.logOut();
           } else {
             error.critical = true;
             error.function = "getMe";
