@@ -64,7 +64,10 @@
         </ul>
 
         <div class="nav-link disabled" v-if="currentUserName">
-          Logged in as {{ currentUserName }}
+          Logged in as
+          <span style="color: rgb(165, 165, 165)">
+            {{ currentUserName }}
+          </span>
         </div>
         <button class="btn btn-danger" @click="logOut()" v-if="currentUserName">
           Log Out
