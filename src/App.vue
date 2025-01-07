@@ -38,18 +38,32 @@
           </li>
 
           <transition mode="out-in">
-            <li v-if="$route.name === 'Home' && homePageLoaded && userCount">
+            <li
+              v-if="$route.name === 'Home' && homePageLoaded && userCount"
+              class="d-flex justify-content-center align-items-center"
+            >
               <button
-                class="btn btn-success align-middle ms-2 mt-2 pt-0 pb-0 ps-1 pe-1"
+                class="btn btn-success d-grid pt-0 pb-0 ps-1 pe-1"
                 @click="toggleLists"
               >
-                {{ listsExpanded ? "Hide" : "Expand" }} All Lists
+                <div
+                  :class="listsExpanded ? 'invisible' : 'visible'"
+                  class="stacker"
+                >
+                  Expand All Lists
+                </div>
+                <div
+                  :class="listsExpanded ? 'visible' : 'invisible'"
+                  class="stacker"
+                >
+                  Hide All Lists
+                </div>
               </button>
             </li>
           </transition>
         </ul>
 
-        <div class="nav-link disabled align-middle" v-if="currentUserName">
+        <div class="nav-link disabled" v-if="currentUserName">
           Logged in as {{ currentUserName }}
         </div>
         <button class="btn btn-danger" @click="logOut()" v-if="currentUserName">
@@ -121,6 +135,12 @@
 </template>
 
 <style>
+.d-grid {
+  grid-area: "stack";
+}
+.stacker {
+  grid-area: stack;
+}
 body {
   overflow-y: scroll;
 }
