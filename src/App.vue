@@ -40,7 +40,7 @@
           <transition mode="out-in">
             <li
               v-if="$route.name === 'Home' && homePageLoaded && userCount"
-              class="d-flex justify-content-center align-items-center"
+              class="d-flex justify-content-center align-items-center ms-1"
             >
               <button
                 class="btn btn-success d-grid pt-0 pb-0 ps-1 pe-1"

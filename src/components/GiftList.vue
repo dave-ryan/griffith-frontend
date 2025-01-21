@@ -37,7 +37,10 @@
           &#128578;</span
         >
 
-        <div v-if="user.gifts?.length" class="gift-container d-inline-block">
+        <div
+          v-if="user.gifts?.length"
+          class="gift-container d-inline-block mt-1"
+        >
           <Gift
             v-for="gift in user.gifts"
             :key="gift.id"
@@ -69,7 +72,7 @@
 <style scoped>
 @media (min-width: 350px) {
   .gift-container {
-    width: 350px;
+    max-width: 350px;
   }
 }
 @media (max-width: 350px) {

@@ -22,7 +22,7 @@
     />
 
     <span
-      class="text-truncate d-inline-block gift-name"
+      class="text-truncate d-inline-block"
       ref="giftName"
       @click="toggleTruncation()"
       truncated="true"
@@ -47,7 +47,7 @@
         ><i class="bi bi-box-arrow-up-right"></i>
       </a>
     </span>
-    <span v-if="gift.purchaser" class="ms-auto">
+    <span v-if="gift.purchaser" class="ms-auto claimed-label ps-2">
       <span v-if="gift.purchaser.id === currentUser?.id" class="text-success">
         Claimed</span
       >
@@ -66,11 +66,12 @@
 </template>
 
 <style scoped>
-.gift-name {
-  max-width: 68%;
-}
 .check-box {
   margin-top: 0.1rem;
+  padding: 7px;
+}
+.claimed-label {
+  min-width: 70px;
 }
 </style>
 
