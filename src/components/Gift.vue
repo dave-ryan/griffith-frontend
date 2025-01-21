@@ -105,9 +105,11 @@ export default {
       if (el.getAttribute("truncated") === "true") {
         el.setAttribute("truncated", "false");
         el.classList.remove("text-truncate", "d-inline-block");
+        el.classList.add("border-top", "border-bottom");
       } else {
         el.setAttribute("truncated", "true");
         el.classList.add("text-truncate", "d-inline-block");
+        el.classList.remove("border-top", "border-bottom");
       }
     },
   },
