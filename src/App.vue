@@ -316,7 +316,16 @@ export default {
     toggleLists() {
       var buttons = document.getElementsByClassName("list-button");
       for (let i = 0; i < buttons.length; i++) {
-        buttons[i].click();
+        let expandedAttr = buttons[i].getAttribute("aria-expanded");
+        // aria-expanded doesn't get added as an attr until clicked
+        if (
+          (expandedAttr === null || expandedAttr === "false") &&
+          !this.listsExpanded
+        ) {
+          buttons[i].click();
+        } else if (expandedAttr === "true" && this.listsExpanded) {
+          buttons[i].click();
+        }
       }
       this.listsExpanded = !this.listsExpanded;
     },
