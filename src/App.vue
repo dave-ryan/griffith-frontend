@@ -28,13 +28,38 @@
       >
         <ul class="navbar-nav me-auto" @click="collapseBurger">
           <li>
-            <router-link class="nav-link" to="/home">Home</router-link>
+            <router-link class="nav-link" to="/home"
+              >Home
+              <div
+                v-if="$route.name === 'Home'"
+                class="text-secondary position-absolute start-50 translate-middle"
+              >
+                •
+              </div>
+            </router-link>
           </li>
           <li>
-            <router-link class="nav-link" to="/my-list">My List</router-link>
+            <router-link class="nav-link" to="/my-list"
+              >My List
+
+              <div
+                v-if="$route.name === 'My List'"
+                class="text-secondary position-absolute start-50 translate-middle"
+              >
+                •
+              </div>
+            </router-link>
           </li>
           <li v-if="currentUser?.is_admin">
-            <router-link class="nav-link" to="/admin">Admin</router-link>
+            <router-link class="nav-link" to="/admin"
+              >Admin
+              <div
+                v-if="$route.name === 'Admin'"
+                class="text-secondary position-absolute start-50 translate-middle"
+              >
+                •
+              </div>
+            </router-link>
           </li>
 
           <transition mode="out-in">
