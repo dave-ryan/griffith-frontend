@@ -32,9 +32,9 @@
               >Home
               <div
                 v-if="$route.name === 'Home'"
-                class="text-secondary position-absolute start-50 translate-middle"
+                class="text-secondary fs-4 position-absolute start-50 translate-middle"
               >
-                •
+                ─
               </div>
             </router-link>
           </li>
@@ -44,9 +44,9 @@
 
               <div
                 v-if="$route.name === 'My List'"
-                class="text-secondary position-absolute start-50 translate-middle"
+                class="text-secondary fs-4 position-absolute start-50 translate-middle"
               >
-                •
+                ─
               </div>
             </router-link>
           </li>
@@ -55,9 +55,9 @@
               >Admin
               <div
                 v-if="$route.name === 'Admin'"
-                class="text-secondary position-absolute start-50 translate-middle"
+                class="text-secondary fs-4 position-absolute start-50 translate-middle"
               >
-                •
+                ─
               </div>
             </router-link>
           </li>
