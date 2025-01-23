@@ -153,7 +153,7 @@
     <div v-if="showScrollToTopButton" class="position-fixed to-top-container">
       <button
         v-if="showScrollToTopButton"
-        class="btn btn-dark rounded-circle to-top-btn"
+        class="btn text-light rounded-circle to-top-btn"
         @click="scrollToTop()"
       >
         <i class="bi bi-arrow-up-short"></i>
@@ -243,8 +243,14 @@ button:active:focus:not(.nopulse),
   right: 2%;
 }
 .to-top-btn {
-  padding-top: 7px !important;
-  padding-bottom: 7px !important;
+  line-height: 0 !important;
+  height: 44px;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  font-size: 38.4px !important;
+  background-color: rgb(85, 85, 85) !important;
 }
 </style>
 
