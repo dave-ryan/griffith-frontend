@@ -776,7 +776,7 @@ export default {
       }).id;
       userParams.secret_santa_id = this.users.find((user) => {
         return user.name === userParams.secretSantaName;
-      }).id;
+      })?.id;
 
       console.log("user params: ", userParams);
       axios
